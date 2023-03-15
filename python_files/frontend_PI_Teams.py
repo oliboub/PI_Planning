@@ -39,7 +39,7 @@ def create_team_gui(info='Info'):
     right_layout=[[sg.T('Select image'),
                  sg.I(key='-IMG-',enable_events=True),
                  sg.FileBrowse(file_types=(('All files',['*.jpeg','*.jpg','*.png']),("JPEG Files","*.jpeg"),("JPG Files","*.jpg"),("PNG Files","*.png")))],
-                 [sg.Image(key='-PHOTO-', data=convert_to_bytes('imagesDB/ilovemycompany.jpeg',resize=(250,250)))]]
+                 [sg.Image(key='-PHOTO-', data=convert_to_bytes('../imagesDB/ilovemycompany.jpeg',resize=(250,250)))]]
     
 #    layout=[[sg.Frame("Contact data",left_layout, vertical_alignment='center',pad=((10,10),(10,10))),sg.VerticalSeparator(),sg.Col(right_layout,element_justification='center')],
 #           [sg.B('Add',enable_events=True),sg.Cancel()]]
@@ -60,7 +60,7 @@ def create_team_gui(info='Info'):
             break
  
         elif event == '-IMG-':
-            logo='imagesDB/'+values['-IMG-'].split("/")[-1]
+            logo='../imagesDB/'+values['-IMG-'].split("/")[-1]
             print(logo)
             window['-PHOTO-'].update(data=convert_to_bytes(values['-IMG-'],resize=(250,250)))
  
@@ -73,7 +73,7 @@ def create_team_gui(info='Info'):
             team=values['-TEAM-']
 #            print(projectID,description,team)
             if not logo:
-                logo='imagesDB/ilovemycompany.jpeg'
+                logo='../imagesDB/ilovemycompany.jpeg'
             print(logo)
                 
             create_team(projectID,team, description, logo)
@@ -118,7 +118,7 @@ def list_all_teams_gui(page,teams,info='info'):
         if team.TeamLogo != None:
             photo=team.TeamLogo
         else:
-            photo ='imagesDB/ilovemycompany.jpeg'
+            photo ='../imagesDB/ilovemycompany.jpeg'
 #        print(TeamPhoto)
 
         row = [sg.I(team.TeamName,disabled=True,font='Calibri 11', size=(20,1)),
