@@ -24,6 +24,7 @@ connect('PIPlanning')
 
 
 def who_am_i_gui(alias):
+    global admin
     print('function: who_am_i_gui(',alias,')')
     font='Calibri 11'
 #    print(theme)
@@ -66,7 +67,7 @@ def who_am_i_gui(alias):
             break
             
         if event == ('-PASSWD-'):
-            print('PAsswd')
+            print('Passwd')
             msg,firstcon = change_password(email,firstcon)
             print(msg)
             pass

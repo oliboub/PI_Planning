@@ -24,7 +24,7 @@ connect('PIPlanning')
 # In[27]:
 
 
-def main(theme,admin):
+def main(theme,admin=False):
     print('function main:(',theme,admin,')')
     menu_admin = [
         ['Parameters',
