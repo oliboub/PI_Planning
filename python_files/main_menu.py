@@ -38,8 +38,8 @@ def main(theme):
     
     #background_color='#6c69df'
     layout = [[sg.Menu(menu)],
-              [sg.Image(data=convert_to_bytes('res/safe.png', resize=(490, 220)))]] 
-    window = MyWindow('PI PLanning',layout,icon='res/agile.ico',finalize=True)
+              [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
+    window = MyWindow('PI PLanning',layout,icon='../imagesDB/agile.ico',finalize=True)
     window.my_move_to_center()
     
     while True:
