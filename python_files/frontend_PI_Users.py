@@ -20,7 +20,7 @@ connect('PIPlanning')
 # ### My Info
 # #### Who am I
 
-# In[ ]:
+# In[2]:
 
 
 def who_am_i_gui(alias):
@@ -73,7 +73,7 @@ def who_am_i_gui(alias):
             
 
 
-# In[ ]:
+# In[3]:
 
 
 #who_am_i_gui('superadmin')
@@ -82,13 +82,13 @@ def who_am_i_gui(alias):
 # ------
 # ## Change Password
 
-# In[ ]:
+# In[14]:
 
 
 def change_password(email,firstcon):
     print('function: change_password(',email,firstcon,')')
     font='Calibri 11'
-    msg = ''
+    msg = 'Init'
     layout=[
         [sg.T('** First connection **',key='-FIRST-',size=(60,1),visible=False,justification='center',font=font)],
         [sg.T(email,size=(17,1),font=font),sg.T('please change your password',size=(25,1),font=font)],
@@ -116,6 +116,7 @@ def change_password(email,firstcon):
             
         elif event1 == 'Ok':
             if firstcon == False:
+                print("firstcon = false")
                 checkpwd=get_actual_password(email,values1['-OLDPWD-'])
                 if checkpwd == False:
                     msg='error, actual password not matching'
@@ -144,7 +145,7 @@ def change_password(email,firstcon):
 #                    print(values1['-CHKNEWPWD-'],values1['-NEWPWD-'])
 #                window1.close()
 #            pass
-            print(msg)
+            print("msg:",msg)
             matches = []
             errorlist= ['error, actual password not matching','error: old and new paswd are equivalents','error: new paswd are differents','error: new paswd is empty','error: Minimal size must be 8 caracters','Cancel:']
             matches = [match for match in errorlist if msg in match]
@@ -183,15 +184,15 @@ def change_password(email,firstcon):
     return(msg,firstcon)
 
 
-# In[ ]:
+# In[15]:
 
 
-#change_password('mctvv@live.com',False)
+# change_password('oliboub@gmail.com',True)
 
 
 # ### Select Theme
 
-# In[ ]:
+# In[6]:
 
 
 def select_theme_gui(memberid,theme):
@@ -229,10 +230,11 @@ def select_theme_gui(memberid,theme):
 
 # ### Call User Alias
 
-# In[ ]:
+# In[3]:
 
 
 def user_alias_gui():
+    print('function: user_alias_gui()')
     layout=[
         [sg.T('Alias Name', size=(10,1)),sg.I(key='-ALIAS-', default_text='oliboub', size=(50,1))],
         [sg.OK(),sg.Cancel()]
@@ -271,8 +273,10 @@ def user_alias_gui():
                     MemberAlias='None'
                     return(MemberAlias)                    
                     break
+
       
         else:
+            print(result.MemberFirstConnection)
             print(result.MemberName)
             toto="Welcome back "+result.MemberFirstName
             sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
@@ -281,10 +285,11 @@ def user_alias_gui():
 
 # ## Login_Window
 
-# In[59]:
+# In[17]:
 
 
 def login_window():
+    print('function: login_window()')    
     x=3
     layout=[
         [sg.T('Email', font=font, size=(10,1)),sg.I(key='-EMAIL-', default_text='oliboub@gmail.com',font=font, size=(50,1))],
@@ -347,22 +352,29 @@ def login_window():
                         x -= 1
 
                     else:
-                        print(result.MemberAlias)
+                        print(result.MemberFirstConnection)
+                        MemberAlias= result.MemberAlias
+                        print(MemberAlias)
                         window.close()
-                        toto="Welcome back "+result.MemberAlias
-                        sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
-                        return(result.MemberAlias)
+                        if result.MemberFirstConnection == True:
+                            result = change_password(MemberEmail,True)
+                            toto="Welcome  "+MemberAlias
+                            sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
+                        else:
+                            toto="Welcome back "+MemberAlias
+                            sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
+                        return(MemberAlias)
 
 
-# In[60]:
+# In[19]:
 
 
 #global font
 #font='Calibri 11'
-#login_window()
+login_window()
 
 
-# In[ ]:
+# In[10]:
 
 
 print(__name__,'imported')
