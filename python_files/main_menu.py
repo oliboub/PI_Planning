@@ -5,7 +5,7 @@
 
 # ## Imports
 
-# In[1]:
+# In[3]:
 
 
 import PySimpleGUI as sg
@@ -21,24 +21,35 @@ connect('PIPlanning')
 # -------
 # ## Main
 
-# In[2]:
+# In[27]:
 
 
-def main(theme):
-    print(theme)
-    menu = [
+def main(theme,admin):
+    print('function main:(',theme,admin,')')
+    menu_admin = [
         ['Parameters',
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
          ['Teams',['Create Team','List Teams',['List All Teams','List Teams by Project'],'Archive Team'],
-         ['Members',['Create member','Archive member']]]]
+         ['Members',['Create member','List members','Archive member']]]]
         ],
          ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
     
-    #background_color='#6c69df'
-    layout = [[sg.Menu(menu)],
+    menu_std = [
+        ['My Project', ['List Teams', 'Members',['List members','Archive member']]],
+         ['My Info',['Who am I','Select Theme']],
+        ['Exit', ['Quit']]
+    ]
+    
+    if admin == True:
+        layout = [[sg.Menu(menu_admin)],
               [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
+    else:
+        layout = [[sg.Menu(menu_std)],
+              [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
+    
+    #background_color='#6c69df'
     window = MyWindow('PI PLanning',layout,icon='../imagesDB/agile.ico',finalize=True)
     window.my_move_to_center()
     
@@ -85,7 +96,6 @@ def main(theme):
             info='Liste de toutes les equipes du projet '+ projectname
             list_all_teams_gui(1,teams,info)
             
-
 #--- My Info
         if event == "Who am I":
             who_am_i_gui(UserAlias)
@@ -109,7 +119,7 @@ if __name__ == '__main__':
     if UserAlias != 'None':
         memberid,name,firstname,email,theme,project,team,role,admin,firstcon=query_member_alias(UserAlias)
         sg.theme(theme)
-        main(theme)
+        main(theme,admin)
     else:
         toto="Bye"
         sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
