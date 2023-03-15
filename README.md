@@ -12,3 +12,5 @@ There is no real need behind, but it is used to push my experience and learning 
 Putting it in github, is also to improve my learning curve after the training on github.
 
 Most of my trainings comes from skilleos and udemy..
+
+Note: You need to put on PYTHONPATH the directory py_tools and python_files. or merge all together
