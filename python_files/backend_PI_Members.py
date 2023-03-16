@@ -9,6 +9,7 @@
 
 
 import bcrypt
+import os
 from mongoengine import *
 from backend_PI_mongo_model import *
 from datetime import datetime
@@ -121,7 +122,9 @@ def query_members_by_team(teamname='All'):
 
 def query_member(alias):
     print('fonction: query_member(',alias,')')
-    if alias.find('@'):
+#    if alias.find('@'):
+    print(alias.find("@"))
+    if alias.find('@') > -1:
         print('Email')
         member1 = Members.objects(Archived=False,MemberEmail=alias).first()
         if member1 is None:
@@ -284,7 +287,7 @@ def get_actual_password(email,passwd):
 # In[19]:
 
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')
 
 
 # In[ ]:
