@@ -31,7 +31,7 @@ if g.DEBUG_OL >= 1:
 
 def main(theme,projectid,admin=False):
     if g.DEBUG_OL >= 1:
-        print('function main:(',theme,projectid,admin,')')
+        print('--- function main:(',theme,projectid,admin,')')
     menu_admin = [
         ['Parameters',
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
@@ -43,7 +43,7 @@ def main(theme,projectid,admin=False):
     ]
     
     menu_std = [
-        ['My Project', ['List my team','List our team members','list teams members']],['Tasks',['Create task','List tasks']],
+        ['My Project', ['List project teams','List our team members','list teams members']],['Tasks',['Create task','List tasks']],
         ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
@@ -105,8 +105,14 @@ def main(theme,projectid,admin=False):
                     print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
             info='Liste de toutes les equipes du projet '+ projectname
             list_all_teams_gui(1,teams,info)
+            
+        if event == "Archive Team":
+            if g.DEBUG_OL >= 2:
+                print(__name__,projectid,projectname) 
+            teams=list_teams_page(1)
+                    
 
-        if event == "List my team":
+        if event == "List project teams":
             info='info'
             project=query_project_name_from_ID(projectid)
             

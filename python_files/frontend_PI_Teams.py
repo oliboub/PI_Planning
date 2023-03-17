@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## PI  Teams management
+# # PI  Teams management
+
+# ## Prerequisites
 
 # In[1]:
 
 
+import global_variables as g
+g.init()
+import os
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
 from frontend_PI import *
@@ -14,19 +19,23 @@ connect('PIPlanning')
 
 
 # ------
-# ### Create Team
+# ## Create Team
 
 # In[24]:
 
 
 def create_team_gui(info='Info'):
+    if g.DEBUG_OL >= 1:
+        print('--- function: create_team_gui(',info,')')
+    
     sg.set_options(element_padding=(5, 10))
 
     projects_list=list_projects()
     comboproj = []
     for project in projects_list:
         comboproj.append(project.ProjectName)
-    print(comboproj)
+    if g.DEBUG_OL >= 2:
+        print(comboproj)
         
     info_layout = [sg.T(info,font='Calibri 11',justification="left")]
  
@@ -61,7 +70,8 @@ def create_team_gui(info='Info'):
  
         elif event == '-IMG-':
             logo='../imagesDB/'+values['-IMG-'].split("/")[-1]
-            print(logo)
+            if g.DEBUG_OL >= 2:
+                print(logo)
             window['-PHOTO-'].update(data=convert_to_bytes(values['-IMG-'],resize=(250,250)))
  
             
@@ -74,7 +84,8 @@ def create_team_gui(info='Info'):
 #            print(projectID,description,team)
             if not logo:
                 logo='../imagesDB/ilovemycompany.jpeg'
-            print(logo)
+            if g.DEBUG_OL >= 2:
+                print(logo)
                 
             create_team(projectID,team, description, logo)
             layout1=[[sg.T('Team:',font='Calibri 11'),sg.T(team,font='Calibri 11',text_color='blue'),sg.T('for projet:',font='Calibri 11'),sg.T(values['-PROJECT-'],font='Calibri 11',text_color='blue'),sg.T(' créée.',font='Calibri 11')],
@@ -90,15 +101,22 @@ def create_team_gui(info='Info'):
                 break
 
 
-# create_team_gui('Please enter informations regarding this team')
+# In[ ]:
 
-# ### List All Teams
 
-# In[18]:
+#create_team_gui('Please enter informations regarding this team')
+
+
+# ## List_all_teams_gui()
+
+# In[2]:
 
 
 def list_all_teams_gui(page,teams,info='info'):
-#    global page
+    if g.DEBUG_OL >= 1:
+        print('--- function: list_all_teams_gui(',page,teams,info,')')
+ 
+    #    global page
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
     layout = [[sg.T(info,font='Calibri 11',justification="left")],
@@ -108,7 +126,8 @@ def list_all_teams_gui(page,teams,info='info'):
                sg.T('Team Logo',font='Calibri 11')]]
     idx=0
     for team in teams.items:
-        print(team.TeamID,team.ProjectID)
+        if g.DEBUG_OL >= 2:
+            print('TeamID',team.TeamID,'\tProjectID',team.ProjectID)
         projectname = Projects.objects(ProjectID=team.ProjectID).first()
         if projectname is None:
             projectname='Non allocated'
@@ -142,7 +161,8 @@ def list_all_teams_gui(page,teams,info='info'):
     
     while True:
         event1, values1 = window.read()
-        print(event1,values1)
+        if g.DEBUG_OL >= 2:
+            print(event1,values1)
         if event1 == sg.WIN_CLOSED or event1 == 'Return':
 #            print('event1',event1)
             window.close()
@@ -152,40 +172,49 @@ def list_all_teams_gui(page,teams,info='info'):
             if teams.has_next:
                 page += 1
                 window.close()
-                teams = list_teams_page(page)
+                teams = list_teams_page(page,team.ProjectID)
                 list_all_teams_gui(page,teams,'ceci est l"info de base')
         elif event1 == "<":
             if teams.has_prev:
                 page -= 1
                 window.close()
-                teams = list_teams_page(page)
+                teams = list_teams_page(page,team.ProjectID)
                 list_all_teams_gui(page,teams,'ceci est l"info de base')
         elif event1 == "<<":
             if teams.has_prev:
                 page = 1
                 window.close()
-                teams = list_teams_page(page)
+                teams = list_teams_page(page,team.ProjectID)
                 list_all_teams_gui(page,teams,'ceci est l"info de base')
         elif event1 == ">>":
             if teams.has_next:
                 page = teams.pages
                 window.close()
-                teams = list_teams_page(page)
+                teams = list_teams_page(page,team.ProjectID)
                 list_all_teams_gui(page,teams,'ceci est l"info de base')
 
 
-# ### Select teams by Project
+# In[ ]:
+
+
+#list_all_teams_gui(1)
+
+
+# ## Select teams by Project
 
 # In[19]:
 
 
 def select_project_gui(info='info'):
+    if g.DEBUG_OL >= 1:
+        print('--- function: select_project_gui(',info,')')
     projects_list=list_projects()
     
     comboproj = []
     for project in projects_list:
         comboproj.append(project.ProjectName)
-    print(comboproj)
+    if g.DEBUG_OL >= 2:
+        print(comboproj)
         
     layout = [
         [sg.T(info,font='Calibri 11',justification="left")],
@@ -229,5 +258,5 @@ def select_project_gui(info='info'):
 # In[ ]:
 
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')
 

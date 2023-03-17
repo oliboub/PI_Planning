@@ -26,7 +26,7 @@ connect('PIPlanning')
 
 def query_member(alias):
     if g.DEBUG_OL >= 1:
-        print('fonction: query_member(',alias,')')
+        print('--- function: query_member(',alias,')')
     if g.DEBUG_OL >= 2:
 #    if alias.find('@'):
         print(alias.find("@"))
@@ -60,7 +60,7 @@ def query_member(alias):
 # In[11]:
 
 
-query_member('oliboub')
+#query_member('oliboub')
 
 
 # ## query_members_alias(alias)
@@ -70,7 +70,7 @@ query_member('oliboub')
 
 def query_member_alias(Alias):
     if g.DEBUG_OL >= 1:
-        print('fonction: query_member_alias(',Alias,')')
+        print('--- function: query_member_alias(',Alias,')')
     try:
         member1 = Members.objects(Archived=False,MemberAlias=Alias).first()
     except Exception as e:
@@ -120,7 +120,7 @@ def query_member_alias(Alias):
 
 def query_members_by_team(teamname='All'):
     if g.DEBUG_OL >= 1:
-        print('fonction: query_members_by_team(',teamname,')')
+        print('--- function: query_members_by_team(',teamname,')')
     members = []
     if teamname is None:
         if g.DEBUG_OL >= 2:
@@ -173,7 +173,7 @@ def query_members_by_team(teamname='All'):
 
 def write_new_member_theme(memberid,theme):
     if g.DEBUG_OL >= 1:
-        print('fonction: write_new_member_theme(',theme,')')
+        print('--- function: write_new_member_theme(',theme,')')
     member1 = Members.objects(MemberID=memberid).first()
     member1.MemberTheme=theme
     member1.save() 
@@ -186,7 +186,7 @@ def write_new_member_theme(memberid,theme):
 
 def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid,password="default123",admin=False):
     if g.DEBUG_OL >= 1:
-        print('fonction: create_member(',name,firstname,password,alias,email,theme,photo,projectid,teamid,roleid,admin,')')
+        print('--- function: create_member(',name,firstname,password,alias,email,theme,photo,projectid,teamid,roleid,admin,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     member = Members()
@@ -213,7 +213,7 @@ def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid
 
 def update_member_password(email,password):
     if g.DEBUG_OL >= 1:
-        print('fonction: update_member_passwd(',email,'password',')',)
+        print('--- function: update_member_passwd(',email,'password',')',)
     member1 = Members.objects(Archived=False,MemberEmail=email).first()
     debug_ol=0
     if g.DEBUG_OL >= 2:
@@ -269,7 +269,7 @@ def update_member_password(email,password):
 
 def get_actual_password(email,passwd):
     if g.DEBUG_OL >= 1:
-        print('fonction: get_actual_password(',email,'password)',)
+        print('--- function: get_actual_password(',email,'password)',)
     password=passwd.encode('utf-8')
     strikepwd= bcrypt.hashpw(password, bcrypt.gensalt())
     
@@ -300,7 +300,7 @@ def get_actual_password(email,passwd):
 # In[3]:
 
 
-get_actual_password('admin@gmail.com','aaaaaaaa')
+#get_actual_password('admin@gmail.com','aaaaaaaa')
 
 
 # In[ ]:
