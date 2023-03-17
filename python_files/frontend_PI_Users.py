@@ -3,16 +3,18 @@
 
 # ## PI User Management
 
-# In[1]:
+# In[ ]:
 
 
+import global_variables as g
+g.init()
 import PySimpleGUI as sg
 import os
 from backend_PI import * # Import tout ce qui est spécifique au projet
 from frontend_PI import *
 
-global font
-font='Calibri 11'
+#global font
+#font='Calibri 11'
     
 connect('PIPlanning')
 
@@ -21,31 +23,34 @@ connect('PIPlanning')
 # ### My Info
 # #### Who am I
 
-# In[2]:
+# In[ ]:
 
 
 def who_am_i_gui(alias):
+
     global admin
-    print('function: who_am_i_gui(',alias,')')
-    font='Calibri 11'
+    if g.DEBUG_OL >= 1:
+        print('function: who_am_i_gui(',alias,')')
+#    font='Calibri 11'
 #    print(theme)
 #    sg.theme(theme)
     memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(alias)
-    print(name,firstname,email,project,team,role,admin,firstcon)
+    if g.DEBUG_OL >= 2:
+        print(name,firstname,email,project,team,role,admin,firstcon)
     left_layout=[
-        [sg.T('Alias Name', size=(10,1),font=font),sg.I(alias,key='-ALIAS-', size=(50,1),font=font)],
-        [sg.T('First name', size=(10,1),font=font),sg.I(firstname,key='-FIRST-', size=(50,1),font=font)],
-        [sg.T('Last name', size=(10,1),font=font),sg.I(name,key='-LAST-', size=(50,1),font=font)],
-        [sg.T('Email', size=(10,1),font=font),sg.I(email,key='-EMAIL-', size=(50,1),font=font)]
+        [sg.T('Alias Name', size=(10,1),font=g.FONT),sg.I(alias,key='-ALIAS-', size=(50,1),font=g.FONT)],
+        [sg.T('First name', size=(10,1),font=g.FONT),sg.I(firstname,key='-FIRST-', size=(50,1),font=g.FONT)],
+        [sg.T('Last name', size=(10,1),font=g.FONT),sg.I(name,key='-LAST-', size=(50,1),font=g.FONT)],
+        [sg.T('Email', size=(10,1),font=g.FONT),sg.I(email,key='-EMAIL-', size=(50,1),font=g.FONT)]
     ]
     right_layout=[
-        [sg.T('Project', size=(10,1),font=font),sg.I(project,key='-PROJ-', size=(50,1),font=font)],
-        [sg.T('Team', size=(10,1),font=font),sg.I(team,key='-TEAM-', size=(50,1),font=font)],
-        [sg.T('Team Role', size=(10,1),font=font),sg.I(role,key='-ROLE-', size=(50,1),font=font)],
+        [sg.T('Project', size=(10,1),font=g.FONT),sg.I(project,key='-PROJ-', size=(50,1),font=g.FONT)],
+        [sg.T('Team', size=(10,1),font=g.FONT),sg.I(team,key='-TEAM-', size=(50,1),font=g.FONT)],
+        [sg.T('Team Role', size=(10,1),font=g.FONT),sg.I(role,key='-ROLE-', size=(50,1),font=g.FONT)],
     ]
-    bottom_left=[[sg.T('UI Theme:', size=(10,1),font=font),sg.I(theme,key='-THEME-',size=(50,1),font=font)]]
-    bottom_right=[[sg.T('Admin:', size=(10,1),font=font),sg.I('Yes',key='-ADMIN-',disabled=True,size=(10,1),font=font)]]
-    bottom_sright=[[sg.B('Change password',key='-PASSWD-',size=(10,1),font=font)]]
+    bottom_left=[[sg.T('UI Theme:', size=(10,1),font=g.FONT),sg.I(theme,key='-THEME-',size=(50,1),font=g.FONT)]]
+    bottom_right=[[sg.T('Admin:', size=(10,1),font=g.FONT),sg.I('Yes',key='-ADMIN-',disabled=True,size=(10,1),font=g.FONT)]]
+    bottom_sright=[[sg.B('Change password',key='-PASSWD-',size=(10,1),font=g.FONT)]]
     
     layout=[[[sg.Frame('User info',left_layout, vertical_alignment='center',pad=((15,15),(15,15))),
              sg.VerticalSeparator(),
@@ -68,14 +73,15 @@ def who_am_i_gui(alias):
             break
             
         if event == ('-PASSWD-'):
-            print('Passwd')
+            if g.DEBUG_OL >= 2:
+                print('Passwd')
             msg,firstcon = change_password(email,firstcon)
-            print(msg)
-            pass
-            
+            if g.DEBUG_OL >= 2:
+                print(msg)
+            pass            
 
 
-# In[3]:
+# In[ ]:
 
 
 #who_am_i_gui('superadmin')
@@ -84,19 +90,20 @@ def who_am_i_gui(alias):
 # ------
 # ## Change Password
 
-# In[14]:
+# In[ ]:
 
 
 def change_password(email,firstcon):
-    print('function: change_password(',email,firstcon,')')
+    if g.DEBUG_OL >= 1:
+        print('function: change_password(',email,firstcon,')')
     font='Calibri 11'
     msg = 'Init'
     layout=[
-        [sg.T('** First connection **',key='-FIRST-',size=(60,1),visible=False,justification='center',font=font)],
-        [sg.T(email,size=(17,1),font=font),sg.T('please change your password',size=(25,1),font=font)],
-        [sg.T('Old Passwd', key='-OLD1-',size=(15,1),visible=False,font=font),sg.I("",key='-OLDPWD-',  password_char='*',visible=False,size=(50,1),font=font)],
-        [sg.T('New Passwd', size=(15,1),font=font),sg.I("",key='-NEWPWD-', password_char='*', size=(50,1),font=font)],
-        [sg.T('Verify Passwd', size=(15,1),font=font),sg.I("",key='-CHKNEWPWD-', password_char='*', size=(50,1),font=font)],
+        [sg.T('** First connection **',key='-FIRST-',size=(60,1),visible=False,justification='center',font=g.FONT)],
+        [sg.T(email,size=(17,1),font=g.FONT),sg.T('please change your password',size=(25,1),font=g.FONT)],
+        [sg.T('Old Passwd', key='-OLD1-',size=(15,1),visible=False,font=g.FONT),sg.I("",key='-OLDPWD-',  password_char='*',visible=False,size=(50,1),font=g.FONT)],
+        [sg.T('New Passwd', size=(15,1),font=g.FONT),sg.I("",key='-NEWPWD-', password_char='*', size=(50,1),font=g.FONT)],
+        [sg.T('Verify Passwd', size=(15,1),font=g.FONT),sg.I("",key='-CHKNEWPWD-', password_char='*', size=(50,1),font=g.FONT)],
         [sg.Ok(),sg.Cancel()]]
  
     window1=MyWindow('Change Password',layout,finalize=True)
@@ -111,20 +118,23 @@ def change_password(email,firstcon):
     while True:
         event1, values1 = window1.read()
         if event1 == sg.WIN_CLOSED or event1 == 'Cancel':
-            print('Cancel')
+            if g.DEBUG_OL >= 2:
+                print('Cancel')
             window1.close()
             msg='Cancel:'
             return(msg,firstcon)
             
         elif event1 == 'Ok':
             if firstcon == False:
-                print("firstcon = false")
+                if g.DEBUG_OL >= 2:
+                    print("firstcon = false")
                 checkpwd=get_actual_password(email,values1['-OLDPWD-'])
                 if checkpwd == False:
                     msg='error, actual password not matching'
                             
                 else:    
-                    print('check old passwd OK')
+                    if g.DEBUG_OL >= 2:
+                        print('check old passwd OK')
                     if values1['-NEWPWD-'] == values1['-OLDPWD-'] and firstcon == True:
                         msg='error: old and new paswd are equivalents'
 #                window1.close()
@@ -147,38 +157,44 @@ def change_password(email,firstcon):
 #                    print(values1['-CHKNEWPWD-'],values1['-NEWPWD-'])
 #                window1.close()
 #            pass
-            print("msg:",msg)
+            if g.DEBUG_OL >= 2:
+                print("msg:",msg)
             matches = []
             errorlist= ['error, actual password not matching','error: old and new paswd are equivalents','error: new paswd are differents','error: new paswd is empty','error: Minimal size must be 8 caracters','Cancel:']
             matches = [match for match in errorlist if msg in match]
-            print('matches:',matches)
+            if g.DEBUG_OL >= 2:
+                print('matches:',matches)
             if matches :
-                layout2=[[sg.T(msg,size=(60,1),justification='center',font=font)],[sg.B('Return')]]
+                layout2=[[sg.T(msg,size=(60,1),justification='center',font=g.FONT)],[sg.B('Return')]]
                 window2=MyWindow('Error',layout2,finalize=True)
                 window2.my_move_to_center()
                 
                 while True:
                     event2, values2 = window2.read()
                     if event2 == sg.WIN_CLOSED or event2 == 'Cancel' or event2 == 'Return':
-                        print('Cancel')
+                        if g.DEBUG_OL >= 2:
+                            print('Cancel')
                         window2.close()
                         break
  
             elif not matches:
-                print('Passwd OK')
+                if g.DEBUG_OL >= 2:
+                    print('Passwd OK')
                 aa=update_member_password(email,values1['-NEWPWD-'])
-                print('Passwd updated')
+                if g.DEBUG_OL >= 2:
+                    print('Passwd updated')
                 msg=('Ok: Password updated succesfully')
                 firstcon=False
                 window1.close()
-                layout2=[[sg.T(msg,size=(60,1),justification='center',font=font)],[sg.B('Return')]]
+                layout2=[[sg.T(msg,size=(60,1),justification='center',font=g.FONT)],[sg.B('Return')]]
                 window2=MyWindow('Ok',layout2,finalize=True)
                 window2.my_move_to_center()
                 
                 while True:
                     event2, values2 = window2.read()
                     if event2 == sg.WIN_CLOSED or event2 == 'Cancel' or event2 == 'Return':
-                        print('Cancel')
+                        if g.DEBUG_OL >= 2:
+                            print('Cancel')
                         window2.close()
                         break
                 break
@@ -186,7 +202,7 @@ def change_password(email,firstcon):
     return(msg,firstcon)
 
 
-# In[15]:
+# In[ ]:
 
 
 # change_password('oliboub@gmail.com',True)
@@ -194,11 +210,15 @@ def change_password(email,firstcon):
 
 # ### Select Theme
 
-# In[6]:
+# In[ ]:
 
 
 def select_theme_gui(memberid,theme):
-#    print('memberid:',memberid,' - theme',theme)
+    if g.DEBUG_OL >= 1:
+        print('function: select_theme_gui(',memberid,theme,')')
+
+    if g.DEBUG_OL >= 2:
+        print('memberid:',memberid,' - theme',theme)
     sg.theme(theme)
 
     layout = [[sg.T('This is your layout')],
@@ -232,11 +252,12 @@ def select_theme_gui(memberid,theme):
 
 # ### Call User Alias
 
-# In[3]:
+# In[ ]:
 
 
 def user_alias_gui():
-    print('function: user_alias_gui()')
+    if g.DEBUG_OL >= 1:
+        print('function: user_alias_gui()')
     layout=[
         [sg.T('Alias Name', size=(10,1)),sg.I(key='-ALIAS-', default_text='oliboub', size=(50,1))],
         [sg.OK(),sg.Cancel()]
@@ -254,7 +275,8 @@ def user_alias_gui():
             break
         
         elif event =='OK':
-            print(value['-ALIAS-'])
+            if g.DEBUG_OL >= 2:
+                print(value['-ALIAS-'])
             window.close()
             MemberAlias= value['-ALIAS-']
             break
@@ -278,8 +300,9 @@ def user_alias_gui():
 
       
         else:
-            print(result.MemberFirstConnection)
-            print(result.MemberName)
+            if g.DEBUG_OL >= 2:
+                print(result.MemberFirstConnection)
+                print(result.MemberName)
             toto="Welcome back "+result.MemberFirstName
             sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
             return(MemberAlias)
@@ -287,15 +310,17 @@ def user_alias_gui():
 
 # ## Login_Window
 
-# In[17]:
+# In[ ]:
 
 
 def login_window():
-    print('function: login_window()')    
+    if g.DEBUG_OL >= 1:
+        print(g.FONT,g.DEBUG_OL)
+        print('function: login_window()')    
     x=3
     layout=[
-        [sg.T('Email', font=font, size=(10,1)),sg.I(key='-EMAIL-', default_text='oliboub@gmail.com',font=font, size=(50,1))],
-        [sg.T('Password', font=font,size=(10,1)),sg.I(key='-PASSWD-',font=font, password_char='*', size=(50,1))],
+        [sg.T('Email', font=g.FONT, size=(10,1)),sg.I(key='-EMAIL-', default_text='oliboub@gmail.com',font=g.FONT, size=(50,1))],
+        [sg.T('Password', font=g.FONT,size=(10,1)),sg.I(key='-PASSWD-',font=g.FONT, password_char='*', size=(50,1))],
         [sg.OK(),sg.Cancel()]
     ]
     
@@ -311,7 +336,8 @@ def login_window():
             break
         
         elif event =='OK':
-            print(value['-EMAIL-'])
+            if g.DEBUG_OL >= 2:
+                print(value['-EMAIL-'])
 #            window.close()
             MemberEmail= value['-EMAIL-']
 
@@ -333,10 +359,11 @@ def login_window():
        
                 else:
                     checkpasswd=get_actual_password(value['-EMAIL-'],value['-PASSWD-'])
-                    print(checkpasswd)
+                    if g.DEBUG_OL >= 2:
+                        print(checkpasswd)
                     if checkpasswd == False:
                         layout=[
-                            [sg.T("Wrong password. ",size=(20,1),font=font),sg.T(x,size=(3,1),font=font),sg.T('Remaining tries',size=(15,1),font=font)],
+                            [sg.T("Wrong password. ",size=(20,1),font=g.FONT),sg.T(x,size=(3,1),font=g.FONT),sg.T('Remaining tries',size=(15,1),font=g.FONT)],
                             [sg.Cancel()]]
 
                         window1=MyWindow('Error',layout,finalize=True)
@@ -354,9 +381,11 @@ def login_window():
                         x -= 1
 
                     else:
-                        print(result.MemberFirstConnection)
+                        if g.DEBUG_OL >= 2:
+                            print(result.MemberFirstConnection)
                         MemberAlias= result.MemberAlias
-                        print(MemberAlias)
+                        if g.DEBUG_OL >= 2:
+                            print(MemberAlias)
                         window.close()
                         if result.MemberFirstConnection == True:
                             result = change_password(MemberEmail,True)
@@ -368,7 +397,7 @@ def login_window():
                         return(MemberAlias)
 
 
-# In[19]:
+# In[ ]:
 
 
 #global font
@@ -376,7 +405,7 @@ def login_window():
 # login_window()
 
 
-# In[10]:
+# In[ ]:
 
 
 print(os.getcwd(),__name__,'imported')

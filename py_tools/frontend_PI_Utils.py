@@ -1,3 +1,4 @@
+import os
 import PySimpleGUI as sg
 from screeninfo import get_monitors
 
@@ -20,4 +21,4 @@ class MyWindow(sg.Window):
         x, y = (screen_width - win_width)//2, (screen_height - win_height)//2
         self.move(x, y)
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')

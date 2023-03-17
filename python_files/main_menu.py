@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Main Menu for PI PLanning
+# # Main Menu for Safe PI Planning
 
 # ## Imports
 
-# In[3]:
+# In[1]:
 
 
+import global_variables as g
+g.init()
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
 from frontend_PI import *
 
 connect('PIPlanning')
+
+if g.DEBUG_OL >= 1:
+    print("Debug mode active level :",g.DEBUG_OL)
 
 
 # ## Documentation
@@ -21,11 +26,12 @@ connect('PIPlanning')
 # -------
 # ## Main
 
-# In[27]:
+# In[2]:
 
 
-def main(theme,admin=False):
-    print('function main:(',theme,admin,')')
+def main(theme,projectid,admin=False):
+    if g.DEBUG_OL >= 1:
+        print('function main:(',theme,projectid,admin,')')
     menu_admin = [
         ['Parameters',
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
@@ -37,7 +43,7 @@ def main(theme,admin=False):
     ]
     
     menu_std = [
-        ['My Project', ['List my team','List our members']],['Tasks',['Create task','List tasks']],
+        ['My Project', ['List my team','List our team members','list teams members']],['Tasks',['Create task','List tasks']],
         ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
@@ -67,11 +73,13 @@ def main(theme,admin=False):
         if event == 'List Project':
             info='List of active projects'
             ActualProjectID,ActualProjectName, ActualProjectDesc=list_projects_gui(info)
-            print('ActualProjectID:',ActualProjectID,'\tActualProjectName;',ActualProjectName,'\tActualProjectDesc:',ActualProjectDesc)
+            if g.DEBUG_OL >= 2:
+                print('ActualProjectID:',ActualProjectID,'\tActualProjectName;',ActualProjectName,'\tActualProjectDesc:',ActualProjectDesc)
         if event == 'Archive Project':
             info='Archivage de projet non utilisé'
             ArchivedProjectName=archive_project_gui(info)
-            print('ArchivedProjectName;',ArchivedProjectName)
+            if g.DEBUG_OL >= 2:
+                print('ArchivedProjectName;',ArchivedProjectName)
         
 #--- Teams
         if event == 'Create Team':
@@ -81,28 +89,34 @@ def main(theme,admin=False):
         if event == "List All Teams":
             info='List of All active Teams even if non allocated to project'
             teams=list_teams_page(1)
-            print(teams)
+            if g.DEBUG_OL >= 2:
+                print(teams)
             list_all_teams_gui(1,teams,info)
 
         if event == "List Teams by Project":
             info='Select project top display associated teams'
             projectid=None
             projectid,projectname=select_project_gui() # a lan cer pour chercher les equipes d'un projet
-
-            print(__name__,projectid,projectname)
             teams=list_teams_page(1,projectid)
-            for a in teams.items:
-                print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
+
+            if g.DEBUG_OL >= 2:
+                print(__name__,projectid,projectname)
+                for a in teams.items:
+                    print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
             info='Liste de toutes les equipes du projet '+ projectname
             list_all_teams_gui(1,teams,info)
 
         if event == "List my team":
             info='info'
-            print(__name__,projectid,projectname)
+            project=query_project_name_from_ID(projectid)
+            
+            if g.DEBUG_OL >= 2:
+                print(__name__,projectid,project.ProjectName)
             teams=list_teams_page(1,projectid)
-            for a in teams.items:
-                print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
-            info='Liste de toutes les equipes du projet '+ projectname
+            if g.DEBUG_OL >= 2:
+                for a in teams.items:
+                    print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
+            info='Liste de toutes les equipes du projet '+ project.ProjectName
             list_all_teams_gui(1,teams,info)
  
 #--- My Info
@@ -110,25 +124,28 @@ def main(theme,admin=False):
             who_am_i_gui(UserAlias)
         
         if event == "Select Theme":
-            theme1=select_theme_gui(memberid,theme,)
-            print(theme1)
+            theme1=select_theme_gui(memberid,theme)
+            if g.DEBUG_OL >= 2:
+                print(theme1)
             sg.theme(theme1)
             window.close()
-            main(theme1)
+            main(theme1,projectid)
 
 if __name__ == '__main__':
-    theme='LightBlue2'
-    global font
-    font='Calibri 11'
+    
+    theme=g.THEME
+    
     page = 1
-#    UserAlias=user_alias_gui()
+
+    #    UserAlias=user_alias_gui()
     UserAlias=login_window()
-    print(UserAlias)
+    if g.DEBUG_OL >= 2:
+        print(UserAlias)
     
     if UserAlias != 'None':
         memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(UserAlias)
         sg.theme(theme)
-        main(theme,admin)
+        main(theme,projectid,admin)
     else:
         toto="Bye"
         sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)

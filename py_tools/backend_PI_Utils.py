@@ -1,6 +1,8 @@
+import os
 import PIL.Image
 import io
 import base64
+
 
 def convert_to_bytes(file_or_bytes, resize=None):
     '''
@@ -33,4 +35,4 @@ def convert_to_bytes(file_or_bytes, resize=None):
     return bio.getvalue()
 
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')

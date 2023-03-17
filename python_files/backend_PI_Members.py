@@ -5,9 +5,11 @@
 
 # ## prerequisites
 
-# In[ ]:
+# In[1]:
 
 
+import global_variables as g
+g.init()
 import bcrypt
 import os
 from mongoengine import *
@@ -19,38 +21,46 @@ connect('PIPlanning')
 
 # ## query_member(alias)
 
-# In[ ]:
+# In[10]:
 
 
 def query_member(alias):
-    print('fonction: query_member(',alias,')')
+    if g.DEBUG_OL >= 1:
+        print('fonction: query_member(',alias,')')
+    if g.DEBUG_OL >= 2:
 #    if alias.find('@'):
-    print(alias.find("@"))
+        print(alias.find("@"))
     if alias.find('@') > -1:
-        print('Email')
+        if g.DEBUG_OL >= 2:
+            print('Email')
         member1 = Members.objects(Archived=False,MemberEmail=alias).first()
         if member1 is None:
-            print('None')
+            if g.DEBUG_OL >= 2:
+                print('None')
             return(1,'None')
         else:
-            print(member1.MemberName)
+            if g.DEBUG_OL >= 2:
+                print(member1.MemberName)
             return(0,member1)
         return(0,member1)        
     else:
-        print('alias')
+        if g.DEBUG_OL >= 2:
+            print('alias')
         member1 = Members.objects(Archived=False,MemberAlias=alias).first()
         if member1 is None:
-            print('None')
+            if g.DEBUG_OL >= 2:
+                print('None')
             return(1,'None')
         else:
-            print(member1.MemberName)
+            if g.DEBUG_OL >= 2:
+                print(member1.MemberName)
             return(0,member1)
 
 
-# In[ ]:
+# In[11]:
 
 
-#query_member('oliboub')
+query_member('oliboub')
 
 
 # ## query_members_alias(alias)
@@ -59,7 +69,8 @@ def query_member(alias):
 
 
 def query_member_alias(Alias):
-    print('fonction: query_member_alias(',Alias,')')
+    if g.DEBUG_OL >= 1:
+        print('fonction: query_member_alias(',Alias,')')
     try:
         member1 = Members.objects(Archived=False,MemberAlias=Alias).first()
     except Exception as e:
@@ -79,7 +90,7 @@ def query_member_alias(Alias):
 #    print(team.ProjectID)
     project=Projects.objects(ProjectID=team.ProjectID).first()
     debug_ol=0
-    if debug_ol == 1:
+    if g.DEBUG_OL >= 2:
         print('MemberID:',member1.MemberID)
         print('User Alias:',member1.MemberAlias)
         print('User Name:',member1.MemberName)
@@ -104,40 +115,50 @@ def query_member_alias(Alias):
 
 # ## query_members_by_team
 
-# def query_members_by_team(teamname='All'):
-#     print('fonction: query_members_by_team(',teamname,')')
-#     members = []
-#     if teamname is None:
-#         print('Please add a teamname as parameter')
-#         return('[]')
-# 
-#     else:
-#         if teamname != 'All':
-#             teams=Teams.objects(TeamName=teamname).first()
-#             print(teams)
-# 
-#             if teams is None:
-#                 print("'None' value provided for item of farkling routine")
-#                 return('[]')
-# 
-#             else:
-#                 link=LinkMemberTeam.objects(TeamID=teams.TeamID)
-#                 print(link)
-#         else:
-#             link=LinkMemberTeam.objects()
-#             
-#         for i in range(len(link)):
-# #            print(link[i].MemberID)
-#             member1=Members.objects(MemberID=link[i].MemberID).first()
-# #            print(member1.MemberName)
-#             members.append(member1.MemberName)
-#         print(members)
-#         return(members)
-# #        for i in range(len(member1)):
-# #            print(member1[i])
-# #            members=member1[i][1]
-# #        print(members)
-# #        return(members)
+# In[ ]:
+
+
+def query_members_by_team(teamname='All'):
+    if g.DEBUG_OL >= 1:
+        print('fonction: query_members_by_team(',teamname,')')
+    members = []
+    if teamname is None:
+        if g.DEBUG_OL >= 2:
+            print('Please add a teamname as parameter')
+        return('[]')
+
+    else:
+        if teamname != 'All':
+            teams=Teams.objects(TeamName=teamname).first()
+            if g.DEBUG_OL >= 2:
+                print(teams)
+
+            if teams is None:
+                if g.DEBUG_OL >= 2:
+                    print("'None' value provided for item of farkling routine")
+                return('[]')
+
+            else:
+                link=LinkMemberTeam.objects(TeamID=teams.TeamID)
+                if g.DEBUG_OL >= 2:
+                    print('link:',link)
+        else:
+            link=LinkMemberTeam.objects()
+            
+        for i in range(len(link)):
+            member1=Members.objects(MemberID=link[i].MemberID).first()
+            #if g.DEBUG_OL >= 2:
+            #    print(, link[i].MemberIDmember1.MemberName)
+            members.append(member1.MemberName)
+        if g.DEBUG_OL >= 2:
+            print(members)
+        return(members)
+#        for i in range(len(member1)):
+#            print(member1[i])
+#            members=member1[i][1]
+#        print(members)
+#        return(members)
+
 
 # In[ ]:
 
@@ -151,7 +172,8 @@ def query_member_alias(Alias):
 
 
 def write_new_member_theme(memberid,theme):
-    print('fonction: write_new_member_theme(',theme,')')
+    if g.DEBUG_OL >= 1:
+        print('fonction: write_new_member_theme(',theme,')')
     member1 = Members.objects(MemberID=memberid).first()
     member1.MemberTheme=theme
     member1.save() 
@@ -163,7 +185,8 @@ def write_new_member_theme(memberid,theme):
 
 
 def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid,password="default123",admin=False):
-    print('fonction: create_member(',name,firstname,password,alias,email,theme,photo,projectid,teamid,roleid,admin,')')
+    if g.DEBUG_OL >= 1:
+        print('fonction: create_member(',name,firstname,password,alias,email,theme,photo,projectid,teamid,roleid,admin,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     member = Members()
@@ -189,10 +212,11 @@ def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid
 
 
 def update_member_password(email,password):
-    print('fonction: update_member_passwd(',email,'password',')',)
+    if g.DEBUG_OL >= 1:
+        print('fonction: update_member_passwd(',email,'password',')',)
     member1 = Members.objects(Archived=False,MemberEmail=email).first()
     debug_ol=0
-    if debug_ol == 1:
+    if g.DEBUG_OL >= 2:
         print('------ Before')
         print('MemberID:',member1.MemberID)
         print('User Alias:',member1.MemberAlias)
@@ -220,7 +244,7 @@ def update_member_password(email,password):
     member1.update(**fields)
 
     member1 = Members.objects(Archived=False,MemberEmail=email).first()
-    if debug_ol == 1:
+    if g.DEBUG_OL >= 2:
         print('------ After')
         print('MemberID:',member1.MemberID)
         print('User Alias:',member1.MemberAlias)
@@ -240,17 +264,18 @@ def update_member_password(email,password):
 
 # ## get_actual_password(email,passwd)
 
-# In[ ]:
+# In[2]:
 
 
 def get_actual_password(email,passwd):
-    print('fonction: get_actual_password(',email,'password)',)
+    if g.DEBUG_OL >= 1:
+        print('fonction: get_actual_password(',email,'password)',)
     password=passwd.encode('utf-8')
     strikepwd= bcrypt.hashpw(password, bcrypt.gensalt())
     
     member1 = Members.objects(Archived=False,MemberEmail=email).first()
-    debug_ol=0
-    if debug_ol == 1:
+
+    if g.DEBUG_OL >= 2:
         print('strikepwd:',strikepwd)
         print('MemberID:',member1.MemberID)
         print('User Alias:',member1.MemberAlias)
@@ -262,18 +287,20 @@ def get_actual_password(email,passwd):
         print('Member Password:',member1.MemberPassword)
     
     if bcrypt.hashpw(password, member1.MemberPassword) == member1.MemberPassword:
-        print("It matches")
+        if g.DEBUG_OL >= 2:
+            print("It matches")
         a=True
     else:
-        print("It does not match")
+        if g.DEBUG_OL >= 2:
+            print("It does not match")
         a=False
     return(a)
 
 
-# In[ ]:
+# In[3]:
 
 
-#get_actual_password('admin@gmail.com','aaaaaaaa')
+get_actual_password('admin@gmail.com','aaaaaaaa')
 
 
 # In[ ]:
