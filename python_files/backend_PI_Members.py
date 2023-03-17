@@ -5,7 +5,7 @@
 
 # ## prerequisites
 
-# In[1]:
+# In[ ]:
 
 
 import bcrypt
@@ -17,13 +17,47 @@ from datetime import datetime
 connect('PIPlanning')
 
 
+# ## query_member(alias)
+
+# In[ ]:
+
+
+def query_member(alias):
+    print('fonction: query_member(',alias,')')
+#    if alias.find('@'):
+    print(alias.find("@"))
+    if alias.find('@') > -1:
+        print('Email')
+        member1 = Members.objects(Archived=False,MemberEmail=alias).first()
+        if member1 is None:
+            print('None')
+            return(1,'None')
+        else:
+            print(member1.MemberName)
+            return(0,member1)
+        return(0,member1)        
+    else:
+        print('alias')
+        member1 = Members.objects(Archived=False,MemberAlias=alias).first()
+        if member1 is None:
+            print('None')
+            return(1,'None')
+        else:
+            print(member1.MemberName)
+            return(0,member1)
+
+
+# In[ ]:
+
+
+#query_member('oliboub')
+
+
 # ## query_members_alias(alias)
 
-# In[1]:
+# In[ ]:
 
 
-#
-### members
 def query_member_alias(Alias):
     print('fonction: query_member_alias(',Alias,')')
     try:
@@ -59,10 +93,10 @@ def query_member_alias(Alias):
         print('Member First Connection:',member1.MemberFirstConnection)
         
     
-    return(member1.MemberID,member1.MemberName,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
+    return(member1.MemberID,member1.MemberName,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
 
 
-# In[15]:
+# In[ ]:
 
 
 #query_member_alias('superadmin')
@@ -70,85 +104,45 @@ def query_member_alias(Alias):
 
 # ## query_members_by_team
 
-# In[4]:
+# def query_members_by_team(teamname='All'):
+#     print('fonction: query_members_by_team(',teamname,')')
+#     members = []
+#     if teamname is None:
+#         print('Please add a teamname as parameter')
+#         return('[]')
+# 
+#     else:
+#         if teamname != 'All':
+#             teams=Teams.objects(TeamName=teamname).first()
+#             print(teams)
+# 
+#             if teams is None:
+#                 print("'None' value provided for item of farkling routine")
+#                 return('[]')
+# 
+#             else:
+#                 link=LinkMemberTeam.objects(TeamID=teams.TeamID)
+#                 print(link)
+#         else:
+#             link=LinkMemberTeam.objects()
+#             
+#         for i in range(len(link)):
+# #            print(link[i].MemberID)
+#             member1=Members.objects(MemberID=link[i].MemberID).first()
+# #            print(member1.MemberName)
+#             members.append(member1.MemberName)
+#         print(members)
+#         return(members)
+# #        for i in range(len(member1)):
+# #            print(member1[i])
+# #            members=member1[i][1]
+# #        print(members)
+# #        return(members)
 
-
-def query_members_by_team(teamname='All'):
-    print('fonction: query_members_by_team(',teamname,')')
-    members = []
-    if teamname is None:
-        print('Please add a teamname as parameter')
-        return('[]')
-
-    else:
-        if teamname != 'All':
-            teams=Teams.objects(TeamName=teamname).first()
-            print(teams)
-
-            if teams is None:
-                print("'None' value provided for item of farkling routine")
-                return('[]')
-
-            else:
-                link=LinkMemberTeam.objects(TeamID=teams.TeamID)
-                print(link)
-        else:
-            link=LinkMemberTeam.objects()
-            
-        for i in range(len(link)):
-#            print(link[i].MemberID)
-            member1=Members.objects(MemberID=link[i].MemberID).first()
-#            print(member1.MemberName)
-            members.append(member1.MemberName)
-        print(members)
-        return(members)
-#        for i in range(len(member1)):
-#            print(member1[i])
-#            members=member1[i][1]
-#        print(members)
-#        return(members)
-
-
-# In[5]:
+# In[ ]:
 
 
 #query_members_by_team('All')
-
-
-# ## query_member(alias)
-
-# In[1]:
-
-
-def query_member(alias):
-    print('fonction: query_member(',alias,')')
-#    if alias.find('@'):
-    print(alias.find("@"))
-    if alias.find('@') > -1:
-        print('Email')
-        member1 = Members.objects(Archived=False,MemberEmail=alias).first()
-        if member1 is None:
-            print('None')
-            return(1,'None')
-        else:
-            print(member1.MemberName)
-            return(0,member1)
-        return(0,member1)        
-    else:
-        print('alias')
-        member1 = Members.objects(Archived=False,MemberAlias=alias).first()
-        if member1 is None:
-            print('None')
-            return(1,'None')
-        else:
-            print(member1.MemberName)
-            return(0,member1)
-
-
-# In[9]:
-
-
-#query_member('oliboub')
 
 
 # ## write_new_member_theme(memberid,theme)
@@ -160,16 +154,12 @@ def write_new_member_theme(memberid,theme):
     print('fonction: write_new_member_theme(',theme,')')
     member1 = Members.objects(MemberID=memberid).first()
     member1.MemberTheme=theme
-    member1.save()   
+    member1.save() 
 
+
+# ## create_member(MemberName,FirstName.Email,MemberTheme)'lightblue2',ProjectName,TeamName,RoleName,admin=False)
 
 # In[ ]:
-
-
-## create_member(MemberName,FirstName.Email,MemberTheme)'lightblue2',ProjectName,TeamName,RoleName,admin=False)
-
-
-# In[3]:
 
 
 def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid,password="default123",admin=False):
@@ -193,7 +183,9 @@ def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid
     member.save()
 
 
-# In[38]:
+# ## update_member_password(email,password)
+
+# In[ ]:
 
 
 def update_member_password(email,password):
@@ -239,16 +231,16 @@ def update_member_password(email,password):
         print('Member Last Update:',member1.LastUpdate)
         print('Member Password:',member1.MemberPassword)
 
-    
 
-
-# In[37]:
+# In[ ]:
 
 
 #update_member_password('oliboub@gmail.com','aaaaaaaa')
 
 
-# In[26]:
+# ## get_actual_password(email,passwd)
+
+# In[ ]:
 
 
 def get_actual_password(email,passwd):
@@ -278,20 +270,14 @@ def get_actual_password(email,passwd):
     return(a)
 
 
-# In[36]:
+# In[ ]:
 
 
 #get_actual_password('admin@gmail.com','aaaaaaaa')
 
 
-# In[19]:
-
-
-print(os.getcwd(),__name__,'imported')
-
-
 # In[ ]:
 
 
-
+print(os.getcwd(),__name__,'imported')
 

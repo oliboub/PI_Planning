@@ -1,7 +1,7 @@
 # README.md of PI_Planning
 
 ## Purpose
-Ths purpose of this site is to use learning done on python, mongodb and pysimplegui to try to develop a usefull tool to manage PI planning
+Ths purpose of this site is to use learning done on python, mongodb and pysimplegui to try to develop a usefull tool to manage SAFE PI planning
 - Includes a database model on mongodb
 - Includes Projects, Teams, Members, PI planning, Tasks
 

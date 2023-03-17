@@ -7,6 +7,7 @@
 
 
 import PySimpleGUI as sg
+import os
 from backend_PI import * # Import tout ce qui est spécifique au projet
 from frontend_PI import *
 
@@ -29,7 +30,7 @@ def who_am_i_gui(alias):
     font='Calibri 11'
 #    print(theme)
 #    sg.theme(theme)
-    memberid,name,firstname,email,theme,project,team,role,admin,firstcon=query_member_alias(alias)
+    memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(alias)
     print(name,firstname,email,project,team,role,admin,firstcon)
     left_layout=[
         [sg.T('Alias Name', size=(10,1),font=font),sg.I(alias,key='-ALIAS-', size=(50,1),font=font)],
@@ -378,5 +379,5 @@ def login_window():
 # In[10]:
 
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')
 

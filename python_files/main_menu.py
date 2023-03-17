@@ -37,11 +37,11 @@ def main(theme,admin=False):
     ]
     
     menu_std = [
-        ['My Project', ['List Teams', 'Members',['List members','Archive member']]],
-         ['My Info',['Who am I','Select Theme']],
+        ['My Project', ['List my team','List our members']],['Tasks',['Create task','List tasks']],
+        ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
-    
+   
     if admin == True:
         layout = [[sg.Menu(menu_admin)],
               [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
@@ -95,7 +95,16 @@ def main(theme,admin=False):
                 print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
             info='Liste de toutes les equipes du projet '+ projectname
             list_all_teams_gui(1,teams,info)
-            
+
+        if event == "List my team":
+            info='info'
+            print(__name__,projectid,projectname)
+            teams=list_teams_page(1,projectid)
+            for a in teams.items:
+                print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
+            info='Liste de toutes les equipes du projet '+ projectname
+            list_all_teams_gui(1,teams,info)
+ 
 #--- My Info
         if event == "Who am I":
             who_am_i_gui(UserAlias)
@@ -117,7 +126,7 @@ if __name__ == '__main__':
     print(UserAlias)
     
     if UserAlias != 'None':
-        memberid,name,firstname,email,theme,project,team,role,admin,firstcon=query_member_alias(UserAlias)
+        memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(UserAlias)
         sg.theme(theme)
         main(theme,admin)
     else:
