@@ -45,20 +45,31 @@ def create_team(projectID, team, description, logo):
 # test
 
 
-# ## list_teams_all(projectid=None)
+# ## list_teams(project=None)
+# 
+# Project can be:
+# - **None** for all projects 'Dfefault'
+# - **projectID**
+# - **ProjectName**
 
-# In[4]:
+# In[25]:
 
 
-def list_teams_all(projectid=None):
+def list_teams(project=None):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_teams_all(',projectid,')')
-    if projectid ==  None:
+        print('--- function: list_teams_all(',project,')')
+        print(type(project))
+    if project ==  None:
         team = Teams.objects(Archived=False)
     else:
-        team = Teams.objects(Archived=False,ProjectID=projectid)
-    if g.DEBUG_OL >= 2:
-        print('Team\t\t - \t Project')
+        if type(project) is int:
+            pid=project
+        else:
+            projectinfo=Projects.objects(ProjectName=project).first()
+            pid=projectinfo.ProjectID
+        team = Teams.objects(Archived=False,ProjectID=pid)
+        if g.DEBUG_OL >= 2:
+            print('Team\t\t - \t Project')
     team1= []
     list_teams=[]
     for team1 in team:
@@ -76,39 +87,10 @@ def list_teams_all(projectid=None):
     return(list_teams)
 
 
-# In[6]:
+# In[26]:
 
 
-#list_teams_all(2)
-
-
-# ## list_teams_by_project(pname)
-
-# In[7]:
-
-
-def list_teams_by_project(pname):
-    if g.DEBUG_OL >= 1:
-        print('--- function: list_teams_by_project(',pname,')')
-    list_teams=[]
-    project=Projects.objects(ProjectName=pname).first()
-    pid=project.ProjectID
-    team = Teams.objects(Archived=False,ProjectID=pid)
-#    print("Project:",pname)
-#    print('Teams')
- 
-    for team1 in team:
-#        print(pname,team1.TeamName,team1.TeamID,team1.ProjectID,team1.TeamDescription,team1.TeamLogo)
-        teams=[pname,team1.TeamName,team1.TeamDescription,team1.TeamLogo]
-        list_teams.append(teams)
-#    print(list_teams)
-    return(list_teams)
-
-
-# In[9]:
-
-
-#list_teams_by_project("titi")
+#list_teams_all("titi")
 
 
 # ## list_teams_page(page,projectid=None)

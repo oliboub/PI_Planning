@@ -26,12 +26,12 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[2]:
+# In[4]:
 
 
-def main(theme,projectid,admin=False):
+def main(theme,projectid,project,admin=False):
     if g.DEBUG_OL >= 1:
-        print('--- function main:(',theme,projectid,admin,')')
+        print('--- function main:(',theme,projectid,project,admin,')')
     menu_admin = [
         ['Parameters',
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
@@ -96,7 +96,7 @@ def main(theme,projectid,admin=False):
         if event == "List Teams by Project":
             info='Select project top display associated teams'
             projectid=None
-            projectid,projectname=select_project_gui() # a lan cer pour chercher les equipes d'un projet
+            projectid,projectname=select_project_gui() # a lancer pour chercher les equipes d'un projet
             teams=list_teams_page(1,projectid)
 
             if g.DEBUG_OL >= 2:
@@ -113,19 +113,17 @@ def main(theme,projectid,admin=False):
                     
 
         if event == "List project teams":
-            info='info'
-            project=query_project_name_from_ID(projectid)
-            
             if g.DEBUG_OL >= 2:
-                print(__name__,projectid,project.ProjectName)
+                print(__name__,projectid,project)
             teams=list_teams_page(1,projectid)
             if g.DEBUG_OL >= 2:
                 for a in teams.items:
                     print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
-            info='Liste de toutes les equipes du projet '+ project.ProjectName
+            info='Lists of teams for your project: '+project
             list_all_teams_gui(1,teams,info)
  
-#--- My Info
+
+    #--- My Info
         if event == "Who am I":
             who_am_i_gui(UserAlias)
         
@@ -151,7 +149,7 @@ if __name__ == '__main__':
     if UserAlias != 'None':
         memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(UserAlias)
         sg.theme(theme)
-        main(theme,projectid,admin)
+        main(theme,projectid,project,admin)
     else:
         toto="Bye"
         sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)

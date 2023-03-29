@@ -113,23 +113,31 @@ def query_member_alias(Alias):
 #query_member_alias('superadmin')
 
 
-# ## query_members_by_team
+# ## query_members_by_team(team)
+# Team might be:
+# - **All** for all
+# - **TeamName**
+# - **TeamID**
+# 
 
-# In[ ]:
+# In[2]:
 
 
-def query_members_by_team(teamname='All'):
+def query_members_by_team(team='All'):
     if g.DEBUG_OL >= 1:
-        print('--- function: query_members_by_team(',teamname,')')
+        print('--- function: query_members_by_team(',team,')')
     members = []
-    if teamname is None:
+    if team is None:
         if g.DEBUG_OL >= 2:
             print('Please add a teamname as parameter')
         return('[]')
 
     else:
-        if teamname != 'All':
-            teams=Teams.objects(TeamName=teamname).first()
+        if team != 'All':
+            if type(team) is int:
+                teams=Teams.objects(TeamID=team).first()
+            else:
+                teams=Teams.objects(TeamName=team).first()
             if g.DEBUG_OL >= 2:
                 print(teams)
 
@@ -160,10 +168,10 @@ def query_members_by_team(teamname='All'):
 #        return(members)
 
 
-# In[ ]:
+# In[10]:
 
 
-#query_members_by_team('All')
+#query_members_by_team('Sprinters')
 
 
 # ## write_new_member_theme(memberid,theme)
