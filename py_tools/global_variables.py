@@ -8,6 +8,7 @@ def init():
     # 0 means no print
     # 1 means print call to function only
     # 2 means print all
+    # -1 Special cases
 
     
     global FONT

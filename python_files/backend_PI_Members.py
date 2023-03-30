@@ -17,11 +17,13 @@ from backend_PI_mongo_model import *
 from datetime import datetime
 
 connect('PIPlanning')
+if g.DEBUG_OL == -1:
+    print("Debug mode active level :",g.DEBUG_OL)
 
 
 # ## query_member(alias)
 
-# In[2]:
+# In[ ]:
 
 
 def query_member(alias):
@@ -66,7 +68,7 @@ def query_member(alias):
 # ## query_members_alias(alias)
 # Can be alias or ID
 
-# In[3]:
+# In[2]:
 
 
 def query_member_alias(Alias):
@@ -113,13 +115,13 @@ def query_member_alias(Alias):
         print('Member First Connection:',member1.MemberFirstConnection)
         
     
-    return(member1.MemberID,member1.MemberName,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
+    return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
 
 
 # In[ ]:
 
 
-#query_member_alias(5)
+#query_member_alias(1)
 
 
 # ## query_members_by_team(team)
@@ -324,42 +326,69 @@ def get_actual_password(email,passwd):
 #get_actual_password('admin@gmail.com','aaaaaaaa')
 
 
-# ## list_members_page(page,teamid=None)
+# ## list_members_page(page,linespage=5,teamid=None)
 
-# In[40]:
+# In[49]:
 
 
-def list_members_page(page,teamid=None):
+def list_members_page(page,linespage=5,teamid=None):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_members_page(',page,teamid,')')
-    members=[]
+        print('--- function: list_members_page(',page,linespage,teamid,')')
+    membersid=[]
+    members =[]
+    members1=[]
+    members2=[]
     member2=[]
     if teamid == None:
-        members = Members.objects(Archived=False).paginate(page,5)
+        members1 = Members.objects(Archived=False)
+        print(len(members1))
     else:
-        membersid=LinkMemberTeam.objects(TeamID=teamid)
-        for member in membersid:
-            if g.DEBUG_OL >= 2:
-                print(member.MemberID)
-            memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(member.MemberID)
-            member2=[memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon]
-            if g.DEBUG_OL >= 2:
-                print(member2)
-            members.append(member2)
+        members1=LinkMemberTeam.objects(TeamID=teamid)
+        print(len(members1))      
+
+    for i in members1:
+        membersid.append(i.MemberID)
+        print(membersid)
+        
+    for member in membersid:
+        if g.DEBUG_OL >= 2:
+                print(member)
+        memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(member)
+        member2=[memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon]
+        if g.DEBUG_OL >= 2:
+            print(member2)
+        members2.append(member2)
     
-    if g.DEBUG_OL >= 2:
-            print(members)
-    return members
+    if g.DEBUG_OL >= 1:
+        x=0
+        print('original page:',page,'linespage',linespage)
+        start=page*linespage-linespage
+        end=start+linespage
+        if end > len(members2):
+            end=len(members2)
+
+        if g.DEBUG_OL >= 1:
+            print('page',page,'\tlinespage',linespage,'\tstart:',start,'\tend:',end)
+        for i in range(start,end):
+            members.append(members2[i])
+            print(members[i])
+#    return members1
 
 
-# In[41]:
+# In[50]:
 
 
-list_members_page(1,2)
+#list_members_page(1,5,1)
+
+
+# In[44]:
+
+
+print(os.getcwd(),__name__,'imported')
 
 
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
+
 

@@ -3,7 +3,7 @@
 
 # ## PI Members Management
 
-# In[ ]:
+# In[1]:
 
 
 import PySimpleGUI as sg
@@ -96,10 +96,81 @@ def create_member_gui(info='Info'):
             pass
 
 
-# In[ ]:
+# ## list_members_gui(page,members,info='info')
+# **WIP**
+
+# In[4]:
 
 
+def list_members_gui(page,members,info='info'):
+    if g.DEBUG_OL >= 1:
+        print('--- function: list_members_gui(',page,members,info,')')
+ 
+    #    global page
+    sg.set_options(element_padding=(5, 5))
+#    list_teams=list_teams_all()
+    layout = [[sg.T(info,font='Calibri 11',justification="left")],
+              [sg.T('Member Name',font='Calibri 11', size=(20, 1)),
+               sg.T('Member Alias',font='Calibri 11', size=(30, 1)),
+               sg.T('Member Role',font='Calibri 11', size=(20, 1)),
+               sg.T('Member Email',font='Calibri 11')]]
+    idx=0
+    for memnber in members.items:
+        if g.DEBUG_OL >= 2:
+            print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
 
+        row = [sg.I(member[1],disabled=True,font='Calibri 11', size=(20,1)),
+               sg.I(member[2],disabled=True, font='Calibri 11',size=(30,1)),
+               sg.I(member[9],disabled=True, font='Calibri 11',size=(20,1)),
+               sg.I(member[5],disabled=True, font='Calibri 11',size=(20,1)),]
+        layout.append(row)
+        idx+=1
+        
+    pagination = [[sg.B('<<', disabled=not teams.has_prev),
+                   sg.B("<", disabled=not teams.has_prev),
+                   sg.T(text=page, key='-PAGE-', size=(2, 1)),
+                   sg.B(">", disabled=not teams.has_next),
+                   sg.B(">>", disabled=not teams.has_next)
+                   ]]
+    layout += [[sg.Col(pagination, justification='right')]]
+    layout += [[sg.B('Return')]]
+               
+    window = MyWindow('List of Teams', layout,keep_on_top=True, element_justification = 'center',finalize=True)
+    window.my_move_to_center()
+    
+    while True:
+        event1, values1 = window.read()
+        if g.DEBUG_OL >= 2:
+            print(event1,values1)
+        if event1 == sg.WIN_CLOSED or event1 == 'Return':
+#            print('event1',event1)
+            window.close()
+            return(None)
+            break  
+        elif event1 == ">":
+            if teams.has_next:
+                page += 1
+                window.close()
+                teams = list_teams_page(page,team.ProjectID)
+                list_all_teams_gui(page,teams,'ceci est l"info de base')
+        elif event1 == "<":
+            if teams.has_prev:
+                page -= 1
+                window.close()
+                teams = list_teams_page(page,team.ProjectID)
+                list_all_teams_gui(page,teams,'ceci est l"info de base')
+        elif event1 == "<<":
+            if teams.has_prev:
+                page = 1
+                window.close()
+                teams = list_teams_page(page,team.ProjectID)
+                list_all_teams_gui(page,teams,'ceci est l"info de base')
+        elif event1 == ">>":
+            if teams.has_next:
+                page = teams.pages
+                window.close()
+                teams = list_teams_page(page,team.ProjectID)
+                list_all_teams_gui(page,teams,'ceci est l"info de base')
 
 
 # In[ ]:
