@@ -328,7 +328,7 @@ def get_actual_password(email,passwd):
 
 # ## list_members_page(page,linespage=5,teamid=None)
 
-# In[49]:
+# In[57]:
 
 
 def list_members_page(page,linespage=5,teamid=None):
@@ -359,26 +359,22 @@ def list_members_page(page,linespage=5,teamid=None):
             print(member2)
         members2.append(member2)
     
+    start=page*linespage-linespage
+    end=start+linespage
+    if end > len(members2):
+        end=len(members2)
+
     if g.DEBUG_OL >= 1:
-        x=0
-        print('original page:',page,'linespage',linespage)
-        start=page*linespage-linespage
-        end=start+linespage
-        if end > len(members2):
-            end=len(members2)
-
-        if g.DEBUG_OL >= 1:
-            print('page',page,'\tlinespage',linespage,'\tstart:',start,'\tend:',end)
-        for i in range(start,end):
-            members.append(members2[i])
-            print(members[i])
-#    return members1
+        print('page',page,'\tlinespage',linespage,'\tstart:',start,'\tend:',end)
+    for i in range(start,end):
+        members.append(members2[i])
+    return members
 
 
-# In[50]:
+# In[62]:
 
 
-#list_members_page(1,5,1)
+list_members_page(1,5,)
 
 
 # In[44]:

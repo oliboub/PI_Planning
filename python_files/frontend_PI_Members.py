@@ -96,15 +96,15 @@ def create_member_gui(info='Info'):
             pass
 
 
-# ## list_members_gui(page,members,info='info')
+# ## list_members_gui(page,members,items,info='info')
 # **WIP**
 
 # In[4]:
 
 
-def list_members_gui(page,members,info='info'):
+def list_members_gui(page,members,items,linespage=5,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_members_gui(',page,members,info,')')
+        print('--- function: list_members_gui(',page,members,items,linespages=5,info='info',')')
  
     #    global page
     sg.set_options(element_padding=(5, 5))
@@ -115,7 +115,7 @@ def list_members_gui(page,members,info='info'):
                sg.T('Member Role',font='Calibri 11', size=(20, 1)),
                sg.T('Member Email',font='Calibri 11')]]
     idx=0
-    for memnber in members.items:
+    for member in members:
         if g.DEBUG_OL >= 2:
             print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
 
