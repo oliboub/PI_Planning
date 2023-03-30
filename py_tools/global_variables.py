@@ -17,4 +17,7 @@ def init():
     global THEME
     THEME = 'LightBlue2'
     
+    global linespage # lines by pages when display lists
+    linespage = 5
+    
 print(os.getcwd(),__name__,'imported')

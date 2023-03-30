@@ -23,7 +23,7 @@ if g.DEBUG_OL == -1:
 
 # ## query_member(alias)
 
-# In[ ]:
+# In[6]:
 
 
 def query_member(alias):
@@ -65,10 +65,10 @@ def query_member(alias):
 #query_member('oliboub')
 
 
-# ## query_members_alias(alias)
+# ## query_member_alias(alias)
 # Can be alias or ID
 
-# In[2]:
+# In[9]:
 
 
 def query_member_alias(Alias):
@@ -118,7 +118,7 @@ def query_member_alias(Alias):
     return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
 
 
-# In[ ]:
+# In[10]:
 
 
 #query_member_alias(1)
@@ -131,62 +131,61 @@ def query_member_alias(Alias):
 # - **TeamID**
 # 
 
-# In[ ]:
+# In[17]:
 
 
 def query_members_by_team(team='All'):
     if g.DEBUG_OL >= 1:
         print('--- function: query_members_by_team(',team,')')
-    members = []
-    if team is None:
+
+    membersid=[]
+    members =[]
+    members1=[]
+    members2=[]
+    member2=[]
+    teamid=0
+    
+    if team == 'All':
+        members1 = Members.objects(Archived=False)
+        print(len(members1))
+
+    if type(team) is str and team != 'All' :
+        try:
+            teamselected=Teams.objects(Archived=False,TeamName=team).first()
+            teamid=teamselected.TeamID
+            print(teamid)
+        except Exception as e:
+            return "Error: %s" % (e)
+            end()
+    elif type(team) is int:
+        teamid=team
+        
+    if teamid != 0:
+        members1=LinkMemberTeam.objects(TeamID=teamid)
+
+    print('teamid:',teamid,'Qtt members found:',len(members1))      
+
+
+    for i in members1:
+        membersid.append(i.MemberID)
+        print(membersid)
+        
+    for member in membersid:
         if g.DEBUG_OL >= 2:
-            print('Please add a teamname as parameter')
-        return('[]')
-
-    else:
-        if team != 'All':
-            if type(team) is int:
-                teams=Teams.objects(TeamID=team).first()
-            else:
-                teams=Teams.objects(TeamName=team).first()
-            if g.DEBUG_OL >= 2:
-                print(teams)
-
-            if teams is None:
-                if g.DEBUG_OL >= 2:
-                    print("'None' value provided for item of farkling routine")
-                return('[]')
-
-            else:
-                link=LinkMemberTeam.objects(TeamID=teams.TeamID)
-                if g.DEBUG_OL >= 2:
-                    print('link:',link)
-        else:
-            link=LinkMemberTeam.objects()
-            
-        for i in range(len(link)):
-            member1=Members.objects(MemberID=link[i].MemberID).first()
-            #if g.DEBUG_OL >= 2:
-            #    print(, link[i].MemberIDmember1.MemberName)
-#            members.append(member1.MemberName)
-            members.append(member1)
-
+                print(member)
+        memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(member)
+        member2=[memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon]
         if g.DEBUG_OL >= 2:
-            print(members[0].MemberName, members[0].MemberID,members[0].MemberEmail,members[0].MemberAlias)
-            print(members[1].MemberName, members[1].MemberID,members[1].MemberEmail,members[1].MemberAlias)
-            
-        return(members)
-#        for i in range(len(member1)):
-#            print(member1[i])
-#            members=member1[i][1]
-#        print(members)
-#        return(members)
+            print(member2)
+        members.append(member2)
+    
+    return(members)
 
 
-# In[ ]:
+# In[20]:
 
 
-#query_members_by_team('Sprinters')
+#query_members_by_team(2)
 
 
 # ## write_new_member_theme(memberid,theme)
@@ -326,12 +325,8 @@ def get_actual_password(email,passwd):
 #get_actual_password('admin@gmail.com','aaaaaaaa')
 
 
-# ## list_members_page(page,linespage=5,teamid=None)
-
-# In[57]:
-
-
-def list_members_page(page,linespage=5,teamid=None):
+# ## list_members_page(page,linespage,teamid=None)
+def list_members_page(page,linespage,teamid=None):
     if g.DEBUG_OL >= 1:
         print('--- function: list_members_page(',page,linespage,teamid,')')
     membersid=[]
@@ -361,23 +356,22 @@ def list_members_page(page,linespage=5,teamid=None):
     
     start=page*linespage-linespage
     end=start+linespage
-    if end > len(members2):
+    items=len(members2)
+    if end > items:
         end=len(members2)
 
     if g.DEBUG_OL >= 1:
         print('page',page,'\tlinespage',linespage,'\tstart:',start,'\tend:',end)
     for i in range(start,end):
         members.append(members2[i])
-    return members
+    return(members,items)
+# In[ ]:
 
 
-# In[62]:
+#list_members_page(1,5,1)
 
 
-list_members_page(1,5,)
-
-
-# In[44]:
+# In[ ]:
 
 
 print(os.getcwd(),__name__,'imported')
