@@ -1,6 +1,7 @@
 #import bcrypt
 from mongoengine import *
 from backend_PI_mongo_model import *
+import os
 from datetime import datetime
 
 
@@ -40,6 +41,6 @@ def archive_project(ID):
     project1.save()
 
     
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')
 ### ------------------------------
 

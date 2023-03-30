@@ -23,7 +23,7 @@ if g.DEBUG_OL == -1:
 
 # ## query_member(alias)
 
-# In[6]:
+# In[ ]:
 
 
 def query_member(alias):
@@ -68,7 +68,7 @@ def query_member(alias):
 # ## query_member_alias(alias)
 # Can be alias or ID
 
-# In[9]:
+# In[ ]:
 
 
 def query_member_alias(Alias):
@@ -118,7 +118,7 @@ def query_member_alias(Alias):
     return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
 
 
-# In[10]:
+# In[ ]:
 
 
 #query_member_alias(1)
@@ -131,7 +131,7 @@ def query_member_alias(Alias):
 # - **TeamID**
 # 
 
-# In[17]:
+# In[ ]:
 
 
 def query_members_by_team(team='All'):
@@ -182,7 +182,7 @@ def query_members_by_team(team='All'):
     return(members)
 
 
-# In[20]:
+# In[ ]:
 
 
 #query_members_by_team(2)
@@ -201,31 +201,51 @@ def write_new_member_theme(memberid,theme):
     member1.save() 
 
 
-# ## create_member(MemberName,FirstName.Email,MemberTheme)'lightblue2',ProjectName,TeamName,RoleName,admin=False)
+# ## create_member(MemberName,FirstName.alias,email,teamid,roleid,MemberTheme='lightblue2',password='default123',admin=False)
 
-# In[ ]:
+# In[2]:
 
 
-def create_member(name,firstname,alias,email,theme,photo,projectid,teamid,roleid,password="default123",admin=False):
+def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',password="default123",admin=False):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_member(',name,firstname,password,alias,email,theme,photo,projectid,teamid,roleid,admin,')')
+        print('--- function: create_member(',name,firstname,alias,email,teamid,roleid,theme,password,admin,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     member = Members()
-    MemberName =  nameame
-    MemberFirstName = firstname
-    MemberEmail = email
-    MemberAlias = alias
-    MemberRole = roleid
-    MemberTheme = theme
-    MemberAvatar = photo
+    member.MemberName =  name
+    member.MemberFirstName = firstname
+    member.MemberEmail = email
+    member.MemberAlias = alias
+    member.MemberRole = roleid
+    member.MemberTheme = theme
+#    MemberAvatar = photo
     hashAndSalt = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    MemberPassword = hashAndSalt
-    MemberAdmin = admin
-    Archived = False
-    CreationDate = creationdate
-    LastUpdate = creationdate
+    member.MemberPassword = hashAndSalt
+    member.MemberAdmin = admin
+    member.Archived = False
+    member.MemberFirstConnection=True
+    member.CreationDate = creationdate
+    member.LastUpdate = creationdate
     member.save()
+    
+    newmember=Members.objects(MemberAlias=alias).first()
+    if g.DEBUG_OL >= 2:
+        print('New member created with memberID=',newmember.MemberID)
+    
+    teammember= LinkMemberTeam()
+    teammember.MemberID = newmember.MemberID
+    teammember.TeamID = teamid
+    teammember.save()
+    
+    if g.DEBUG_OL >= 2:
+        print('newmember:',alias,' is allocated to teamid:',teamid)
+    return newmember.MemberID
+
+
+# In[4]:
+
+
+#create_member('Artic', 'Haud','haudartic','haudartic@toto.com',2,2,'LightBlue2','default123',False )
 
 
 # ## update_member_password(email,password)
@@ -335,10 +355,4 @@ def get_actual_password(email,passwd):
 
 
 print(os.getcwd(),__name__,'imported')
-
-
-# In[ ]:
-
-
-
 

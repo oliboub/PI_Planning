@@ -3,32 +3,45 @@
 
 # ## PI Members Management
 
-# In[89]:
+# In[1]:
 
 
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
 import operator
+import os
 
 connect('PIPlanning')
 
 
-# ## create_member_gui
+# ## create_member_gui(info)
 
-# In[ ]:
+# In[13]:
 
 
 def create_member_gui(info='Info'):
+    if g.DEBUG_OL >= 1:
+        print('--- function: create_member_gui(',info,')')
+ 
     sg.set_options(element_padding=(5, 10))
 
     projects_list=list_projects()
     comboproj = []
     for project in projects_list:
         comboproj.append(project.ProjectName)
-    print(comboproj)
+    if g.DEBUG_OL >= 2:
+        print(comboproj)
     
     team=[]
     combomembers=[]
+    comboroles=[]
+    
+    roles=Roles.objects(Archived=False)
+    for i in roles:
+        comboroles.append(i.RoleName)
+    if g.DEBUG_OL >= 2:
+        print(comboroles)
+    
     
     info_layout = [sg.T(info,font='Calibri 11',justification="left")]
  
@@ -37,20 +50,21 @@ def create_member_gui(info='Info'):
         [sg.T('Team Name', size=(20, 1),key='-TXTTEAM-',font='Calibri 11',visible=False), sg.Combo(team,key='-TEAM-',enable_events=True,visible=False,size=(20, 1),font='Calibri 11')],
     ]
     
-    bottom_layout=[[sg.T('Task Name',key='-TNAME-',size=(15,1),font='Calibri 11',visible=False),
-                    sg.I("",key='-TNAMEI-',visible=False,size=(20,1))],
-                  [sg.T('Task Member',key='-TMEMBER-',size=(15,1),font='Calibri 11',visible=False),
-                   sg.Combo(combomembers,key='-TMEMBERI-',enable_events=True,size=(20, 1),font='Calibri 11',visible=False)]
+    bottom_layout=[[sg.T('Last Name',key='-L1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-MNAME-',visible=True,size=(20,1)),
+                    sg.T('First Name',key='-F1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-FNAME-',visible=True,size=(20,1))],
+                   [sg.T('Alias',key='-A1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-ALIAS-',visible=True,size=(20,1))],
+                   [sg.T('Email',key='-E1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-EMAIL-',visible=True,size=(20,1))],
+                   [sg.T('Role', size=(15, 1),font='Calibri 11'), sg.Combo(comboroles,key='-ROLE-',enable_events=True,size=(20, 1),font='Calibri 11')],
                   ]
     
 #    layout = [info_layout,[sg.Frame("Select perimeter", left_layout, vertical_alignment='top', pad=((10, 10), (10, 10)))],
 #            [sg.B('Add', enable_events=True), sg.Cancel()]]
              
     layout = [info_layout,[sg.Frame("Select perimeter", left_layout, vertical_alignment='top', pad=((10, 10), (10, 10)))],
-              [sg.Frame("Task", bottom_layout,key='-TASKS-', vertical_alignment='top',pad=((10, 10), (10, 10)),visible=False)],
+              [sg.Frame("New Member information", bottom_layout,key='-MEMBER-', vertical_alignment='top',pad=((10, 10), (10, 10)),visible=False)],
               [sg.B('Add', enable_events=True), sg.Cancel()]]
         
-    window = MyWindow('Create task', layout,finalize=True)
+    window = MyWindow('Create member', layout,finalize=True)
     window.my_move_to_center()
     
     while True:
@@ -63,44 +77,65 @@ def create_member_gui(info='Info'):
             break
  
         elif '-PROJ-' in event:
-#           print(values['-PROJ-'])
+            window['-MEMBER-'].update(visible=False)
+            if g.DEBUG_OL >= 2:
+                print(values['-PROJ-'])
             project=values['-PROJ-']
-            list_teams = []
+            teams_list = []
             teams_list=list_teams(project)
-            for i in range(len(teams_list)):
-#                print(teams_list[i][1])
-                list_teams.append(teams_list[i][1])
-            print(list_teams)
+            teams=[]
+            for i in teams_list:
+                if g.DEBUG_OL >= 2:
+                    print(i[1])
+                teams.append(i[1])
             window['-TXTTEAM-'].update(visible=True)
-            window['-TEAM-'].update(values=list_teams,visible=True)
+            window['-TEAM-'].update(values=teams,visible=True)
             
 
               
         elif '-TEAM-' in event:
             team=values['-TEAM-']
-            print(team)
+            if g.DEBUG_OL >= 2:
+                print(team)
 
-            tasks_lists=list_tasks(project,team,'All','All')
-            
-            combomembers=query_members_by_team(team)
+
+            members=query_members_by_team(team)
+            for i in members:
+                if g.DEBUG_OL >= 2:
+                    print(i[2])
+                combomembers.append(i[2])
             print(combomembers)
             
-            titre='Lists of tasks for project: '+project+' and team:'+team
-            window['-TASKS-'].update(value=titre,visible=True)
-            window['-TNAME-'].update(visible=True)
-            window['-TNAMEI-'].update(visible=True)
-            window['-TMEMBER-'].update(visible=True)
-            window['-TMEMBERI-'].update(values=combomembers,visible=True)
+            titre='Member information for : '+project+' and team:'+team
             
+            window['-MEMBER-'].update(visible=True)
+
         elif event == 'Add':
-            print(event,values)
-            pass
+            teamselected=Teams.objects(Archived=False,TeamName=values['-TEAM-']).first()
+            roleselected=Roles.objects(Archived=False,RoleName=values['-ROLE-']).first()
+            teamid=teamselected.TeamID
+            roleid=roleselected.RoleID
+
+            if g.DEBUG_OL >= 2:
+                print('event:',event,'\nvalues:',values)
+                print('name:',values['-MNAME-'],'first name:',values['-FNAME-'],'alias:',values['-ALIAS-'],'email:',values['-EMAIL-'],'teamid:',teamid,'roleid:',roleid)
+            id=create_member(values['-MNAME-'],values['-FNAME-'],values['-ALIAS-'],values['-EMAIL-'],teamid,roleid)
+            if g.DEBUG_OL >= 2:
+                print('New user created with id:',id)
+            sg.popup('New user '+values['-ALIAS-']+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
+            window.close()
+
+
+# In[14]:
+
+
+#create_member_gui()
 
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 # **WIP**
 
-# In[99]:
+# In[16]:
 
 
 def list_members_gui(teamid,page,linespage,info='info'):
@@ -189,16 +224,16 @@ def list_members_gui(teamid,page,linespage,info='info'):
                 list_all_teams_gui(page,teams,'ceci est l"info de base')
 
 
-# In[102]:
+# In[18]:
 
 
-#list_members_gui('PI',1,5)
+#list_members_gui(2,2,5)
 
 
-# In[27]:
+# In[ ]:
 
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')
 
 
 # In[ ]:
