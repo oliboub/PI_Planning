@@ -21,7 +21,7 @@ connect('PIPlanning')
 
 # ## query_member(alias)
 
-# In[10]:
+# In[2]:
 
 
 def query_member(alias):
@@ -57,25 +57,34 @@ def query_member(alias):
             return(0,member1)
 
 
-# In[11]:
+# In[ ]:
 
 
 #query_member('oliboub')
 
 
 # ## query_members_alias(alias)
+# Can be alias or ID
 
-# In[ ]:
+# In[3]:
 
 
 def query_member_alias(Alias):
     if g.DEBUG_OL >= 1:
         print('--- function: query_member_alias(',Alias,')')
-    try:
-        member1 = Members.objects(Archived=False,MemberAlias=Alias).first()
-    except Exception as e:
-        return "Error: %s" % (e)
-        end()
+    if type(Alias) is str:
+        try:
+            member1 = Members.objects(Archived=False,MemberAlias=Alias).first()
+        except Exception as e:
+            return "Error: %s" % (e)
+            end()
+    else:
+        try:
+            member1 = Members.objects(Archived=False,MemberID=Alias).first()
+        except Exception as e:
+            return "Error: %s" % (e)
+            end()
+        
 #    print('member1.MemberID',member1.MemberID)
 #    print('member1.MemberName:',member1.MemberName)
 #    linkrole=LinkMemberRole.objects(MemberID=member1.MemberID).first()
@@ -110,7 +119,7 @@ def query_member_alias(Alias):
 # In[ ]:
 
 
-#query_member_alias('superadmin')
+#query_member_alias(5)
 
 
 # ## query_members_by_team(team)
@@ -120,7 +129,7 @@ def query_member_alias(Alias):
 # - **TeamID**
 # 
 
-# In[2]:
+# In[ ]:
 
 
 def query_members_by_team(team='All'):
@@ -157,9 +166,13 @@ def query_members_by_team(team='All'):
             member1=Members.objects(MemberID=link[i].MemberID).first()
             #if g.DEBUG_OL >= 2:
             #    print(, link[i].MemberIDmember1.MemberName)
-            members.append(member1.MemberName)
+#            members.append(member1.MemberName)
+            members.append(member1)
+
         if g.DEBUG_OL >= 2:
-            print(members)
+            print(members[0].MemberName, members[0].MemberID,members[0].MemberEmail,members[0].MemberAlias)
+            print(members[1].MemberName, members[1].MemberID,members[1].MemberEmail,members[1].MemberAlias)
+            
         return(members)
 #        for i in range(len(member1)):
 #            print(member1[i])
@@ -168,7 +181,7 @@ def query_members_by_team(team='All'):
 #        return(members)
 
 
-# In[10]:
+# In[ ]:
 
 
 #query_members_by_team('Sprinters')
@@ -272,7 +285,7 @@ def update_member_password(email,password):
 
 # ## get_actual_password(email,passwd)
 
-# In[2]:
+# In[ ]:
 
 
 def get_actual_password(email,passwd):
@@ -305,10 +318,44 @@ def get_actual_password(email,passwd):
     return(a)
 
 
-# In[3]:
+# In[ ]:
 
 
 #get_actual_password('admin@gmail.com','aaaaaaaa')
+
+
+# ## list_members_page(page,teamid=None)
+
+# In[40]:
+
+
+def list_members_page(page,teamid=None):
+    if g.DEBUG_OL >= 1:
+        print('--- function: list_members_page(',page,teamid,')')
+    members=[]
+    member2=[]
+    if teamid == None:
+        members = Members.objects(Archived=False).paginate(page,5)
+    else:
+        membersid=LinkMemberTeam.objects(TeamID=teamid)
+        for member in membersid:
+            if g.DEBUG_OL >= 2:
+                print(member.MemberID)
+            memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(member.MemberID)
+            member2=[memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon]
+            if g.DEBUG_OL >= 2:
+                print(member2)
+            members.append(member2)
+    
+    if g.DEBUG_OL >= 2:
+            print(members)
+    return members
+
+
+# In[41]:
+
+
+list_members_page(1,2)
 
 
 # In[ ]:

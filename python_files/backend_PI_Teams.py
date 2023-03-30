@@ -95,7 +95,7 @@ def list_teams(project=None):
 
 # ## list_teams_page(page,projectid=None)
 
-# In[ ]:
+# In[2]:
 
 
 def list_teams_page(page,projectid=None):
@@ -106,9 +106,16 @@ def list_teams_page(page,projectid=None):
     else:
         teams = Teams.objects(ProjectID=projectid,Archived=False).paginate(page,5)
            
-#    for a in teams.items:
-#        print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
+    if g.DEBUG_OL >= 2:
+        for a in teams.items:
+            print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
     return teams
+
+
+# In[3]:
+
+
+#list_teams_page(1,1)
 
 
 # In[ ]:

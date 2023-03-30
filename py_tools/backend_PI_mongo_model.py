@@ -26,7 +26,7 @@ class Teams(DocumentPro):
     LastUpdate = DateTimeField()
 
 hashAndSalt = bcrypt.hashpw('default1234'.encode(), bcrypt.gensalt())
-class Members(Document):
+class Members(DocumentPro):
 #    id = SequenceField(primary_key=True)
     MemberID = SequenceField()  # Identifiant de la personne
     MemberName =  StringField(required=True)
