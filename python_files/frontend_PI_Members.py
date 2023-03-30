@@ -3,11 +3,12 @@
 
 # ## PI Members Management
 
-# In[1]:
+# In[89]:
 
 
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
+import operator
 
 connect('PIPlanning')
 
@@ -99,7 +100,7 @@ def create_member_gui(info='Info'):
 # ## list_members_gui(teamid,page,linespage,info='info')
 # **WIP**
 
-# In[42]:
+# In[99]:
 
 
 def list_members_gui(teamid,page,linespage,info='info'):
@@ -108,7 +109,10 @@ def list_members_gui(teamid,page,linespage,info='info'):
  
     #    global page
     members=[]
-    members=query_members_by_team(teamid)
+    members1=query_members_by_team(teamid)
+ #   members = sorted(members1, key=lambda x: (x[8], x[2]))
+    members=sorted(members1, key = operator.itemgetter(8, 1, 3))
+
     items=len(members)
     if g.DEBUG_OL >= 1:
         print('items:',items)
@@ -116,7 +120,8 @@ def list_members_gui(teamid,page,linespage,info='info'):
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
     layout = [[sg.T(info,font='Calibri 11',justification="left")],
-              [sg.T('Member Name',font='Calibri 11', size=(20, 1)),
+              [sg.T('Team Name',font='Calibri 11', size=(20, 1)),
+               sg.T('Member Name',font='Calibri 11', size=(20, 1)),
                sg.T('Member Firstname',font='Calibri 11',size=(20, 1)),
                sg.T('Member Alias',font='Calibri 11', size=(30, 1)),
                sg.T('Member Role',font='Calibri 11', size=(20, 1)),
@@ -127,7 +132,8 @@ def list_members_gui(teamid,page,linespage,info='info'):
         if g.DEBUG_OL >= 2:
             print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
 
-        row = [sg.I(member[1],disabled=True, font='Calibri 11', size=(20,1)),
+        row = [sg.I(member[8],disabled=True, font='Calibri 11', size=(20,1)),
+               sg.I(member[1],disabled=True, font='Calibri 11', size=(20,1)),
                sg.I(member[3],disabled=True, font='Calibri 11',size=(30,1)),
                sg.I(member[2],disabled=True, font='Calibri 11',size=(20,1)),
                sg.I(member[9],disabled=True, font='Calibri 11',size=(20,1)),
@@ -145,7 +151,7 @@ def list_members_gui(teamid,page,linespage,info='info'):
     layout += [[sg.Col(pagination, justification='right')]]
     layout += [[sg.B('Return')]]
                
-    window = MyWindow('List of Members of team '+members[0][8], layout,keep_on_top=True, element_justification = 'center',finalize=True)
+    window = MyWindow('List of Members of team', layout,keep_on_top=True, element_justification = 'center',finalize=True)
     window.my_move_to_center()
     
     while True:
@@ -183,10 +189,10 @@ def list_members_gui(teamid,page,linespage,info='info'):
                 list_all_teams_gui(page,teams,'ceci est l"info de base')
 
 
-# In[43]:
+# In[102]:
 
 
-list_members_gui(1,1,5)
+#list_members_gui('PI',1,5)
 
 
 # In[27]:

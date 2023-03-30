@@ -325,46 +325,6 @@ def get_actual_password(email,passwd):
 #get_actual_password('admin@gmail.com','aaaaaaaa')
 
 
-# ## list_members_page(page,linespage,teamid=None)
-def list_members_page(page,linespage,teamid=None):
-    if g.DEBUG_OL >= 1:
-        print('--- function: list_members_page(',page,linespage,teamid,')')
-    membersid=[]
-    members =[]
-    members1=[]
-    members2=[]
-    member2=[]
-    if teamid == None:
-        members1 = Members.objects(Archived=False)
-        print(len(members1))
-    else:
-        members1=LinkMemberTeam.objects(TeamID=teamid)
-        print(len(members1))      
-
-    for i in members1:
-        membersid.append(i.MemberID)
-        print(membersid)
-        
-    for member in membersid:
-        if g.DEBUG_OL >= 2:
-                print(member)
-        memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(member)
-        member2=[memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon]
-        if g.DEBUG_OL >= 2:
-            print(member2)
-        members2.append(member2)
-    
-    start=page*linespage-linespage
-    end=start+linespage
-    items=len(members2)
-    if end > items:
-        end=len(members2)
-
-    if g.DEBUG_OL >= 1:
-        print('page',page,'\tlinespage',linespage,'\tstart:',start,'\tend:',end)
-    for i in range(start,end):
-        members.append(members2[i])
-    return(members,items)
 # In[ ]:
 
 
