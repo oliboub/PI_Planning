@@ -26,7 +26,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[4]:
+# In[2]:
 
 
 def main(theme,projectid,project,admin=False):
@@ -122,6 +122,17 @@ def main(theme,projectid,project,admin=False):
             info='Lists of teams for your project: '+project
             list_all_teams_gui(1,teams,info)
  
+
+        if event == 'Create member':
+            if g.DEBUG_OL >= 2:
+                print(__name__)
+            idx=create_member_gui('Create a new member allocated to a project and a team')
+ 
+        if event == 'List our team members':
+            if g.DEBUG_OL >= 2:
+                print(__name__)
+ #           idx=list_members_gui(team,page,linespage,info='info')¶
+  
 
     #--- My Info
         if event == "Who am I":

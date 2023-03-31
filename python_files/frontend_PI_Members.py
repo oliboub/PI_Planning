@@ -12,11 +12,13 @@ import operator
 import os
 
 connect('PIPlanning')
+if g.DEBUG_OL == -1:
+    print("Debug mode active level :",g.DEBUG_OL)
 
 
 # ## create_member_gui(info)
 
-# In[13]:
+# In[ ]:
 
 
 def create_member_gui(info='Info'):
@@ -126,7 +128,7 @@ def create_member_gui(info='Info'):
             window.close()
 
 
-# In[14]:
+# In[ ]:
 
 
 #create_member_gui()
@@ -135,22 +137,39 @@ def create_member_gui(info='Info'):
 # ## list_members_gui(teamid,page,linespage,info='info')
 # **WIP**
 
-# In[16]:
+# In[7]:
 
 
-def list_members_gui(teamid,page,linespage,info='info'):
+def list_members_gui(teamid,page,linespage=5,info='info'):
     if g.DEBUG_OL >= 1:
         print('--- function: list_members_gui(',teamid,page,linespage,info,')')
  
     #    global page
     members=[]
+    memberstotal=[]
     members1=query_members_by_team(teamid)
  #   members = sorted(members1, key=lambda x: (x[8], x[2]))
-    members=sorted(members1, key = operator.itemgetter(8, 1, 3))
+    memberstotal=sorted(members1, key = operator.itemgetter(8, 1, 3))
 
-    items=len(members)
-    if g.DEBUG_OL >= 1:
-        print('items:',items)
+    items=len(memberstotal)
+
+    start=page*linespage-linespage
+    end=start+linespage
+    if end > items:
+        end = items
+    a=0
+ 
+    if g.DEBUG_OL >= 2:
+        print('items:',items,'\tstart:',start,'\tend:',end)
+    
+
+    for i in range(start,end):
+        members.append(memberstotal[i])
+        if g.DEBUG_OL >= 2:
+            print(members[a])
+        a=+1
+    
+    
         
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
@@ -177,17 +196,28 @@ def list_members_gui(teamid,page,linespage,info='info'):
         layout.append(row)
         idx+=1
    
-    pagination = [[sg.B('<<', key='-BEGINING-'),
-                   sg.B("<", key='-BACK-'),
+    pagination = [[sg.B('<<', key='-BEGIN-',disabled=False),
+                   sg.B("<", key='-BACK-',disabled=False),
                    sg.T(text=page, key='-PAGE-', size=(2, 1)),
-                   sg.B(">", key='-NEXT-'),
-                   sg.B(">>", key='-END-')
+                   sg.B(">", key='-NEXT-',disabled=False),
+                   sg.B(">>", key='-END-',disabled=False)
                    ]]
     layout += [[sg.Col(pagination, justification='right')]]
     layout += [[sg.B('Return')]]
+    
                
     window = MyWindow('List of Members of team', layout,keep_on_top=True, element_justification = 'center',finalize=True)
     window.my_move_to_center()
+
+    if g.DEBUG_OL >= 2:
+        print('start',start,'end',end,'len(memberstotal)',len(memberstotal),'len(memberstotal)-linespage',len(memberstotal)-linespage)
+    if end >= len(memberstotal):
+        window['-END-'].update(disabled=True)
+        window['-NEXT-'].update(disabled=True)
+    if start  < linespage:
+        window['-BEGIN-'].update(disabled=True)
+        window['-BACK-'].update(disabled=True)
+
     
     while True:
         event1, values1 = window.read()
@@ -198,36 +228,29 @@ def list_members_gui(teamid,page,linespage,info='info'):
             return(None)
             break
             
-        elif event1 == ">":
-            if teams.has_next:
-                page += 1
-                window.close()
-                teams = list_members_page(page,team.ProjectID)
-                list_all_teams_gui(page,teams,'ceci est l"info de base')
-        elif event1 == "<":
-            if teams.has_prev:
-                page -= 1
-                window.close()
-                teams = list_members_page(page,team.ProjectID)
-                list_all_teams_gui(page,teams,'ceci est l"info de base')
-        elif event1 == "<<":
-            if teams.has_prev:
-                page = 1
-                window.close()
-                teams = list_members_page(page,team.ProjectID)
-                list_all_teams_gui(page,teams,'ceci est l"info de base')
-        elif event1 == ">>":
-            if teams.has_next:
-                page = teams.pages
-                window.close()
-                teams = list_members_page(page,team.ProjectID)
-                list_all_teams_gui(page,teams,'ceci est l"info de base')
+        if event1 == "-NEXT-":
+            page += 1
+            window.close()
+            list_members_gui(teamid,page,linespage,info)
+        if event1 == "-BACK-":
+            page -= 1
+            window.close()
+            list_members_gui(teamid,page,linespage,info)
+        if event1 == "-BEGIN-":
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,info)
+        if event1 == "-END-":
+            page = (items-linespage)//linespage+1
+            print(page)
+            window.close()
+            list_members_gui(teamid,page,linespage,info)
 
 
-# In[18]:
+# In[17]:
 
 
-#list_members_gui(2,2,5)
+#list_members_gui(1,1,2)
 
 
 # In[ ]:

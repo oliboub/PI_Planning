@@ -147,13 +147,15 @@ def query_members_by_team(team='All'):
     
     if team == 'All':
         members1 = Members.objects(Archived=False)
-        print(len(members1))
+        if g.DEBUG_OL >= 2:
+            print(len(members1))
 
     if type(team) is str and team != 'All' :
         try:
             teamselected=Teams.objects(Archived=False,TeamName=team).first()
             teamid=teamselected.TeamID
-            print(teamid)
+            if g.DEBUG_OL >= 2:
+                print(teamid)
         except Exception as e:
             return "Error: %s" % (e)
             end()
@@ -163,12 +165,14 @@ def query_members_by_team(team='All'):
     if teamid != 0:
         members1=LinkMemberTeam.objects(TeamID=teamid)
 
-    print('teamid:',teamid,'Qtt members found:',len(members1))      
+        if g.DEBUG_OL >= 2:
+            print('teamid:',teamid,'Qtt members found:',len(members1))      
 
 
     for i in members1:
         membersid.append(i.MemberID)
-        print(membersid)
+        if g.DEBUG_OL >= 2:
+            print(membersid)
         
     for member in membersid:
         if g.DEBUG_OL >= 2:

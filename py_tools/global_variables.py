@@ -2,7 +2,7 @@ import os
 
 def init():
     global DEBUG_OL
-    DEBUG_OL=2
+    DEBUG_OL=1
 
     # DEBUG_OL
     # 0 means no print
