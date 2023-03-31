@@ -135,9 +135,8 @@ def create_member_gui(info='Info'):
 
 
 # ## list_members_gui(teamid,page,linespage,info='info')
-# **WIP**
 
-# In[9]:
+# In[4]:
 
 
 def list_members_gui(teamid,page,linespage=5,info='info'):
@@ -149,7 +148,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
     memberstotal=[]
     members1=query_members_by_team(teamid)
  #   members = sorted(members1, key=lambda x: (x[8], x[2]))
-    memberstotal=sorted(members1, key = operator.itemgetter(6, 1, 3))
+    memberstotal=sorted(members1, key = operator.itemgetter(8, 1, 3))
 
     items=len(memberstotal)
 
@@ -172,7 +171,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
     if teamid == 'All':
         titlewindows='List of Members for all teams'
     else:
-        titlewindows='List of Members for the team: '+members[0][6]
+        titlewindows='List of Members for the team: '+members[0][8]+' of project: '+members[0][6]
         
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
@@ -189,11 +188,11 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
         if g.DEBUG_OL >= 2:
             print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
 
-        row = [sg.I(member[6],disabled=True, font='Calibri 11', size=(20,1)),
+        row = [sg.I(member[8],disabled=True, font='Calibri 11', size=(20,1)),
                sg.I(member[1],disabled=True, font='Calibri 11', size=(20,1)),
                sg.I(member[3],disabled=True, font='Calibri 11',size=(20,1)),
                sg.I(member[2],disabled=True, font='Calibri 11',size=(20,1)),
-               sg.I(member[8],disabled=True, font='Calibri 11',size=(20,1)),
+               sg.I(member[10],disabled=True, font='Calibri 11',size=(20,1)),
                sg.I(member[4],disabled=True, font='Calibri 11',size=(20,1)),
               ]
         layout.append(row)
@@ -244,6 +243,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
                 print('type',type(values1['-DLINES-']),'value',values1['-DLINES-'],values1['-DLINES-'].isnumeric())
             if values1['-DLINES-'].isnumeric()== True:
                 linespage=int(values1['-DLINES-'])
+                page=1
                 window.close()
                 list_members_gui(teamid,page,linespage,info)
                                                   
@@ -269,7 +269,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
             list_members_gui(teamid,page,linespage,info)
 
 
-# In[10]:
+# In[5]:
 
 
 #list_members_gui( 1, 1, 3, "List of team members")

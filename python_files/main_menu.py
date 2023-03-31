@@ -26,7 +26,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[2]:
+# In[3]:
 
 
 def main(theme,projectid,project,admin=False):
@@ -36,14 +36,14 @@ def main(theme,projectid,project,admin=False):
         ['Parameters',
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
          ['Teams',['Create Team','List Teams',['List All Teams','List Teams by Project'],'Archive Team'],
-         ['Members',['Create member','List members','Archive member']]]]
+         ['Members',['Create member','List project members','Archive member']]]]
         ],
          ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
     
     menu_std = [
-        ['My Project', ['List project teams','List our team members','list teams members']],['Tasks',['Create task','List tasks']],
+        ['My Project', ['List project teams','List project members','---','List our team members']],['Tasks',['Create task','List tasks']],
         ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
@@ -132,7 +132,12 @@ def main(theme,projectid,project,admin=False):
             if g.DEBUG_OL >= 2:
                 print(__name__)
             idx=list_members_gui(teamid,1,5,info='List of team members')
-  
+ 
+        if event == 'List project members':
+            if g.DEBUG_OL >= 2:
+                print(__name__)
+            idx=list_members_gui('All',1,5,info='List of project members')
+ 
 
     #--- My Info
         if event == "Who am I":
@@ -144,7 +149,7 @@ def main(theme,projectid,project,admin=False):
                 print(theme1)
             sg.theme(theme1)
             window.close()
-            main(theme1,projectid)
+            main(theme1,projectid,project,admin)
 
 if __name__ == '__main__':
     

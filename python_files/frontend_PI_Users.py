@@ -3,7 +3,7 @@
 
 # ## PI User Management
 
-# In[ ]:
+# In[1]:
 
 
 import global_variables as g
@@ -23,7 +23,7 @@ connect('PIPlanning')
 # ### My Info
 # #### Who am I
 
-# In[ ]:
+# In[2]:
 
 
 def who_am_i_gui(alias):
@@ -34,7 +34,7 @@ def who_am_i_gui(alias):
 #    font='Calibri 11'
 #    print(theme)
 #    sg.theme(theme)
-    memberid,name,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(alias)
+    memberid,name,firstname,alias,email,theme,project,projectid,team,teamid,role,admin,firstcon=query_member_alias(alias)
     if g.DEBUG_OL >= 2:
         print(name,firstname,email,project,team,role,admin,firstcon)
     left_layout=[
@@ -81,14 +81,14 @@ def who_am_i_gui(alias):
             pass            
 
 
-# In[ ]:
+# In[5]:
 
 
 #who_am_i_gui('superadmin')
 
 
 # ------
-# ## Change Password
+# ### Change Password
 
 # In[ ]:
 
@@ -210,7 +210,7 @@ def change_password(email,firstcon):
 
 # ### Select Theme
 
-# In[ ]:
+# In[4]:
 
 
 def select_theme_gui(memberid,theme):

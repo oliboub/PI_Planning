@@ -5,7 +5,7 @@
 
 # ## prerequisites
 
-# In[2]:
+# In[ ]:
 
 
 import global_variables as g
@@ -68,7 +68,7 @@ def query_member(alias):
 # ## query_member_alias(alias)
 # Can be alias or ID
 
-# In[11]:
+# In[ ]:
 
 
 def query_member_alias(Alias):
@@ -120,10 +120,10 @@ def query_member_alias(Alias):
     return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,team.TeamID,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
 
 
-# In[12]:
+# In[ ]:
 
 
-query_member_alias(1)
+#query_member_alias(1)
 
 
 # ## query_members_by_team(team)
@@ -180,7 +180,7 @@ def query_members_by_team(team='All'):
         if g.DEBUG_OL >= 2:
                 print(member)
         memberid,name,alias,firstname,email,theme,project,projectid,team,teamid,role,admin,firstcon=query_member_alias(member)
-        member2=[memberid,name,alias,firstname,email,theme,project,projectid,role,admin,firstcon]
+        member2=[memberid,name,alias,firstname,email,theme,project,projectid,team,teamid,role,admin,firstcon]
         if g.DEBUG_OL >= 2:
             print(member2)
         members.append(member2)
@@ -201,7 +201,7 @@ def query_members_by_team(team='All'):
 
 def write_new_member_theme(memberid,theme):
     if g.DEBUG_OL >= 1:
-        print('--- function: write_new_member_theme(',theme,')')
+        print('--- function: write_new_member_theme(',memberid,theme,')')
     member1 = Members.objects(MemberID=memberid).first()
     member1.MemberTheme=theme
     member1.save() 
@@ -209,7 +209,7 @@ def write_new_member_theme(memberid,theme):
 
 # ## create_member(MemberName,FirstName.alias,email,teamid,roleid,MemberTheme='lightblue2',password='default123',admin=False)
 
-# In[2]:
+# In[ ]:
 
 
 def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',password="default123",admin=False):
@@ -248,7 +248,7 @@ def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',pa
     return newmember.MemberID
 
 
-# In[4]:
+# In[ ]:
 
 
 #create_member('Artic', 'Haud','haudartic','haudartic@toto.com',2,2,'LightBlue2','default123',False )
