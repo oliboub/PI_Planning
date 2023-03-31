@@ -137,7 +137,7 @@ def create_member_gui(info='Info'):
 # ## list_members_gui(teamid,page,linespage,info='info')
 # **WIP**
 
-# In[7]:
+# In[9]:
 
 
 def list_members_gui(teamid,page,linespage=5,info='info'):
@@ -149,7 +149,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
     memberstotal=[]
     members1=query_members_by_team(teamid)
  #   members = sorted(members1, key=lambda x: (x[8], x[2]))
-    memberstotal=sorted(members1, key = operator.itemgetter(8, 1, 3))
+    memberstotal=sorted(members1, key = operator.itemgetter(6, 1, 3))
 
     items=len(memberstotal)
 
@@ -159,7 +159,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
         end = items
     a=0
  
-    if g.DEBUG_OL >= 2:
+    if g.DEBUG_OL >=2:
         print('items:',items,'\tstart:',start,'\tend:',end)
     
 
@@ -169,7 +169,10 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
             print(members[a])
         a=+1
     
-    
+    if teamid == 'All':
+        titlewindows='List of Members for all teams'
+    else:
+        titlewindows='List of Members for the team: '+members[0][6]
         
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
@@ -177,7 +180,7 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
               [sg.T('Team Name',font='Calibri 11', size=(20, 1)),
                sg.T('Member Name',font='Calibri 11', size=(20, 1)),
                sg.T('Member Firstname',font='Calibri 11',size=(20, 1)),
-               sg.T('Member Alias',font='Calibri 11', size=(30, 1)),
+               sg.T('Member Alias',font='Calibri 11', size=(20, 1)),
                sg.T('Member Role',font='Calibri 11', size=(20, 1)),
                sg.T('Member Email',font='Calibri 11', size=(20, 1)),
               ]]
@@ -186,27 +189,34 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
         if g.DEBUG_OL >= 2:
             print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
 
-        row = [sg.I(member[8],disabled=True, font='Calibri 11', size=(20,1)),
+        row = [sg.I(member[6],disabled=True, font='Calibri 11', size=(20,1)),
                sg.I(member[1],disabled=True, font='Calibri 11', size=(20,1)),
-               sg.I(member[3],disabled=True, font='Calibri 11',size=(30,1)),
+               sg.I(member[3],disabled=True, font='Calibri 11',size=(20,1)),
                sg.I(member[2],disabled=True, font='Calibri 11',size=(20,1)),
-               sg.I(member[9],disabled=True, font='Calibri 11',size=(20,1)),
+               sg.I(member[8],disabled=True, font='Calibri 11',size=(20,1)),
                sg.I(member[4],disabled=True, font='Calibri 11',size=(20,1)),
               ]
         layout.append(row)
         idx+=1
    
+    
+    memberqtt= [[sg.T('Total members found: ',font='Calibri 11', size=(24, 1)),sg.I(items,key='-MFOUND-',enable_events=False,disabled=True,visible=True,size=(10,1))]
+                  ]
+    
+    displaylines= [[sg.T('Displayed Lines:',font='Calibri 11', size=(22, 1)),sg.I(linespage,key='-DLINES-',enable_events=True,visible=True,size=(10,1))]
+                  ]
+    
     pagination = [[sg.B('<<', key='-BEGIN-',disabled=False),
                    sg.B("<", key='-BACK-',disabled=False),
                    sg.T(text=page, key='-PAGE-', size=(2, 1)),
                    sg.B(">", key='-NEXT-',disabled=False),
                    sg.B(">>", key='-END-',disabled=False)
                    ]]
-    layout += [[sg.Col(pagination, justification='right')]]
+    layout += [[sg.Col(displaylines, element_justification='left'),sg.Col(memberqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
     layout += [[sg.B('Return')]]
     
                
-    window = MyWindow('List of Members of team', layout,keep_on_top=True, element_justification = 'center',finalize=True)
+    window = MyWindow(titlewindows, layout,keep_on_top=True, element_justification = 'center',finalize=True)
     window.my_move_to_center()
 
     if g.DEBUG_OL >= 2:
@@ -223,23 +233,35 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
         event1, values1 = window.read()
         if g.DEBUG_OL >= 2:
             print(event1,values1)
+                                                                                                          
         if event1 == sg.WIN_CLOSED or event1 == 'Return':
             window.close()
             return(None)
             break
-            
+                                                                                                          
+        if event1 == "-DLINES-":
+            if g.DEBUG_OL >= 2:
+                print('type',type(values1['-DLINES-']),'value',values1['-DLINES-'],values1['-DLINES-'].isnumeric())
+            if values1['-DLINES-'].isnumeric()== True:
+                linespage=int(values1['-DLINES-'])
+                window.close()
+                list_members_gui(teamid,page,linespage,info)
+                                                  
         if event1 == "-NEXT-":
             page += 1
             window.close()
             list_members_gui(teamid,page,linespage,info)
+
         if event1 == "-BACK-":
             page -= 1
             window.close()
             list_members_gui(teamid,page,linespage,info)
+        
         if event1 == "-BEGIN-":
             page = 1
             window.close()
             list_members_gui(teamid,page,linespage,info)
+        
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
             print(page)
@@ -247,10 +269,10 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
             list_members_gui(teamid,page,linespage,info)
 
 
-# In[17]:
+# In[10]:
 
 
-#list_members_gui(1,1,2)
+#list_members_gui( 1, 1, 3, "List of team members")
 
 
 # In[ ]:

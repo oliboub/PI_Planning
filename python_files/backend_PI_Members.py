@@ -5,7 +5,7 @@
 
 # ## prerequisites
 
-# In[1]:
+# In[2]:
 
 
 import global_variables as g
@@ -68,7 +68,7 @@ def query_member(alias):
 # ## query_member_alias(alias)
 # Can be alias or ID
 
-# In[ ]:
+# In[11]:
 
 
 def query_member_alias(Alias):
@@ -98,6 +98,7 @@ def query_member_alias(Alias):
 #    print(link.TeamID)
     team=Teams.objects(TeamID=link.TeamID).first()
 #    print(team.TeamName)
+#    print(team.TeamID)
 #    print(team.ProjectID)
     project=Projects.objects(ProjectID=team.ProjectID).first()
     debug_ol=0
@@ -108,6 +109,7 @@ def query_member_alias(Alias):
         print('User First Name:',member1.MemberFirstName)
         print('User Email:',member1.MemberEmail)
         print('Project allocated:',project.ProjectName)
+        print('Project Team ID:',team.TeamID)
         print('Project Team allocated:',team.TeamName)
         print('User Theme:',member1.MemberTheme)
         print('Team Role:',role.RoleName)
@@ -115,13 +117,13 @@ def query_member_alias(Alias):
         print('Member First Connection:',member1.MemberFirstConnection)
         
     
-    return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
+    return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,project.ProjectName,project.ProjectID,team.TeamName,team.TeamID,role.RoleName,member1.MemberAdmin,member1.MemberFirstConnection)
 
 
-# In[ ]:
+# In[12]:
 
 
-#query_member_alias(1)
+query_member_alias(1)
 
 
 # ## query_members_by_team(team)
@@ -177,8 +179,8 @@ def query_members_by_team(team='All'):
     for member in membersid:
         if g.DEBUG_OL >= 2:
                 print(member)
-        memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(member)
-        member2=[memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon]
+        memberid,name,alias,firstname,email,theme,project,projectid,team,teamid,role,admin,firstcon=query_member_alias(member)
+        member2=[memberid,name,alias,firstname,email,theme,project,projectid,role,admin,firstcon]
         if g.DEBUG_OL >= 2:
             print(member2)
         members.append(member2)

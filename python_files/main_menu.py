@@ -131,7 +131,7 @@ def main(theme,projectid,project,admin=False):
         if event == 'List our team members':
             if g.DEBUG_OL >= 2:
                 print(__name__)
- #           idx=list_members_gui(team,page,linespage,info='info')¶
+            idx=list_members_gui(teamid,1,5,info='List of team members')
   
 
     #--- My Info
@@ -158,7 +158,7 @@ if __name__ == '__main__':
         print(UserAlias)
     
     if UserAlias != 'None':
-        memberid,name,alias,firstname,email,theme,project,projectid,team,role,admin,firstcon=query_member_alias(UserAlias)
+        memberid,name,alias,firstname,email,theme,project,projectid,team,teamid,role,admin,firstcon=query_member_alias(UserAlias)
         sg.theme(theme)
         main(theme,projectid,project,admin)
     else:
