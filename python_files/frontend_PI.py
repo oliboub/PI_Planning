@@ -2,6 +2,7 @@ from frontend_PI_Utils import *
 from frontend_PI_Teams import *
 from frontend_PI_Projects import *
 from frontend_PI_Users import *
+from frontend_PI_Roles import *
 from frontend_PI_Members import *
 #from frontend_PI_Tasks import *
 

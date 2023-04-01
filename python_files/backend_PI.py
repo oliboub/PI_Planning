@@ -5,6 +5,7 @@ from backend_PI_mongo_model import *
 from datetime import datetime
 from backend_PI_Utils import *
 from backend_PI_Members import *
+from backend_PI_Roles import *
 from backend_PI_Projects import *
 from backend_PI_Teams import *
 from backend_PI_Tasks import *

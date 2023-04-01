@@ -36,7 +36,8 @@ def main(theme,projectid,project,admin=False):
         ['Parameters',
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
          ['Teams',['Create Team','List Teams',['List All Teams','List Teams by Project'],'Archive Team'],
-         ['Members',['Create member','List project members','Archive member']]]]
+         ['Members',['Create member','List project members','Archive member'],
+         ['Roles',['Create Role']]]]],
         ],
          ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
@@ -138,6 +139,11 @@ def main(theme,projectid,project,admin=False):
                 print(__name__)
             idx=list_members_gui('All',1,5,8,1,3,info='List of project members')
  
+        if event == 'Create Role':
+            if g.DEBUG_OL >= 2:
+                print(__name__)
+            idx=create_role_gui('Create a new role')
+
 
     #--- My Info
         if event == "Who am I":
