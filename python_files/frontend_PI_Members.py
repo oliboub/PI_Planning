@@ -3,7 +3,7 @@
 
 # ## PI Members Management
 
-# In[1]:
+# In[ ]:
 
 
 import PySimpleGUI as sg
@@ -136,19 +136,22 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[4]:
+# In[ ]:
 
 
-def list_members_gui(teamid,page,linespage=5,info='info'):
+def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_members_gui(',teamid,page,linespage,info,')')
+        print('--- function: list_members_gui(',teamid,page,linespage,order1, order2, order3,info,')')
  
     #    global page
     members=[]
     memberstotal=[]
     members1=query_members_by_team(teamid)
  #   members = sorted(members1, key=lambda x: (x[8], x[2]))
-    memberstotal=sorted(members1, key = operator.itemgetter(8, 1, 3))
+    order1=int(order1)
+    order2=int(order2)
+    order3=int(order3)
+    memberstotal=sorted(members1, key = operator.itemgetter(order1, order2, order3))
 
     items=len(memberstotal)
 
@@ -176,12 +179,12 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
     layout = [[sg.T(info,font='Calibri 11',justification="left")],
-              [sg.T('Team Name',font='Calibri 11', size=(20, 1)),
-               sg.T('Member Name',font='Calibri 11', size=(20, 1)),
+              [sg.T('Team Name',font='Calibri 11',key='-TFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Name',font='Calibri 11',key='-NFILTER-',enable_events=True, size=(20, 1)),
                sg.T('Member Firstname',font='Calibri 11',size=(20, 1)),
-               sg.T('Member Alias',font='Calibri 11', size=(20, 1)),
-               sg.T('Member Role',font='Calibri 11', size=(20, 1)),
-               sg.T('Member Email',font='Calibri 11', size=(20, 1)),
+               sg.T('Member Alias',font='Calibri 11',key='-AFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Role',font='Calibri 11',key='-RFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Email',font='Calibri 11',key='-MFILTER-',enable_events=True, size=(20, 1)),
               ]]
     idx=0
     for member in members:
@@ -238,6 +241,49 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
             return(None)
             break
                                                                                                           
+
+        if event1 == '-TFILTER-':
+            order1=8
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            
+            
+        if event1 == '-AFILTER-':
+            order1=2
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+ 
+        if event1 == '-NFILTER-':
+            order1=1
+            order2=3
+            order3=8
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == '-RFILTER-':
+            order1=10
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == '-MFILTER-':
+            order1=4
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+
+
         if event1 == "-DLINES-":
             if g.DEBUG_OL >= 2:
                 print('type',type(values1['-DLINES-']),'value',values1['-DLINES-'],values1['-DLINES-'].isnumeric())
@@ -245,34 +291,34 @@ def list_members_gui(teamid,page,linespage=5,info='info'):
                 linespage=int(values1['-DLINES-'])
                 page=1
                 window.close()
-                list_members_gui(teamid,page,linespage,info)
+                list_members_gui(teamid,page,linespage,order1, order2, order3,info)
                                                   
         if event1 == "-NEXT-":
             page += 1
             window.close()
-            list_members_gui(teamid,page,linespage,info)
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
         if event1 == "-BACK-":
             page -= 1
             window.close()
-            list_members_gui(teamid,page,linespage,info)
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
         
         if event1 == "-BEGIN-":
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,info)
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
         
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
             print(page)
             window.close()
-            list_members_gui(teamid,page,linespage,info)
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
 
-# In[5]:
+# In[ ]:
 
 
-#list_members_gui( 1, 1, 3, "List of team members")
+#list_members_gui( 1, 1, 3,8,1,3, "List of team members")
 
 
 # In[ ]:

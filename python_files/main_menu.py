@@ -5,7 +5,7 @@
 
 # ## Imports
 
-# In[1]:
+# In[ ]:
 
 
 import global_variables as g
@@ -26,7 +26,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[3]:
+# In[ ]:
 
 
 def main(theme,projectid,project,admin=False):
@@ -131,12 +131,12 @@ def main(theme,projectid,project,admin=False):
         if event == 'List our team members':
             if g.DEBUG_OL >= 2:
                 print(__name__)
-            idx=list_members_gui(teamid,1,5,info='List of team members')
+            idx=list_members_gui(teamid,1,5,8,1,3,info='List of team members')
  
         if event == 'List project members':
             if g.DEBUG_OL >= 2:
                 print(__name__)
-            idx=list_members_gui('All',1,5,info='List of project members')
+            idx=list_members_gui('All',1,5,8,1,3,info='List of project members')
  
 
     #--- My Info

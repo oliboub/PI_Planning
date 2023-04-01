@@ -3,7 +3,7 @@
 
 # ## PI User Management
 
-# In[1]:
+# In[ ]:
 
 
 import global_variables as g
@@ -23,7 +23,7 @@ connect('PIPlanning')
 # ### My Info
 # #### Who am I
 
-# In[2]:
+# In[ ]:
 
 
 def who_am_i_gui(alias):
@@ -38,18 +38,18 @@ def who_am_i_gui(alias):
     if g.DEBUG_OL >= 2:
         print(name,firstname,email,project,team,role,admin,firstcon)
     left_layout=[
-        [sg.T('Alias Name', size=(10,1),font=g.FONT),sg.I(alias,key='-ALIAS-', size=(50,1),font=g.FONT)],
-        [sg.T('First name', size=(10,1),font=g.FONT),sg.I(firstname,key='-FIRST-', size=(50,1),font=g.FONT)],
-        [sg.T('Last name', size=(10,1),font=g.FONT),sg.I(name,key='-LAST-', size=(50,1),font=g.FONT)],
-        [sg.T('Email', size=(10,1),font=g.FONT),sg.I(email,key='-EMAIL-', size=(50,1),font=g.FONT)]
+        [sg.T('Alias Name', size=(10,1),font=g.FONT),sg.I(alias,key='-ALIAS-',enable_events=False,disabled=True, size=(50,1),font=g.FONT)],
+        [sg.T('First name', size=(10,1),font=g.FONT),sg.I(firstname,key='-FIRST-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
+        [sg.T('Last name', size=(10,1),font=g.FONT),sg.I(name,key='-LAST-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
+        [sg.T('Email', size=(10,1),font=g.FONT),sg.I(email,key='-EMAIL-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)]
     ]
     right_layout=[
-        [sg.T('Project', size=(10,1),font=g.FONT),sg.I(project,key='-PROJ-', size=(50,1),font=g.FONT)],
-        [sg.T('Team', size=(10,1),font=g.FONT),sg.I(team,key='-TEAM-', size=(50,1),font=g.FONT)],
-        [sg.T('Team Role', size=(10,1),font=g.FONT),sg.I(role,key='-ROLE-', size=(50,1),font=g.FONT)],
+        [sg.T('Project', size=(10,1),font=g.FONT),sg.I(project,key='-PROJ-',enable_events=False,disabled=True, size=(50,1),font=g.FONT)],
+        [sg.T('Team', size=(10,1),font=g.FONT),sg.I(team,key='-TEAM-',enable_events=False, disabled=True,size=(50,1),font=g.FONT)],
+        [sg.T('Team Role', size=(10,1),font=g.FONT),sg.I(role,key='-ROLE-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
     ]
-    bottom_left=[[sg.T('UI Theme:', size=(10,1),font=g.FONT),sg.I(theme,key='-THEME-',size=(50,1),font=g.FONT)]]
-    bottom_right=[[sg.T('Admin:', size=(10,1),font=g.FONT),sg.I('Yes',key='-ADMIN-',disabled=True,size=(10,1),font=g.FONT)]]
+    bottom_left=[[sg.T('UI Theme:', size=(10,1),font=g.FONT),sg.I(theme,key='-THEME-',enable_events=False,disabled=True,size=(50,1),font=g.FONT)]]
+    bottom_right=[[sg.T('Admin:', size=(10,1),font=g.FONT),sg.I('Yes',key='-ADMIN-',enable_events=False,disabled=True,size=(10,1),font=g.FONT)]]
     bottom_sright=[[sg.B('Change password',key='-PASSWD-',size=(10,1),font=g.FONT)]]
     
     layout=[[[sg.Frame('User info',left_layout, vertical_alignment='center',pad=((15,15),(15,15))),
@@ -81,7 +81,7 @@ def who_am_i_gui(alias):
             pass            
 
 
-# In[5]:
+# In[ ]:
 
 
 #who_am_i_gui('superadmin')
@@ -210,7 +210,7 @@ def change_password(email,firstcon):
 
 # ### Select Theme
 
-# In[4]:
+# In[ ]:
 
 
 def select_theme_gui(memberid,theme):
