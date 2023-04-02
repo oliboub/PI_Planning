@@ -7,21 +7,25 @@
 
 # ### Imports
 
-# In[1]:
+# In[ ]:
 
 
-from backend_PI_mongo_model import *
+import os
+import bcrypt
 from datetime import datetime
-from frontend_PI_Utils import *
-from backend_PI_Utils import *
+import PySimpleGUI as sg
+from backend_PI_Utils import * # Import tout ce qui est spécifique au projet
+from backend_PI_mongo_model import * # Import tout ce qui est spécifique au projet
+#from backend_PI import * # Import tout ce qui est spécifique au projet
+#from frontend_PI import *
 
 
-# ### database connection
-
-# In[2]:
+# In[ ]:
 
 
-connect("PIPlanning")
+import global_variables as g
+g.init()
+connect('PIPlanning')
 
 
 # ## Create Task

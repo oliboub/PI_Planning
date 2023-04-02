@@ -1,7 +1,18 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # backend_PI_Utils.py
+
+# In[ ]:
+
+
 import os
 import PIL.Image
 import io
 import base64
+
+
+# In[ ]:
 
 
 def convert_to_bytes(file_or_bytes, resize=None):
@@ -35,4 +46,8 @@ def convert_to_bytes(file_or_bytes, resize=None):
     return bio.getvalue()
 
 
+# In[ ]:
+
+
 print(os.getcwd(),__name__,'imported')
+

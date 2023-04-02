@@ -5,15 +5,35 @@
 
 # ## Prerequisites
 
-# In[1]:
+# In[ ]:
 
 
+import os
+import time
+import bcrypt
+from datetime import datetime
+import PySimpleGUI as sg
 import global_variables as g
 g.init()
-import os
-import PySimpleGUI as sg
-from backend_PI import * # Import tout ce qui est spécifique au projet
-from frontend_PI import *
+#time.sleep(1)
+from backend_PI_Utils import * # Import tout ce qui est spécifique au projet
+from backend_PI_mongo_model import * # Import tout ce qui est spécifique au projet
+time.sleep(1)
+from backend_PI_Members import * # Import tout ce qui est spécifique au projet
+from backend_PI_Projects import * # Import tout ce qui est spécifique au projet
+from backend_PI_Roles import * # Import tout ce qui est spécifique au projet
+from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
+from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
+
+
+# In[ ]:
+
+
+from frontend_PI_Utils import *
+
+
+# In[ ]:
+
 
 connect('PIPlanning')
 

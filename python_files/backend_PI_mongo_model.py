@@ -1,6 +1,17 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
+import os
 import bcrypt
 from mongoengine import *
 from mongoengine_pagination import DocumentPro
+
+
+# In[ ]:
+
 
 class Projects(Document):
 #    id = SequenceField(primary_key=True)
@@ -154,4 +165,8 @@ class TasksStatus(Document):
     Archived = BooleanField(default=False) # PI archived
 
 
-print(__name__,'imported')
+# In[ ]:
+
+
+print(os.getcwd(),__name__,'imported')
+

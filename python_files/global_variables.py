@@ -1,8 +1,16 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # global_variables
+
+# In[ ]:
+
+
 import os
 
 def init():
     global DEBUG_OL
-    DEBUG_OL=2
+    DEBUG_OL=1
 
     # DEBUG_OL
     # 0 means no print
@@ -21,3 +29,4 @@ def init():
     linespage = 5
     
 print(os.getcwd(),__name__,'imported')
+

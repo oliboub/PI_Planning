@@ -28,5 +28,10 @@ class MyWindow(sg.Window):
         win_width, win_height = self.size
         x, y = (screen_width - win_width)//2, (screen_height - win_height)//2
         self.move(x, y)
+
+
+# In[ ]:
+
+
 print(os.getcwd(),__name__,'imported')
 

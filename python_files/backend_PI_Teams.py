@@ -8,14 +8,19 @@
 # In[ ]:
 
 
+import os
+import bcrypt
+from datetime import datetime
+import PySimpleGUI as sg
+from backend_PI_Utils import * # Import tout ce qui est spécifique au projet
+from backend_PI_mongo_model import * # Import tout ce qui est spécifique au projet
+
+
+# In[ ]:
+
+
 import global_variables as g
 g.init()
-import bcrypt
-import os
-from mongoengine import *
-from backend_PI_mongo_model import *
-from datetime import datetime
-
 connect('PIPlanning')
 
 
