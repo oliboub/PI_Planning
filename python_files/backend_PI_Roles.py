@@ -12,13 +12,18 @@ import global_variables as g
 g.init()
 import bcrypt
 import os
-from mongoengine import *
-from backend_PI_mongo_model import *
+from backend_PI import * # Import tout ce qui est spécifique au projet
+from frontend_PI import *
 from datetime import datetime
 
-connect('PIPlanning')
 if g.DEBUG_OL == -1:
     print("Debug mode active level :",g.DEBUG_OL)
+
+
+# In[ ]:
+
+
+connect('PIPlanning')
 
 
 # ## create_role(role,description)
@@ -52,8 +57,29 @@ def create_role(newrole,description):
 #create_role("Busines Owner","Business owner for SAP HR")
 
 
+# ## archive_status_role(roleid,newstatus)
+
 # In[ ]:
 
 
+def archive_status_role(roleid,newstatus):
+    if g.DEBUG_OL >= 1:
+        print('--- function: archive_status_role(',roleid,newstatus,')')
+    now = datetime.now()
+    role1=Roles.objects(RoleID=roleid).first()
+    role1.Archived = newstatus
+    role1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    role1.save()
 
+
+# In[ ]:
+
+
+#archive_status_role(1,False)
+
+
+# In[ ]:
+
+
+print(os.getcwd(),__name__,'imported')
 

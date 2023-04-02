@@ -10,10 +10,8 @@ import global_variables as g
 g.init()
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
+from frontend_PI import *
 import os
-
-if g.DEBUG_OL == -1:
-    print("Debug mode active level :",g.DEBUG_OL)
 
 
 # In[ ]:
@@ -92,9 +90,8 @@ def create_role_gui(info='Info'):
 
 
 # ## list_roles_gui(page,linespage,info='info')
-# **WIP**
 
-# In[1]:
+# In[ ]:
 
 
 def list_roles_gui(page,linespage=5,info='info'):
@@ -106,7 +103,7 @@ def list_roles_gui(page,linespage=5,info='info'):
     rolesfiltered=[]
     rolestotal=[]
     
-    rolestotal=Roles.objects(Archived=False).order_by('+RoleName')
+    rolestotal=Roles.objects().order_by('+RoleName')
 #    rolestotal=roles1.sort(key = lambda elem: elem[1])
 #    rolestotal.sort()
 
@@ -125,7 +122,7 @@ def list_roles_gui(page,linespage=5,info='info'):
     for i in range(start,end):
         roles.append(rolestotal[i])
         if g.DEBUG_OL >= 2:
-            print(roles[a])
+            print(roles[0]) #.RoleID,roles.RoleName)
         a=+1
     
     titlewindows='List of existing roles'
@@ -133,18 +130,35 @@ def list_roles_gui(page,linespage=5,info='info'):
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
     layout = [[sg.T(info,font=g.FONT,justification="left")],
-              [sg.T('Role',font=g.FONT,key='-ROLE-',enable_events=False, size=(20, 1)),
+              [sg.T('Role',font=g.FONT,enable_events=False, size=(20, 1)),
                sg.T('Role Description',font=g.FONT,key='-DESC-',enable_events=False, size=(50, 2)),
                sg.T('Creation date',font=g.FONT,size=(20, 1)),
+               sg.T('Update',font=g.FONT,size=(10, 1)),
+               sg.T(' ',font=g.FONT,size=(5, 1)),
+               sg.T('Status',font=g.FONT,size=(10, 1))
               ]]
     idx=0
     for role in roles:
         if g.DEBUG_OL >= 2:
-            print('Role',role.RoleName) #,'\tRole',role[1],'\tDescription:',role[2],'\tCreation date:',role[4],)
-
-        row = [sg.I(role.RoleName,disabled=True, font=g.FONT, size=(20,1)),
-               sg.I(role.RoleDescription,disabled=True, font=g.FONT, size=(50,2)),
-               sg.I(role.CreationDate,disabled=True, font=g.FONT,size=(20,1)),
+            print('Role',role.RoleName ,'\tRoleID',role.RoleID ,'\tRole Status',role.Archived) #,'\tDescription:',role[2],'\tCreation date:',role[4],)
+        if role.Archived is False:
+            status='Active'
+            FONT1=g.FONT
+            bfcolor='white'
+            bbcolor='green'
+        else:
+            status='Archived'
+            FONT1=g.FONT+' italic'
+            bfcolor='white'
+            bbcolor='firebrick3'
+    
+        row = [sg.T(role.RoleID,visible=False),
+                sg.I(role.RoleName,disabled=False, font=g.FONT, size=(20,1)),
+               sg.I(role.RoleDescription,disabled=False, font=g.FONT, size=(50,2)),
+               sg.I(role.CreationDate,disabled=False, font=g.FONT,size=(20,1)),
+               sg.B('Update',enable_events=True, font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
+               sg.T(' ',font=g.FONT,size=(5, 1)),
+               sg.B(status, enable_events=True,key=f'-ARCH-{role.RoleID}',font=FONT1,button_color=(bfcolor,bbcolor),size=(10,1)),
             ]
         layout.append(row)
         idx+=1
@@ -153,8 +167,10 @@ def list_roles_gui(page,linespage=5,info='info'):
     rolesqtt= [[sg.T('Total roles found: ',font=g.FONT, size=(15, 1)),sg.I(items,key='-RFOUND-',enable_events=False,disabled=True,visible=True,size=(10,1))]
                   ]
     
-    displaylines= [[sg.T('Displayed Lines:',font=g.FONT, size=(17, 1)),sg.I(linespage,key='-DLINES-',enable_events=True,visible=True,size=(10,1))]
-                  ]
+    displaylines= [[sg.T('Displayed Lines:',font=g.FONT, size=(17, 1)),
+                    sg.I(linespage,key='-DLINES-',enable_events=True,visible=True,size=(10,1)),
+                   sg.T(' ',font=g.FONT,size=(10, 1))]
+                   ]
     
     pagination = [[sg.B('<<', key='-BEGIN-',disabled=False),
                    sg.B("<", key='-BACK-',disabled=False),
@@ -162,8 +178,13 @@ def list_roles_gui(page,linespage=5,info='info'):
                    sg.B(">", key='-NEXT-',disabled=False),
                    sg.B(">>", key='-END-',disabled=False)
                    ]]
-    layout += [[sg.Col(displaylines, element_justification='left'),sg.Col(rolesqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
-    layout += [[sg.B('Return')]]
+    
+    createrole = [[sg.B('Create Role',key='-CROLE-',font=g.FONT,button_color=('white','darkblue')),
+                   sg.T(' ',font=g.FONT,size=(12, 1))]]
+    
+    
+    layout += [[sg.Col(createrole, element_justification='left'),sg.Col(displaylines,element_justification='center'), sg.Col(rolesqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
+    layout += [[sg.B('Return',font=g.FONT)]]
     
                
     window = MyWindow(titlewindows, layout,keep_on_top=True, element_justification = 'center',finalize=True)
@@ -216,6 +237,28 @@ def list_roles_gui(page,linespage=5,info='info'):
         
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
+            window.close()
+            list_roles_gui(page,linespage,info)
+            
+        if event1 == "-CROLE-":
+            window.close()
+            create_role_gui()
+            page = 1
+            list_roles_gui(page,linespage,info)
+            
+        if '-ARCH-' in event1:
+            a=int(event1.split("-")[-1])
+            itemstatus=Roles.objects(RoleID=a).first()
+            print(itemstatus.Archived)
+            if itemstatus.Archived == False:
+                newstatus=True
+            else:
+                newstatus=False
+                
+            if g.DEBUG_OL >= 1:
+                print(a,newstatus)
+            archive_status_role(a,newstatus)
+            page = 1
             window.close()
             list_roles_gui(page,linespage,info)
 

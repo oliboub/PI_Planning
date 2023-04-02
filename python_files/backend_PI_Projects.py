@@ -1,13 +1,30 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # backend_PI_Projects
+
+# ## prerequisites
+
+# In[ ]:
+
+
 #import bcrypt
-from mongoengine import *
-from backend_PI_mongo_model import *
 import os
+from backend_PI import * # Import tout ce qui est spécifique au projet
+from frontend_PI import *
 from datetime import datetime
 
+connect('PIPlanning')
 
-### Projects
+
+# ## create_project(project, description)
+
+# In[ ]:
+
+
 def create_project(project, description):
-    print('fonction: create_project(project,description)')
+    if g.DEBUG_OL >= 1:
+        print('fonction: create_project',project,description,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     proj1=Projects()
@@ -18,29 +35,65 @@ def create_project(project, description):
     proj1.save()
 
 
+# ## query_project(project)
+
+# In[ ]:
+
+
 def query_project(project):
-    print('fonction: query_project(project)')
+    if g.DEBUG_OL >= 1:
+        print('fonction: query_project(',project,')')
     project = Projects.objects(ProjectName=project).first()
     return project
 
+
+# ## list_projects()
+
+# In[ ]:
+
+
 def list_projects():
-    print('fonction: list_projects()')
+    if g.DEBUG_OL >= 1:
+        print('fonction: list_projects()')
     projects = Projects.objects(Archived=False)
     return projects
 
+
+# ## query_project_name_from_ID(ID
+
+# In[ ]:
+
+
 def query_project_name_from_ID(ID):
-    print('fonction: query_project_name_from_ID(ID)')
-    project1 = Projects.objects(ProjectID=ID).first()
-    return project1
+    if g.DEBUG_OL >= 1:
+        print('fonction: query_project_name_from_ID(',ID,')')
+    project = Projects.objects(ProjectID=ID).first()
+    return project
+
+
+# ## archive_project(ID)
+
+# In[ ]:
+
 
 def archive_project(ID):
-    print('fonction: archive_project(ID)')
+    if g.DEBUG_OL >= 1:
+        print('fonction: archive_project(',ID,')')
     project1 = Projects.objects(ProjectID=ID).first()
-    print('archive_project(ID) fonction:',project1.ProjectName)
+    if g.DEBUG_OL >= 2:
+        print('archive_project(ID) fonction:',project1.ProjectName)
     project1.Archived = True
     project1.save()
 
-    
+
+# In[ ]:
+
+
 print(os.getcwd(),__name__,'imported')
-### ------------------------------
+
+
+# In[ ]:
+
+
+
 

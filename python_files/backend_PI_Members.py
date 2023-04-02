@@ -10,15 +10,16 @@
 
 import global_variables as g
 g.init()
-import bcrypt
+import PySimpleGUI as sg
+from backend_PI import * # Import tout ce qui est spécifique au projet
+from frontend_PI import *
 import os
-from mongoengine import *
-from backend_PI_mongo_model import *
-from datetime import datetime
+
+
+# In[ ]:
+
 
 connect('PIPlanning')
-if g.DEBUG_OL == -1:
-    print("Debug mode active level :",g.DEBUG_OL)
 
 
 # ## query_member(alias)

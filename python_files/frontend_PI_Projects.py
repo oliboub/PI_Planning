@@ -6,6 +6,7 @@
 # In[ ]:
 
 
+import os
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
 from frontend_PI import *
@@ -15,7 +16,7 @@ connect('PIPlanning')
 
 # ### Create project
 
-# In[5]:
+# In[ ]:
 
 
 def create_project_gui(info):
@@ -50,7 +51,7 @@ def create_project_gui(info):
 
 # ### List Projects
 
-# In[1]:
+# In[ ]:
 
 
 def list_projects_gui(info):
@@ -109,7 +110,7 @@ def list_projects_gui(info):
 
 # ### Archive project
 
-# In[2]:
+# In[ ]:
 
 
 def archive_project_gui(info):
@@ -173,5 +174,5 @@ def archive_project_gui(info):
 # In[ ]:
 
 
-print(__name__,'imported')
+print(os.getcwd(),__name__,'imported')
 

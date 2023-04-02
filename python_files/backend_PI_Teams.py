@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[1]:
+# In[ ]:
 
 
 import global_variables as g
@@ -52,12 +52,12 @@ def create_team(projectID, team, description, logo):
 # - **projectID**
 # - **ProjectName**
 
-# In[25]:
+# In[ ]:
 
 
 def list_teams(project=None):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_teams_all(',project,')')
+        print('--- function: list_teams(',project,')')
         print(type(project))
     if project ==  None:
         team = Teams.objects(Archived=False)
@@ -87,15 +87,15 @@ def list_teams(project=None):
     return(list_teams)
 
 
-# In[26]:
+# In[ ]:
 
 
-#list_teams_all("titi")
+#list_teams("titi")
 
 
 # ## list_teams_page(page,projectid=None)
 
-# In[2]:
+# In[ ]:
 
 
 def list_teams_page(page,projectid=None):
@@ -112,7 +112,7 @@ def list_teams_page(page,projectid=None):
     return teams
 
 
-# In[3]:
+# In[ ]:
 
 
 #list_teams_page(1,1)

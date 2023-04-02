@@ -13,8 +13,17 @@ g.init()
 import PySimpleGUI as sg
 from backend_PI import * # Import tout ce qui est spécifique au projet
 from frontend_PI import *
+import os
+
+
+# In[ ]:
+
 
 connect('PIPlanning')
+
+
+# In[ ]:
+
 
 if g.DEBUG_OL >= 1:
     print("Debug mode active level :",g.DEBUG_OL)
@@ -37,7 +46,7 @@ def main(theme,projectid,project,admin=False):
          ['Project', ['Create Project', 'List Project', 'Archive Project'],
          ['Teams',['Create Team','List Teams',['List All Teams','List Teams by Project'],'Archive Team'],
          ['Members',['Create member','List project members','Archive member'],
-         ['Roles',['Create Role','List Roles']]]]],
+         ['Manage Roles']]]],
         ],
          ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
@@ -71,6 +80,7 @@ def main(theme,projectid,project,admin=False):
         if event == 'Create Project':
             info='Create new project'
             create_project_gui(info)
+            
         if event == 'List Project':
             info='List of active projects'
             ActualProjectID,ActualProjectName, ActualProjectDesc=list_projects_gui(info)
@@ -139,12 +149,8 @@ def main(theme,projectid,project,admin=False):
                 print(__name__)
             idx=list_members_gui('All',1,5,8,1,3,info='List of project members')
  
-        if event == 'Create Role':
-            if g.DEBUG_OL >= 2:
-                print(__name__)
-            idx=create_role_gui('Create a new role')
 
-        if event == 'List Roles':
+        if event == 'Manage Roles':
             if g.DEBUG_OL >= 2:
                 print(__name__)
             idx=list_roles_gui(1,5,'List of all existing roles')
@@ -179,10 +185,4 @@ if __name__ == '__main__':
     else:
         toto="Bye"
         sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
-
-
-# In[ ]:
-
-
-
 

@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[1]:
+# In[ ]:
 
 
 import PySimpleGUI as sg
@@ -18,7 +18,7 @@ connect('PIPlanning')
 # ------
 # ## Create Tasks
 
-# In[27]:
+# In[ ]:
 
 
 def create_task_gui(info='Info'):
@@ -100,7 +100,7 @@ def create_task_gui(info='Info'):
             pass
 
 
-# In[28]:
+# In[ ]:
 
 
 #create_task_gui("Creation d'une tache dans un project et affectée à une équipe")
