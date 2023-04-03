@@ -49,7 +49,7 @@ def create_role_gui(info='Info'):
 
     existingroles=[]
     
-    roles=Roles.objects(Archived=False)
+    roles=Roles.objects()
     for i in roles:
         existingroles.append(i.RoleName.lower())
     if g.DEBUG_OL >= 2:
@@ -84,9 +84,11 @@ def create_role_gui(info='Info'):
             if g.DEBUG_OL >= 2:
                 print('event:',event,'\nvalues:',values)
                 print('Role:',values['-ROLE-'],'Description:',values['-DESC-'])
+                
             if values['-ROLE-'].lower() in existingroles:
                 sg.popup('role '+values['-ROLE-']+'  already exists !',title="info",auto_close=True, auto_close_duration=3,)
                 window['-ROLE-'].update("new role")
+                
             elif values['-DESC-'] == "Description":
                 sg.popup('Please enter a description',title="info",auto_close=True, auto_close_duration=3,)
        
@@ -110,7 +112,7 @@ def create_role_gui(info='Info'):
 # In[ ]:
 
 
-def list_roles_gui(page,linespage=5,info='info'):
+def list_roles_gui(page=1,linespage=5,info='info'):
     if g.DEBUG_OL >= 1:
         print('--- function: list_roles_gui(',page,linespage,info,')')
  
@@ -147,8 +149,8 @@ def list_roles_gui(page,linespage=5,info='info'):
 #    list_teams=list_teams_all()
     layout = [[sg.T(info,font=g.FONT,justification="left")],
               [sg.T('Role',font=g.FONT,enable_events=False, size=(20, 1)),
-               sg.T('Role Description',font=g.FONT,key='-DESC-',enable_events=False, size=(50, 2)),
-               sg.T('Creation date',font=g.FONT,size=(20, 1)),
+               sg.T('Role Description',font=g.FONT,enable_events=False, size=(50, 2)),
+               sg.T('Last Update',font=g.FONT,size=(20, 1)),
                sg.T('Update',font=g.FONT,size=(10, 1)),
                sg.T(' ',font=g.FONT,size=(5, 1)),
                sg.T('Status',font=g.FONT,size=(10, 1))
@@ -169,10 +171,10 @@ def list_roles_gui(page,linespage=5,info='info'):
             bbcolor='firebrick3'
     
         row = [sg.T(role.RoleID,visible=False),
-                sg.I(role.RoleName,disabled=False, font=g.FONT, size=(20,1)),
-               sg.I(role.RoleDescription,disabled=False, font=g.FONT, size=(50,2)),
-               sg.I(role.CreationDate,disabled=False, font=g.FONT,size=(20,1)),
-               sg.B('Update',enable_events=True, font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
+                sg.I(role.RoleName,key=f'-RNAME-{role.RoleID}',disabled=False, font=g.FONT, size=(20,1)),
+               sg.I(role.RoleDescription,key=f'-DESC-{role.RoleID}',disabled=False, font=g.FONT, size=(50,2)),
+               sg.I(role.LastUpdate,disabled=False, font=g.FONT,size=(20,1)),
+               sg.B('Update',enable_events=True, key=f'-UPDT-{role.RoleID}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
                sg.T(' ',font=g.FONT,size=(5, 1)),
                sg.B(status, enable_events=True,key=f'-ARCH-{role.RoleID}',font=FONT1,button_color=(bfcolor,bbcolor),size=(10,1)),
             ]
@@ -271,18 +273,37 @@ def list_roles_gui(page,linespage=5,info='info'):
             else:
                 newstatus=False
                 
-            if g.DEBUG_OL >= 1:
+            if g.DEBUG_OL >= 2:
                 print(a,newstatus)
-            archive_status_role(a,newstatus)
+            archive_role(a,newstatus)
             page = 1
             window.close()
             list_roles_gui(page,linespage,info)
+
+        if '-UPDT-' in event1:
+            a=int(event1.split("-")[-1])
+            itemupd=Roles.objects(RoleID=a).first()
+            if g.DEBUG_OL >= 2:
+                print(a,values1['-RNAME-'],values1['-RDESC-'])
+                
+            rol='-RNAME-'+str(itemupd.RoleID)
+            desc='-DESC-'+str(itemupd.RoleID)
+
+            if g.DEBUG_OL >= 2:
+                print(itemupd.RoleID,"- '",values1[rol],"' - '",values1[desc],"'")
+            update_role(a,values1[rol],values1[desc])
+            page = 1
+            window.close()
+            list_roles_gui(page,linespage,info)
+            
+            
+            
 
 
 # In[ ]:
 
 
-#list_roles_gui( 1, 3, "List of roles")
+#list_roles_gui()
 
 
 # In[ ]:

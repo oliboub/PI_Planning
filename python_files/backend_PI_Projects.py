@@ -33,7 +33,7 @@ connect('PIPlanning')
 
 def create_project(project, description):
     if g.DEBUG_OL >= 1:
-        print('fonction: create_project',project,description,')')
+        print('function: create_project',project,description,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     proj1=Projects()
@@ -43,56 +43,98 @@ def create_project(project, description):
     proj1.LastUpdate = creationdate
     proj1.save()
 
-
-# ## query_project(project)
-
-# In[ ]:
-
-
-def query_project(project):
-    if g.DEBUG_OL >= 1:
-        print('fonction: query_project(',project,')')
-    project = Projects.objects(ProjectName=project).first()
-    return project
-
-
-# ## list_projects()
-
-# In[ ]:
-
-
-def list_projects():
-    if g.DEBUG_OL >= 1:
-        print('fonction: list_projects()')
-    projects = Projects.objects(Archived=False)
-    return projects
-
-
-# ## query_project_name_from_ID(ID
-
-# In[ ]:
-
-
-def query_project_name_from_ID(ID):
-    if g.DEBUG_OL >= 1:
-        print('fonction: query_project_name_from_ID(',ID,')')
-    project = Projects.objects(ProjectID=ID).first()
-    return project
-
-
-# ## archive_project(ID)
-
-# In[ ]:
-
-
-def archive_project(ID):
-    if g.DEBUG_OL >= 1:
-        print('fonction: archive_project(',ID,')')
-    project1 = Projects.objects(ProjectID=ID).first()
+    createdproject=Projects.objects(ProjectName=project).first()
     if g.DEBUG_OL >= 2:
-        print('archive_project(ID) fonction:',project1.ProjectName)
-    project1.Archived = True
+        print('New project created with projectID=',createdproject.ProjectID)
+    
+    return createdproject.ProjectID
+
+
+# In[ ]:
+
+
+#create_project('Guerre du Nord', 'Guerre virtuelle qui se passe dans les pays froid')
+
+
+# ## list_projects(project=None)
+# project might be:
+# - projecid
+# - projectname
+# - None (for all)
+
+# In[ ]:
+
+
+def list_projects(project=None):
+    if g.DEBUG_OL >= 1:
+        print('--- function: list_projects(',project,')')
+        print(type(project))
+    if project ==  None:
+        projects = Projects.objects()
+    else:
+        if type(project) is int:
+            pid=project
+        else:
+            projectinfo=Projects.objects(ProjectName=project).first()
+            pid=projectinfo.ProjectID
+        projects = Projects.objects(ProjectID=pid)
+    if g.DEBUG_OL >= 1:
+        for i in projects:
+            print("project:",i.ProjectName, '\tProjectID:',i.ProjectID, '\tProjectDescription',i.ProjectDescription,'\tProjectStatus',i.Archived)
+        
+    return(projects)
+
+
+# In[ ]:
+
+
+# list_projects(1)
+
+
+# ## archive_project(projectid,newstatus)
+
+# In[ ]:
+
+
+def archive_project(projectid,newstatus):
+    if g.DEBUG_OL >= 1:
+        print('function: archive_project(',projectid,newstatus,')')
+    project1 = Projects.objects(ProjectID=projectid).first()
+    if g.DEBUG_OL >= 2:
+        print('archive_project name:',project1.ProjectName)
+    now = datetime.now()
+    project1.Archived = newstatus
+    project1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     project1.save()
+
+
+# In[ ]:
+
+
+#archive_project(2,False)
+
+
+# ## update_project(projectid,projectname,projectdescription)
+
+# In[ ]:
+
+
+def update_project(projectid,projectname,projectdescription):
+    if g.DEBUG_OL >= 1:
+        print('--- function: update_role(',projectid,projectname,projectdescription,')')
+    now = datetime.now()
+    project1=Projects.objects(ProjectID=projectid).first()
+    project1.ProjectName = projectname
+    project1.ProjectDescription = projectdescription
+    project1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    project1.save()
+
+
+# In[ ]:
+
+
+#update_project(4,'Guerre du Nord',"Guerre qui démarre au Nord")
+#update_project(4,'Guerre du Sud',"Guerre qui s'est déplacée au sud")
 
 
 # In[ ]:

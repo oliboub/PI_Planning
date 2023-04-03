@@ -5,7 +5,7 @@
 
 # ## Imports
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -26,7 +26,7 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[2]:
+# In[ ]:
 
 
 from frontend_PI_Utils import *
@@ -39,13 +39,13 @@ from frontend_PI_Roles import *
 time.sleep(1)
 
 
-# In[3]:
+# In[ ]:
 
 
 connect('PIPlanning')
 
 
-# In[4]:
+# In[ ]:
 
 
 if g.DEBUG_OL >= 1:
@@ -58,22 +58,23 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[5]:
+# In[ ]:
 
 
 def main(theme,projectid,project,admin=False):
     if g.DEBUG_OL >= 1:
         print('--- function main:(',theme,projectid,project,admin,')')
     menu_admin = [
-        ['Parameters',
-         ['Project', ['Create Project', 'List Project', 'Archive Project'],
-         ['Teams',['Create Team','List Teams',['List All Teams','List Teams by Project'],'Archive Team'],
-         ['Members',['Create member','List project members','Archive member'],
-         ['Manage Roles']]]],
+        ['Management',
+         ['Manage Projects',
+         'Manage Teams',
+         'Manage Members',
+         'Manage Roles'],
         ],
          ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
+        
     
     menu_std = [
         ['My Project', ['List project teams','List project members','---','List our team members']],['Tasks',['Create task','List tasks']],
@@ -100,20 +101,9 @@ def main(theme,projectid,project,admin=False):
             break
 
 #--- Projects
-        if event == 'Create Project':
-            info='Create new project'
-            create_project_gui(info)
-            
-        if event == 'List Project':
+        if event == 'Manage Projects':
             info='List of active projects'
-            ActualProjectID,ActualProjectName, ActualProjectDesc=list_projects_gui(info)
-            if g.DEBUG_OL >= 2:
-                print('ActualProjectID:',ActualProjectID,'\tActualProjectName;',ActualProjectName,'\tActualProjectDesc:',ActualProjectDesc)
-        if event == 'Archive Project':
-            info='Archivage de projet non utilisé'
-            ArchivedProjectName=archive_project_gui(info)
-            if g.DEBUG_OL >= 2:
-                print('ArchivedProjectName;',ArchivedProjectName)
+            list_projects_gui(1,5,info)
         
 #--- Teams
         if event == 'Create Team':
