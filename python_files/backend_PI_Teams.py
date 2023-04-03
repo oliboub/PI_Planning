@@ -29,25 +29,66 @@ connect('PIPlanning')
 # In[ ]:
 
 
-def create_team(projectID, team, description, logo):
+def create_team(projectID, newteam, description, logo):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_team(',projectID,',',team,',',description,',',logo,')')
+        print('--- function: create_team(',projectID,',',newteam,',',description,',',logo,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     team1=Teams()
     team1.ProjectID = projectID
-    team1.TeamName = team
+    team1.TeamName = newteam
     team1.TeamDescription = description
     team1.TeamLogo = logo
     team1.CreationDate = creationdate
     team1.LastUpdate = creationdate
     team1.save()
 
+    createdteam=Teams.objects(TeamName=newteam).first()
+    if g.DEBUG_OL >= 2:
+        print('New team created with TeamID=',createdteam.TeamID)
+    
+    return createdteam.TeamID
+
 
 # In[ ]:
 
 
-# test
+#create_team(1, 'Absolut','The best of drinking','../imagesDB/absolut_vodka.jpg')
+
+
+# # archive_team(teamid,newstatus)
+
+# In[2]:
+
+
+def archive_team(teamid,newstatus):
+    if g.DEBUG_OL >= 1:
+        print('--- function: archive_team(',teamid,newstatus,')')
+    item=Teams.objects(TeamID=teamid).first()
+    if g.DEBUG_OL >= 2:
+        print('archive team name:',item.TeamName)
+    now = datetime.now()
+    item.Archived = newstatus
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
+
+
+# ## update_team(teamid,teamname,teamdescription,project,teamlogo)
+
+# In[ ]:
+
+
+def update_team(teamid,teamname,teamdescription,project,teamlogo):
+    if g.DEBUG_OL >= 1:
+        print('--- function: update_team(',teamid,teamname,teamdescription,project,teamlogo,')')
+    now = datetime.now()
+    item=Teamss.objects(TeamID=teamid).first()
+    item.TeamName = teamname
+    item.TeamDescription = teamdescription
+    item.ProjectID = projectid
+    item.TeamLogo = teamlogo
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
 
 
 # ## list_teams(project=None)
@@ -57,15 +98,15 @@ def create_team(projectID, team, description, logo):
 # - **projectID**
 # - **ProjectName**
 
-# In[ ]:
+# In[1]:
 
 
 def list_teams(project=None):
     if g.DEBUG_OL >= 1:
         print('--- function: list_teams(',project,')')
-        print(type(project))
+#        print(type(project))
     if project ==  None:
-        team = Teams.objects(Archived=False)
+        team = Teams.objects()
     else:
         if type(project) is int:
             pid=project
@@ -81,9 +122,15 @@ def list_teams(project=None):
         projectname = Projects.objects(ProjectID=team1.ProjectID).first()
         if projectname is None:
             projectname='Non allocated'
+        if team1.TeamLogo != None:
+            photo=team1.TeamLogo
+        else:
+            photo ='../imagesDB/ilovemycompany.jpeg'
+
+        
         if g.DEBUG_OL >= 2:
-            print("ProjectName:",projectname.ProjectName,"\tProjectID:",team1.ProjectID,"\tTeamID:",team1.TeamID)
-        teams=[projectname.ProjectName,team1.TeamName,team1.TeamDescription,team1.TeamLogo]
+            print("ProjectID:",team1.ProjectID,"\tProjectName:",projectname.ProjectName,"\tTeamID:",team1.TeamID,'\tTeamName:',team1.TeamName,'\tlogo:',photo,'\tlastupdate:',team1.LastUpdate,'\tArchived:',team1.Archived)
+        teams=[team1.ProjectID,projectname.ProjectName,team1.TeamID,team1.TeamName,team1.TeamDescription,photo,team1.LastUpdate,team1.Archived]
         list_teams.append(teams)
 #    if g.DEBUG_OL >= 2:
 #        for i in list_teams:
@@ -96,31 +143,6 @@ def list_teams(project=None):
 
 
 #list_teams("titi")
-
-
-# ## list_teams_page(page,projectid=None)
-
-# In[ ]:
-
-
-def list_teams_page(page,projectid=None):
-    if g.DEBUG_OL >= 1:
-        print('--- function: list_teams_page(',page,projectid,')')
-    if projectid == None:
-        teams = Teams.objects(Archived=False).paginate(page,5)
-    else:
-        teams = Teams.objects(ProjectID=projectid,Archived=False).paginate(page,5)
-           
-    if g.DEBUG_OL >= 2:
-        for a in teams.items:
-            print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
-    return teams
-
-
-# In[ ]:
-
-
-#list_teams_page(1,1)
 
 
 # In[ ]:

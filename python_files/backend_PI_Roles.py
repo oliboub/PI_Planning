@@ -65,11 +65,13 @@ def create_role(newrole,description):
 def archive_role(roleid,newstatus):
     if g.DEBUG_OL >= 1:
         print('--- function: archive_role(',roleid,newstatus,')')
+    item=Roles.objects(RoleID=roleid).first()
+    if g.DEBUG_OL >= 2:
+        print('archive role name:',item.RoleName)
     now = datetime.now()
-    role1=Roles.objects(RoleID=roleid).first()
-    role1.Archived = newstatus
-    role1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    role1.save()
+    item.Archived = newstatus
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
 
 
 # In[ ]:
@@ -87,11 +89,11 @@ def update_role(roleid,rolename,roledescription):
     if g.DEBUG_OL >= 1:
         print('--- function: update_role(',roleid,rolename,roledescription,')')
     now = datetime.now()
-    role1=Roles.objects(RoleID=roleid).first()
-    role1.RoleName = rolename
-    role1.RoleDescription = roledescription
-    role1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    role1.save()
+    item=Roles.objects(RoleID=roleid).first()
+    item.RoleName = rolename
+    item.RoleDescription = roledescription
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
 
 
 # In[ ]:

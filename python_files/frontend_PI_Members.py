@@ -11,6 +11,7 @@ import time
 import bcrypt
 from datetime import datetime
 import PySimpleGUI as sg
+from operator import itemgetter
 import global_variables as g
 g.init()
 #time.sleep(1)
@@ -65,18 +66,18 @@ def create_member_gui(info='Info'):
         print(comboroles)
     
     
-    info_layout = [sg.T(info,font='Calibri 11',justification="left")]
+    info_layout = [sg.T(info,font=g.FONT,justification="left")]
  
     left_layout = [
-        [sg.T('Project Selection', size=(20, 1),font='Calibri 11'), sg.Combo(comboproj,key='-PROJ-',enable_events=True,size=(20, 1),font='Calibri 11')],
-        [sg.T('Team Name', size=(20, 1),key='-TXTTEAM-',font='Calibri 11',visible=False), sg.Combo(team,key='-TEAM-',enable_events=True,visible=False,size=(20, 1),font='Calibri 11')],
+        [sg.T('Project Selection', size=(20, 1),font=g.FONT), sg.Combo(comboproj,key='-PROJ-',enable_events=True,size=(20, 1),font=g.FONT)],
+        [sg.T('Team Name', size=(20, 1),key='-TXTTEAM-',font=g.FONT,visible=False), sg.Combo(team,key='-TEAM-',enable_events=True,visible=False,size=(20, 1),font=g.FONT)],
     ]
     
-    bottom_layout=[[sg.T('Last Name',key='-L1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-MNAME-',visible=True,size=(20,1)),
-                    sg.T('First Name',key='-F1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-FNAME-',visible=True,size=(20,1))],
-                   [sg.T('Alias',key='-A1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-ALIAS-',visible=True,size=(20,1))],
-                   [sg.T('Email',key='-E1-',size=(15,1),font='Calibri 11',visible=True),sg.I("",key='-EMAIL-',visible=True,size=(20,1))],
-                   [sg.T('Role', size=(15, 1),font='Calibri 11'), sg.Combo(comboroles,key='-ROLE-',enable_events=True,size=(20, 1),font='Calibri 11')],
+    bottom_layout=[[sg.T('Last Name',key='-L1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-MNAME-',visible=True,size=(20,1)),
+                    sg.T('First Name',key='-F1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-FNAME-',visible=True,size=(20,1))],
+                   [sg.T('Alias',key='-A1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-ALIAS-',visible=True,size=(20,1))],
+                   [sg.T('Email',key='-E1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-EMAIL-',visible=True,size=(20,1))],
+                   [sg.T('Role', size=(15, 1),font=g.FONT), sg.Combo(comboroles,key='-ROLE-',enable_events=True,size=(20, 1),font=g.FONT)],
                   ]
     
 #    layout = [info_layout,[sg.Frame("Select perimeter", left_layout, vertical_alignment='top', pad=((10, 10), (10, 10)))],
@@ -156,7 +157,7 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[ ]:
+# In[1]:
 
 
 def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='info'):
@@ -171,7 +172,7 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
     order1=int(order1)
     order2=int(order2)
     order3=int(order3)
-    memberstotal=sorted(members1, key = operator.itemgetter(order1, order2, order3))
+    memberstotal=sorted(members1, key = itemgetter(order1, order2, order3))
 
     items=len(memberstotal)
 
@@ -198,34 +199,34 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
         
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
-    layout = [[sg.T(info,font='Calibri 11',justification="left")],
-              [sg.T('Team Name',font='Calibri 11',key='-TFILTER-',enable_events=True, size=(20, 1)),
-               sg.T('Member Name',font='Calibri 11',key='-NFILTER-',enable_events=True, size=(20, 1)),
-               sg.T('Member Firstname',font='Calibri 11',size=(20, 1)),
-               sg.T('Member Alias',font='Calibri 11',key='-AFILTER-',enable_events=True, size=(20, 1)),
-               sg.T('Member Role',font='Calibri 11',key='-RFILTER-',enable_events=True, size=(20, 1)),
-               sg.T('Member Email',font='Calibri 11',key='-MFILTER-',enable_events=True, size=(20, 1)),
+    layout = [[sg.T(info,font=g.FONT,justification="left")],
+              [sg.T('Team Name',font=g.FONT,key='-TFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Name',font=g.FONT,key='-NFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Firstname',font=g.FONT,size=(20, 1)),
+               sg.T('Member Alias',font=g.FONT,key='-AFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Role',font=g.FONT,key='-RFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Email',font=g.FONT,key='-MFILTER-',enable_events=True, size=(20, 1)),
               ]]
     idx=0
     for member in members:
         if g.DEBUG_OL >= 2:
             print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
 
-        row = [sg.I(member[8],disabled=True, font='Calibri 11', size=(20,1)),
-               sg.I(member[1],disabled=True, font='Calibri 11', size=(20,1)),
-               sg.I(member[3],disabled=True, font='Calibri 11',size=(20,1)),
-               sg.I(member[2],disabled=True, font='Calibri 11',size=(20,1)),
-               sg.I(member[10],disabled=True, font='Calibri 11',size=(20,1)),
-               sg.I(member[4],disabled=True, font='Calibri 11',size=(20,1)),
+        row = [sg.I(member[8],disabled=True, font=g.FONT, size=(20,1)),
+               sg.I(member[1],disabled=True, font=g.FONT, size=(20,1)),
+               sg.I(member[3],disabled=True, font=g.FONT,size=(20,1)),
+               sg.I(member[2],disabled=True, font=g.FONT,size=(20,1)),
+               sg.I(member[10],disabled=True, font=g.FONT,size=(20,1)),
+               sg.I(member[4],disabled=True, font=g.FONT,size=(20,1)),
               ]
         layout.append(row)
         idx+=1
    
     
-    memberqtt= [[sg.T('Total members found: ',font='Calibri 11', size=(24, 1)),sg.I(items,key='-MFOUND-',enable_events=False,disabled=True,visible=True,size=(10,1))]
+    memberqtt= [[sg.T('Total members found: ',font=g.FONT, size=(24, 1)),sg.I(items,key='-MFOUND-',enable_events=False,disabled=True,visible=True,size=(10,1))]
                   ]
     
-    displaylines= [[sg.T('Displayed Lines:',font='Calibri 11', size=(22, 1)),sg.I(linespage,key='-DLINES-',enable_events=True,visible=True,size=(10,1))]
+    displaylines= [[sg.T('Displayed Lines:',font=g.FONT, size=(22, 1)),sg.I(linespage,key='-DLINES-',enable_events=True,visible=True,size=(10,1))]
                   ]
     
     pagination = [[sg.B('<<', key='-BEGIN-',disabled=False),

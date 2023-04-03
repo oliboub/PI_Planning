@@ -36,12 +36,12 @@ def create_project(project, description):
         print('function: create_project',project,description,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    proj1=Projects()
-    proj1.ProjectName = project
-    proj1.ProjectDescription = description
-    proj1.CreationDate = creationdate
-    proj1.LastUpdate = creationdate
-    proj1.save()
+    item=Projects()
+    item.ProjectName = project
+    item.ProjectDescription = description
+    item.CreationDate = creationdate
+    item.LastUpdate = creationdate
+    item.save()
 
     createdproject=Projects.objects(ProjectName=project).first()
     if g.DEBUG_OL >= 2:
@@ -78,7 +78,7 @@ def list_projects(project=None):
             projectinfo=Projects.objects(ProjectName=project).first()
             pid=projectinfo.ProjectID
         projects = Projects.objects(ProjectID=pid)
-    if g.DEBUG_OL >= 1:
+    if g.DEBUG_OL >= 2:
         for i in projects:
             print("project:",i.ProjectName, '\tProjectID:',i.ProjectID, '\tProjectDescription',i.ProjectDescription,'\tProjectStatus',i.Archived)
         
@@ -99,13 +99,13 @@ def list_projects(project=None):
 def archive_project(projectid,newstatus):
     if g.DEBUG_OL >= 1:
         print('function: archive_project(',projectid,newstatus,')')
-    project1 = Projects.objects(ProjectID=projectid).first()
+    item = Projects.objects(ProjectID=projectid).first()
     if g.DEBUG_OL >= 2:
-        print('archive_project name:',project1.ProjectName)
+        print('archive_project name:',item.ProjectName)
     now = datetime.now()
-    project1.Archived = newstatus
-    project1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    project1.save()
+    item.Archived = newstatus
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
 
 
 # In[ ]:
@@ -123,11 +123,11 @@ def update_project(projectid,projectname,projectdescription):
     if g.DEBUG_OL >= 1:
         print('--- function: update_role(',projectid,projectname,projectdescription,')')
     now = datetime.now()
-    project1=Projects.objects(ProjectID=projectid).first()
-    project1.ProjectName = projectname
-    project1.ProjectDescription = projectdescription
-    project1.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    project1.save()
+    item=Projects.objects(ProjectID=projectid).first()
+    item.ProjectName = projectname
+    item.ProjectDescription = projectdescription
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
 
 
 # In[ ]:

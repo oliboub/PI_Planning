@@ -5,7 +5,7 @@
 
 # ## Imports
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -26,7 +26,7 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
@@ -39,13 +39,13 @@ from frontend_PI_Roles import *
 time.sleep(1)
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
 
 
-# In[ ]:
+# In[4]:
 
 
 if g.DEBUG_OL >= 1:
@@ -58,7 +58,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[ ]:
+# In[7]:
 
 
 def main(theme,projectid,project,admin=False):
@@ -106,35 +106,10 @@ def main(theme,projectid,project,admin=False):
             list_projects_gui(1,5,info)
         
 #--- Teams
-        if event == 'Create Team':
-            info='Créer votre nouvelle equipe'
-            create_team_gui(info)
-
-        if event == "List All Teams":
+        if event == "Manage Teams":
             info='List of All active Teams even if non allocated to project'
-            teams=list_teams_page(1)
-            if g.DEBUG_OL >= 2:
-                print(teams)
-            list_all_teams_gui(1,teams,info)
+            list_teams_gui()
 
-        if event == "List Teams by Project":
-            info='Select project top display associated teams'
-            projectid=None
-            projectid,projectname=select_project_gui() # a lancer pour chercher les equipes d'un projet
-            teams=list_teams_page(1,projectid)
-
-            if g.DEBUG_OL >= 2:
-                print(__name__,projectid,projectname)
-                for a in teams.items:
-                    print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
-            info='Liste de toutes les equipes du projet '+ projectname
-            list_all_teams_gui(1,teams,info)
-            
-        if event == "Archive Team":
-            if g.DEBUG_OL >= 2:
-                print(__name__,projectid,projectname) 
-            teams=list_teams_page(1)
-                    
 
         if event == "List project teams":
             if g.DEBUG_OL >= 2:

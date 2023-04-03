@@ -278,7 +278,7 @@ def list_projects_gui(page=1,linespage=5,info='info'):
             proj='-PNAME-'+str(itemupd.ProjectID)
             desc='-DESC-'+str(itemupd.ProjectID)
 
-            if g.DEBUG_OL >= 1:
+            if g.DEBUG_OL >= 2:
                 print(itemupd.ProjectID,"- '",values1[proj],"' - '",values1[desc],"'")
             update_project(a,values1[proj],values1[desc])
             page = 1
