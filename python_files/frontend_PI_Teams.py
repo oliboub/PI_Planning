@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[1]:
+# In[4]:
 
 
 import os
@@ -27,13 +27,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[2]:
+# In[5]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[3]:
+# In[6]:
 
 
 connect('PIPlanning')
@@ -124,7 +124,7 @@ def create_team_gui(info='Info'):
 
 # ## List_teams_gui(project=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info')
 
-# In[8]:
+# In[7]:
 
 
 def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,info='info'):
@@ -360,8 +360,11 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
         if '-PHOTOIMG-' in event1:
             a=int(event1.split("-")[-1])
             toto=Teams.objects(TeamID=a).first()
+            if toto.TeamLogo != None:
+                teamlogo = team1.TeamLogo
+            else:
+                teamlogo ='../imagesDB/ilovemycompany.jpeg'
 
-            teamlogo=toto.TeamLogo
             print(a,'-PHOTOIMG-'+str(a),teamlogo)
 
             photo_layout=[[#sg.T('Select image', font=g.FONT, size=(15,1)),
@@ -435,10 +438,10 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             
 
 
-# In[9]:
+# In[8]:
 
 
-#list_teams_gui()
+list_teams_gui()
 
 
 # ## Select teams by Project
