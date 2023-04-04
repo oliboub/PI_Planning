@@ -39,13 +39,13 @@ from frontend_PI_Roles import *
 time.sleep(1)
 
 
-# In[3]:
+# In[ ]:
 
 
 connect('PIPlanning')
 
 
-# In[4]:
+# In[ ]:
 
 
 if g.DEBUG_OL >= 1:
@@ -58,7 +58,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[7]:
+# In[ ]:
 
 
 def main(theme,projectid,project,admin=False):

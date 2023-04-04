@@ -68,7 +68,6 @@ def create_project(project, description):
 def list_projects(project=None):
     if g.DEBUG_OL >= 1:
         print('--- function: list_projects(',project,')')
-        print(type(project))
     if project ==  None:
         projects = Projects.objects()
     else:

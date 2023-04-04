@@ -58,7 +58,7 @@ def create_team(projectID, newteam, description, logo):
 
 # # archive_team(teamid,newstatus)
 
-# In[2]:
+# In[ ]:
 
 
 def archive_team(teamid,newstatus):
@@ -73,19 +73,34 @@ def archive_team(teamid,newstatus):
     item.save()
 
 
-# ## update_team(teamid,teamname,teamdescription,project,teamlogo)
+# ## update_team(projectid,teamid,teamname,teamdescription,teamlogo)
 
 # In[ ]:
 
 
-def update_team(teamid,teamname,teamdescription,project,teamlogo):
+def update_team(projectid,teamid,teamname,teamdescription,teamlogo):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_team(',teamid,teamname,teamdescription,project,teamlogo,')')
+        print('--- function: update_team(',projectid,teamid,teamname,teamdescription,teamlogo,')')
     now = datetime.now()
-    item=Teamss.objects(TeamID=teamid).first()
+    item=Teams.objects(TeamID=teamid).first()
     item.TeamName = teamname
     item.TeamDescription = teamdescription
     item.ProjectID = projectid
+#    item.TeamLogo = teamlogo
+    item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    item.save()
+
+
+# ## update_team_logo(teamid,teamlogo)
+
+# In[1]:
+
+
+def update_team_logo(teamid,teamlogo):
+    if g.DEBUG_OL >= 1:
+        print('--- function: update_team_logo(',teamid,teamlogo,')')
+    now = datetime.now()
+    item=Teams.objects(TeamID=teamid).first()
     item.TeamLogo = teamlogo
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
@@ -98,7 +113,7 @@ def update_team(teamid,teamname,teamdescription,project,teamlogo):
 # - **projectID**
 # - **ProjectName**
 
-# In[1]:
+# In[ ]:
 
 
 def list_teams(project=None):

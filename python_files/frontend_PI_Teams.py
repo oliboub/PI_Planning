@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -27,13 +27,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
@@ -124,7 +124,7 @@ def create_team_gui(info='Info'):
 
 # ## List_teams_gui(project=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info')
 
-# In[ ]:
+# In[8]:
 
 
 def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,info='info'):
@@ -138,24 +138,31 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
     if g.DEBUG_OL >= 2:
         print(comboproj)
  
-     
-    sg.set_options(element_padding=(5, 5))
-    if project == None:
-        teams1=list_teams()
-    else:
-        teams1=list_teams(project)
-        
-    idx=0
-    for team in teams1:
-        if g.DEBUG_OL >= 2:
-            print('ProjectID:',team[0],'\tProjectName:',team[1],'\tTeamID:',team[2],'\'TeamName:',team[3],'\tTeamDescription:',team[4],'\tTeamLogo:',team[5],'\tLastUpdate:',team[6],'\tArchived:',team[7])
-
+    team=[]  
+    teams1=[]
+    photo=''
     teamstotal=[]
     teams=[]
     order1=int(order1)
     order2=int(order2)
     order3=int(order3)
 
+     
+    sg.set_options(element_padding=(5, 5))
+    if project == None:
+        teams1=list_teams()
+    else:
+        teams1=list_teams(project)
+        if len(teams1) == 0:
+            sg.popup(project+' has no teams yet', title="warning",auto_close=True, auto_close_duration=3,)
+            teams1=list_teams()
+            
+    idx=0
+    for team in teams1:
+        if g.DEBUG_OL >= 2:
+            print('ProjectID:',team[0],'\tProjectName:',team[1],'\tTeamID:',team[2],'\'TeamName:',team[3],'\tTeamDescription:',team[4],'\tTeamLogo:',team[5],'\tLastUpdate:',team[6],'\tArchived:',team[7])
+
+    
     teamstotal=sorted(teams1, key = itemgetter(order1, order2, order3))
 
     items=len(teamstotal)
@@ -163,6 +170,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
     start=page*linespage-linespage
     end=start+linespage
     if end > items:
+        end = items
     a=0
  
     if g.DEBUG_OL >=2:
@@ -200,13 +208,14 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
     for team in teams:
         if g.DEBUG_OL >= 2:
             print('TeamID',team[2],'\tProjectID',team[0],'\tTeam:',team[2])
-            photo=team[5]
 
+            
         if team[7] is False:
             status='Active'
             FONT1=g.FONT
             bfcolor='white'
             bbcolor='green'
+            
         else:
             status='Archived'
             FONT1=g.FONT+' italic'
@@ -214,10 +223,12 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             bbcolor='firebrick3'
  
             
-        row = [sg.I(team[1],disabled=True, font=g.FONT, size=(15,1)),
-               sg.I(team[3],disabled=True, font=g.FONT, size=(15,1)),
-               sg.I(team[4],disabled=True, font=g.FONT,size=(35,1)),
-               sg.Image(key='-PHOTO-', data=convert_to_bytes(team[5], resize=(75, 75))),
+        row = [sg.I(team[1],enable_events=True,key=f'-PNAME-{team[2]}', font=g.FONT, size=(15,1)),
+               sg.I(team[3],enable_events=True,key=f'-TNAME-{team[2]}', font=g.FONT, size=(15,1)),
+               sg.I(team[4],enable_events=True,key=f'-TDESC-{team[2]}', font=g.FONT,size=(35,1)),
+               sg.Image(enable_events=True,key=f'-PHOTOIMG-{team[2]}', data=convert_to_bytes(team[5], resize=(75, 75))),
+               sg.I(team[5],enable_events=False,visible=False,key=f'-PHOTO-{team[2]}'),
+               sg.I(team[0],enable_events=False,visible=False,key=f'-PID-{team[2]}'),
                sg.I(team[6],disabled=True, font=g.FONT,size=(18,1)),
                sg.B('Update',enable_events=True, key=f'-UPDT-{team[2]}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
                sg.T(' ',font=g.FONT,size=(5, 1)),
@@ -276,7 +287,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
         if event1 == sg.WIN_CLOSED or event1 == 'Return':
             window.close()
             return(None)
-            break
+            exit()
 
 
         if event1 == '-PFILTER-':
@@ -345,6 +356,49 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             create_team_gui()
             page = 1
             list_teams_gui(project,page,linespage,order1, order2, order3,info)
+            
+        if '-PHOTOIMG-' in event1:
+            a=int(event1.split("-")[-1])
+            toto=Teams.objects(TeamID=a).first()
+
+            teamlogo=toto.TeamLogo
+            print(a,'-PHOTOIMG-'+str(a),teamlogo)
+
+            photo_layout=[[#sg.T('Select image', font=g.FONT, size=(15,1)),
+                           sg.I(key='-IMG-',enable_events=True,font=g.FONT, size=(25,1)),
+                           sg.FileBrowse(file_types=(('All files',['*.jpeg','*.jpg','*.png']),("JPEG Files","*.jpeg"),("JPG Files","*.jpg"),("PNG Files","*.png")))],
+                          [sg.Image(key='-NEWPHOTO-', data=convert_to_bytes(teamlogo,resize=(250,250)))]]
+            
+            layout = [[photo_layout],
+            [sg.B('Update', enable_events=True), sg.Cancel()]]
+ 
+
+#            window.Hide()
+            window.close()
+            window1 = MyWindow('Select new image', layout,finalize=True)
+            window1.my_move_to_center()
+   
+            while True:
+                event2, values2 = window1.read()
+                if g.DEBUG_OL >= 1:
+                    print(event2,values2)
+                                                                                                          
+                if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
+                    window1.close()
+                    break
+                    
+                if '-IMG-' in event2:
+                    teamlogo=values2['-IMG-']
+                    print(values2['-IMG-'])
+                    window1['-NEWPHOTO-'].update(data=convert_to_bytes(values2['-IMG-'],resize=(250,250)))
+                
+                if event2 == 'Update':
+                    update_team_logo(a,teamlogo)
+                    break
+            
+            window1.close()        
+            list_teams_gui(project,page,linespage,order1, order2, order3,info)
+            
              
         if '-ARCH-' in event1:
             a=int(event1.split("-")[-1])
@@ -366,31 +420,25 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
         if '-UPDT-' in event1:
             a=int(event1.split("-")[-1])
             itemupd=Teams.objects(TeamID=a).first()
-            if g.DEBUG_OL >= 2:
-                print(a,values1['-TNAME-'],values1['-TDESC-'])
+            projid='-PID-'+str(a)
+            team='-TNAME-'+str(a)
+            desc='-TDESC-'+str(a)
+            photo='-PHOTO-'+str(a)
+            
+            if g.DEBUG_OL >= 1:
+                print(a,values1[projid],values1[team],values1[desc],values1[photo])
                 
-#            rol='-RNAME-'+str(itemupd.RoleID)
-#            desc='-DESC-'+str(itemupd.RoleID)
-
-#            if g.DEBUG_OL >= 2:
-#                print(itemupd.RoleID,"- '",values1[rol],"' - '",values1[desc],"'")
-#            update_role(a,values1[rol],values1[desc])
+            update_team(values1[projid],a,values1[team],values1[desc],values1[photo])
             page = 1
             window.close()
             list_teams_gui(project,page,linespage,order1, order2, order3,info)
             
 
 
-# In[ ]:
+# In[9]:
 
 
-#list_teams_gui(None,1,4,3,1,2)
-
-
-# In[ ]:
-
-
-
+list_teams_gui()
 
 
 # ## Select teams by Project
