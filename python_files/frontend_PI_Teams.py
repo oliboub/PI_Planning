@@ -438,7 +438,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
 # In[9]:
 
 
-list_teams_gui()
+#list_teams_gui()
 
 
 # ## Select teams by Project
