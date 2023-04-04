@@ -124,13 +124,15 @@ def create_team_gui(info='Info'):
 
 # ## List_teams_gui(project=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info')
 
-# In[7]:
+# In[15]:
 
 
 def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,info='info'):
     if g.DEBUG_OL >= 1:
         print('--- function: list_teams_gui(',project,page,linespage,order1,order2,order3,info,')')
- 
+    
+    imgdir='../imagesDB/'
+    
     projects_list=list_projects()
     comboproj = []
     for project1 in projects_list:
@@ -361,11 +363,12 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             a=int(event1.split("-")[-1])
             toto=Teams.objects(TeamID=a).first()
             if toto.TeamLogo != None:
-                teamlogo = team1.TeamLogo
+                teamlogo = toto.TeamLogo
             else:
                 teamlogo ='../imagesDB/ilovemycompany.jpeg'
 
-            print(a,'-PHOTOIMG-'+str(a),teamlogo)
+            if g.DEBUG_OL >= 2:
+                print(a,'-PHOTOIMG-'+str(a),teamlogo)
 
             photo_layout=[[#sg.T('Select image', font=g.FONT, size=(15,1)),
                            sg.I(key='-IMG-',enable_events=True,font=g.FONT, size=(25,1)),
@@ -383,7 +386,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
    
             while True:
                 event2, values2 = window1.read()
-                if g.DEBUG_OL >= 1:
+                if g.DEBUG_OL >= 2:
                     print(event2,values2)
                                                                                                           
                 if event2 == sg.WIN_CLOSED or event2 == 'Cancel':
@@ -391,8 +394,13 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
                     break
                     
                 if '-IMG-' in event2:
-                    teamlogo=values2['-IMG-']
-                    print(values2['-IMG-'])
+                    logo=[]
+                    logo=values2['-IMG-'].split('/')
+                    teamlogo=imgdir+logo[-1]
+                    
+                if g.DEBUG_OL >= 2:
+                    print(values2['-IMG-'],logo,teamlogo)
+                    
                     window1['-NEWPHOTO-'].update(data=convert_to_bytes(values2['-IMG-'],resize=(250,250)))
                 
                 if event2 == 'Update':
@@ -413,7 +421,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             else:
                 newstatus=False
                 
-            if g.DEBUG_OL >= 1:
+            if g.DEBUG_OL >= 2:
                 print(a,newstatus)
             archive_team(a,newstatus)
             page = 1
@@ -428,7 +436,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             desc='-TDESC-'+str(a)
             photo='-PHOTO-'+str(a)
             
-            if g.DEBUG_OL >= 1:
+            if g.DEBUG_OL >= 2:
                 print(a,values1[projid],values1[team],values1[desc],values1[photo])
                 
             update_team(values1[projid],a,values1[team],values1[desc],values1[photo])
@@ -438,10 +446,10 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             
 
 
-# In[8]:
+# In[17]:
 
 
-list_teams_gui()
+#list_teams_gui()
 
 
 # ## Select teams by Project
