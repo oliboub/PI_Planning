@@ -39,13 +39,13 @@ from frontend_PI_Roles import *
 time.sleep(1)
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
 
 
-# In[ ]:
+# In[4]:
 
 
 if g.DEBUG_OL >= 1:
@@ -58,7 +58,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[ ]:
+# In[5]:
 
 
 def main(theme,projectid,project,admin=False):
@@ -110,6 +110,9 @@ def main(theme,projectid,project,admin=False):
             info='List of All active Teams even if non allocated to project'
             list_teams_gui()
 
+            
+        if event == "Manage Members":
+            list_members_gui()
 
         if event == "List project teams":
             if g.DEBUG_OL >= 2:

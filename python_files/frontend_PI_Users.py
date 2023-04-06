@@ -3,7 +3,7 @@
 
 # ## PI User Management
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -24,13 +24,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
@@ -40,7 +40,7 @@ connect('PIPlanning')
 # ### My Info
 # #### Who am I
 
-# In[ ]:
+# In[6]:
 
 
 def who_am_i_gui(alias):
@@ -51,9 +51,9 @@ def who_am_i_gui(alias):
 #    font='Calibri 11'
 #    print(theme)
 #    sg.theme(theme)
-    memberid,name,firstname,alias,email,theme,project,projectid,team,teamid,role,admin,firstcon=query_member_alias(alias)
+    memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(alias)
     if g.DEBUG_OL >= 2:
-        print(name,firstname,email,project,team,role,admin,firstcon)
+        print(memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role)
     left_layout=[
         [sg.T('Alias Name', size=(10,1),font=g.FONT),sg.I(alias,key='-ALIAS-',enable_events=False,disabled=True, size=(50,1),font=g.FONT)],
         [sg.T('First name', size=(10,1),font=g.FONT),sg.I(firstname,key='-FIRST-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
@@ -98,7 +98,7 @@ def who_am_i_gui(alias):
             pass            
 
 
-# In[ ]:
+# In[7]:
 
 
 #who_am_i_gui('superadmin')

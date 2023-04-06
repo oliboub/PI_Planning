@@ -5,7 +5,7 @@
 
 # ## prerequisites
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -18,7 +18,7 @@ from backend_PI_mongo_model import * # Import tout ce qui est spécifique au pro
 #from frontend_PI import *
 
 
-# In[ ]:
+# In[3]:
 
 
 import global_variables as g
@@ -28,12 +28,13 @@ connect('PIPlanning')
 
 # ## create_role(role,description)
 
-# In[ ]:
+# In[6]:
 
 
 def create_role(newrole,description):
     if g.DEBUG_OL >= 1:
         print('--- function: create_role(',newrole,description,')')
+    newrole=newrole.title()
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     role = Roles()
@@ -51,10 +52,10 @@ def create_role(newrole,description):
     return createdrole.RoleID
 
 
-# In[ ]:
+# In[7]:
 
 
-#create_role("Busines Owner","Business owner for SAP HR")
+create_role("busines owner HR","Business owner for SAP HR")
 
 
 # ## archive_role(roleid,newstatus)

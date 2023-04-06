@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## PI Members Management
+# ## frontend_PI_Members
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -25,13 +25,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
@@ -47,11 +47,15 @@ def create_member_gui(info='Info'):
         print('--- function: create_member_gui(',info,')')
  
     sg.set_options(element_padding=(5, 10))
-
+    fin=0
+    
     projects_list=list_projects()
     comboproj = []
     for project in projects_list:
-        comboproj.append(project.ProjectName)
+        if g.DEBUG_OL >= 2:
+            print(project.Archived)
+        if project.Archived == False:
+            comboproj.append(project.ProjectName)
     if g.DEBUG_OL >= 2:
         print(comboproj)
     
@@ -97,6 +101,7 @@ def create_member_gui(info='Info'):
         if event == sg.WIN_CLOSED or event == 'Cancel':
 #            print(event)
             window.close()
+            fin=0
             break
  
         elif '-PROJ-' in event:
@@ -109,8 +114,9 @@ def create_member_gui(info='Info'):
             teams=[]
             for i in teams_list:
                 if g.DEBUG_OL >= 2:
-                    print(i[1])
-                teams.append(i[1])
+                    print(i[3],i[7])
+                if i[7] == False:
+                    teams.append(i[3])
             window['-TXTTEAM-'].update(visible=True)
             window['-TEAM-'].update(values=teams,visible=True)
             
@@ -122,31 +128,44 @@ def create_member_gui(info='Info'):
                 print(team)
 
 
-            members=query_members_by_team(team)
-            for i in members:
-                if g.DEBUG_OL >= 2:
-                    print(i[2])
-                combomembers.append(i[2])
-            print(combomembers)
-            
-            titre='Member information for : '+project+' and team:'+team
-            
             window['-MEMBER-'].update(visible=True)
 
         elif event == 'Add':
+            
+            if values['-MNAME-'] == "" or values['-FNAME-'] == "" or values['-ALIAS-'] == "" or values['-EMAIL-'] == "" or values['-ROLE-'] == "":
+                sg.popup('Please fill all fields!',title="error",auto_close=True, auto_close_duration=2,)
+                window.close()
+                fin=1
+                break
+            if values['-EMAIL-'].find('@') == -1:
+                sg.popup('Please fill the email correctly!',title="error",auto_close=True, auto_close_duration=2,)
+                window.close()
+                fin=1
+                break
+                
+                
             teamselected=Teams.objects(Archived=False,TeamName=values['-TEAM-']).first()
             roleselected=Roles.objects(Archived=False,RoleName=values['-ROLE-']).first()
             teamid=teamselected.TeamID
             roleid=roleselected.RoleID
+            username=values['-MNAME-'].capitalize()
+            firstname=values['-FNAME-'].capitalize()
+            alias=values['-ALIAS-'].lower()
+            email=values['-EMAIL-'].lower()
 
             if g.DEBUG_OL >= 2:
                 print('event:',event,'\nvalues:',values)
-                print('name:',values['-MNAME-'],'first name:',values['-FNAME-'],'alias:',values['-ALIAS-'],'email:',values['-EMAIL-'],'teamid:',teamid,'roleid:',roleid)
-            id=create_member(values['-MNAME-'],values['-FNAME-'],values['-ALIAS-'],values['-EMAIL-'],teamid,roleid)
+#                print('name:',values['-MNAME-'],'first name:',values['-FNAME-'],'alias:',values['-ALIAS-'],'email:',values['-EMAIL-'],'teamid:',teamid,'roleid:',roleid)
+                print('name:',username,'first name:',firstname,'alias:',alias,'email:',email,'teamid:',teamid,'roleid:',roleid)
+
+            id=create_member(username,firstname,alias,email,teamid,roleid)
             if g.DEBUG_OL >= 2:
                 print('New user created with id:',id)
-            sg.popup('New user '+values['-ALIAS-']+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
+            sg.popup('New user '+alias+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
             window.close()
+            
+    if fin == 1:
+        create_member_gui()
 
 
 # In[ ]:
@@ -157,22 +176,49 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[1]:
+# In[71]:
 
 
-def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='info'):
+def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
     if g.DEBUG_OL >= 1:
         print('--- function: list_members_gui(',teamid,page,linespage,order1, order2, order3,info,')')
  
     #    global page
     members=[]
     memberstotal=[]
-    members1=query_members_by_team(teamid)
- #   members = sorted(members1, key=lambda x: (x[8], x[2]))
+    members1=[]
+    comboteams=[]
+    comboroles=[]
+    
+    if teamid == None:
+        members1=list_members_by_team()
+        teams=list_teams()
+    else:
+        members1=list_members_by_team(teamid)
+        teamsearch=Teams.objects(TeamID=members1[0][12]).first()
+        teams=list_teams(teamsearch.ProjectID)
+        
+    for i in teams:
+        if i[7] == False:
+            comboteams.append(i[3])
+            
+    roles=Roles.objects(Archived=False)
+    for i in roles:
+        comboroles.append(i.RoleName)
+    
+    comboteams.sort()
+    comboroles.sort()
+    
+    if g.DEBUG_OL >= 1:
+        print(teams[0][1],comboteams,comboroles)
+
+#return [memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
+#   members = sorted(members1, key=lambda x: (x[8], x[2]))
     order1=int(order1)
     order2=int(order2)
     order3=int(order3)
-    memberstotal=sorted(members1, key = itemgetter(order1, order2, order3))
+
+    memberstotal=sorted(members1, key = itemgetter(order1, order2,order3))
 
     items=len(memberstotal)
 
@@ -181,21 +227,22 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
     if end > items:
         end = items
     a=0
+    b=0
  
     if g.DEBUG_OL >=2:
         print('items:',items,'\tstart:',start,'\tend:',end)
     
-
+    dteams={}
     for i in range(start,end):
         members.append(memberstotal[i])
         if g.DEBUG_OL >= 2:
             print(members[a])
         a=+1
     
-    if teamid == 'All':
+    if teamid == None:
         titlewindows='List of Members for all teams'
     else:
-        titlewindows='List of Members for the team: '+members[0][8]+' of project: '+members[0][6]
+        titlewindows='List of Members for the team: '+members[0][13]+' of project: '+members[0][11]
         
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
@@ -204,21 +251,45 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
                sg.T('Member Name',font=g.FONT,key='-NFILTER-',enable_events=True, size=(20, 1)),
                sg.T('Member Firstname',font=g.FONT,size=(20, 1)),
                sg.T('Member Alias',font=g.FONT,key='-AFILTER-',enable_events=True, size=(20, 1)),
-               sg.T('Member Role',font=g.FONT,key='-RFILTER-',enable_events=True, size=(20, 1)),
                sg.T('Member Email',font=g.FONT,key='-MFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Role',font=g.FONT,key='-RFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Last Update',font=g.FONT,key='-LFILTER-',enable_events=True, size=(10, 1)),
+               sg.T(' ',font=g.FONT,size=(5, 1)),
+               sg.T('Status',font=g.FONT,size=(10, 1))
               ]]
     idx=0
     for member in members:
         if g.DEBUG_OL >= 2:
-            print('MemberID',member[0],'\tProjectID',member[6],'\tTeam:',member[7])
+            print('MemberID',member[0],'\tProjectID',member[10],'\Status:',member[7])
+        
+        if member[7] is False:
+            status='Active'
+            FONT1=g.FONT
+            bfcolor='white'
+            bbcolor='green'
+            
+        else:
+            status='Archived'
+            FONT1=g.FONT+' italic'
+            bfcolor='white'
+            bbcolor='firebrick3'
 
-        row = [sg.I(member[8],disabled=True, font=g.FONT, size=(20,1)),
-               sg.I(member[1],disabled=True, font=g.FONT, size=(20,1)),
-               sg.I(member[3],disabled=True, font=g.FONT,size=(20,1)),
-               sg.I(member[2],disabled=True, font=g.FONT,size=(20,1)),
-               sg.I(member[10],disabled=True, font=g.FONT,size=(20,1)),
-               sg.I(member[4],disabled=True, font=g.FONT,size=(20,1)),
-              ]
+   
+        row = [
+#            sg.I(member[13],enable_events=True,key=f'-TNAME-{member[0]}', font=g.FONT, size=(20,1)),
+               sg.Combo(comboteams,enable_events=True,key=f'-TNAME-{member[0]}',default_value=member[13],size=(20, 1),font=g.FONT),
+               sg.I(member[12],enable_events=False, visible=False,key=f'-TID-{member[0]}', font=g.FONT, size=(20,1)),
+               sg.I(member[1],enable_events=True,key=f'-NAME-{member[0]}', font=g.FONT, size=(20,1)),
+               sg.I(member[3],enable_events=True,key=f'-FNAME-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.I(member[2],enable_events=True,key=f'-ALIAS-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.I(member[4],enable_events=True,key=f'-EMAIL-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.Combo(comboroles,enable_events=True,key=f'-ROLE-{member[0]}',default_value=member[15],font=g.FONT,size=(20,1)),
+               sg.I(member[14],enable_events=False, visible=False,key=f'-ROLEID-{member[0]}', font=g.FONT,size=(20,1)),
+               
+               sg.B('Update',enable_events=True, key=f'-UPDT-{member[0]}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
+               sg.T(' ',font=g.FONT,size=(5, 1)),
+               sg.B(status, enable_events=True,key=f'-ARCH-{member[0]}',font=FONT1,button_color=(bfcolor,bbcolor),size=(10,1)),
+             ]
         layout.append(row)
         idx+=1
    
@@ -235,7 +306,13 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
                    sg.B(">", key='-NEXT-',disabled=False),
                    sg.B(">>", key='-END-',disabled=False)
                    ]]
-    layout += [[sg.Col(displaylines, element_justification='left'),sg.Col(memberqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
+    
+    createmember = [[sg.B('Create Member',key='-CMEMBER-',font=g.FONT,button_color=('white','darkblue')),
+                   sg.T(' ',font=g.FONT,size=(12, 1))]]
+    
+    
+ 
+    layout += [[sg.Col(createmember, element_justification='left'),sg.Col(displaylines, element_justification='left'),sg.Col(memberqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
     layout += [[sg.B('Return')]]
     
                
@@ -260,6 +337,7 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
         if event1 == sg.WIN_CLOSED or event1 == 'Return':
             window.close()
             return(None)
+            fin=0
             break
                                                                                                           
 
@@ -296,7 +374,7 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
             window.close()
             list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
-        if event1 == '-MFILTER-':
+        if event1 == '-LFILTER-':
             order1=4
             order2=1
             order3=3
@@ -335,11 +413,62 @@ def list_members_gui(teamid,page,linespage=5,order1=8,order2=1,order3=3,info='in
             window.close()
             list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
+        if event1 == "-CMEMBER-":
+            window.close()
+            create_member_gui()
+            page = 1
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            
+            
+        if '-ARCH-' in event1:
+            a=int(event1.split("-")[-1])
+            itemstatus=Members.objects(MemberID=a).first()
+            if g.DEBUG_OL >= 2:
+                print(itemstatus.Archived)
+            if itemstatus.Archived == False:
+                newstatus=True
+            else:
+                newstatus=False
+                
+            if g.DEBUG_OL >= 2:
+                print(a,newstatus)
+            archive_member(a,newstatus)
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
-# In[ ]:
+        if '-UPDT-' in event1:
+            if g.DEBUG_OL >= 2:
+                print(event1,values1)
+  
+            a=int(event1.split("-")[-1])
+            itemupd=Members.objects(MemberID=a).first()
+#            teamlinkupd=LinkMemberTeam.objects(MemberID=a).first())
+            if g.DEBUG_OL >= 2:
+                print(a,itemupd)
+                
+            teamid='-TID-'+str(itemupd.MemberID)
+            name='-NAME-'+str(itemupd.MemberID)
+            fname='-FNAME-'+str(itemupd.MemberID)
+            alias='-ALIAS-'+str(itemupd.MemberID)
+            email='-EMAIL-'+str(itemupd.MemberID)
+            roleid='-ROLEID-'+str(itemupd.MemberID)
+            
+#            desc='-DESC-'+str(itemupd.RoleID)
+
+            if g.DEBUG_OL >= 1:
+                print(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
+            update_member(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
+            page = 1
+            window.close()
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+       
 
 
-#list_members_gui( 1, 1, 3,8,1,3, "List of team members")
+# In[72]:
+
+
+list_members_gui('OKCorral')
 
 
 # In[ ]:
