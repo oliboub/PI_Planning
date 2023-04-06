@@ -55,7 +55,7 @@ def create_role(newrole,description):
 # In[7]:
 
 
-create_role("busines owner HR","Business owner for SAP HR")
+#create_role("busines owner HR","Business owner for SAP HR")
 
 
 # ## archive_role(roleid,newstatus)

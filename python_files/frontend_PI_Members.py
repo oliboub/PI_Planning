@@ -176,7 +176,7 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[71]:
+# In[120]:
 
 
 def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
@@ -209,7 +209,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
     comboteams.sort()
     comboroles.sort()
     
-    if g.DEBUG_OL >= 1:
+    if g.DEBUG_OL >= 2:
         print(teams[0][1],comboteams,comboroles)
 
 #return [memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
@@ -255,8 +255,10 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
                sg.T('Member Role',font=g.FONT,key='-RFILTER-',enable_events=True, size=(20, 1)),
                sg.T('Last Update',font=g.FONT,key='-LFILTER-',enable_events=True, size=(10, 1)),
                sg.T(' ',font=g.FONT,size=(5, 1)),
-               sg.T('Status',font=g.FONT,size=(10, 1))
-              ]]
+               sg.T('Change Status',font=g.FONT,size=(10, 1))
+              ],
+              [sg.Combo(comboteams,key='-TEAMS-',enable_events=True,size=(20, 1),font=g.FONT),sg.T(" ",size=(144, 1),font=g.FONT)]
+             ]
     idx=0
     for member in members:
         if g.DEBUG_OL >= 2:
@@ -420,6 +422,14 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             list_members_gui(teamid,page,linespage,order1, order2, order3,info)
             
             
+        if event1 == '-TEAMS-':
+            page=1
+            window.close()
+            newteam=Teams.objects(TeamName=values1['-TEAMS-']).first()
+            teamid=newteam.TeamID
+            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+             
+
         if '-ARCH-' in event1:
             a=int(event1.split("-")[-1])
             itemstatus=Members.objects(MemberID=a).first()
@@ -437,6 +447,33 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             window.close()
             list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
+        
+        if '-TNAME-' in event1:
+            a=int(event1.split("-")[-1])
+            newname=values1[event1]
+            if g.DEBUG_OL >= 2:
+                print(a,newname,'\t',event1,values1)
+            teamupd=Teams.objects(TeamName=newname).first()
+            itemid='-TID-'+str(a)
+            window[itemid].update(teamupd.TeamID)
+            
+            if g.DEBUG_OL >= 2:
+                print(a,newname,'\t',event1,values1)
+            
+
+        if '-ROLE-' in event1:
+            a=int(event1.split("-")[-1])
+            newname=values1[event1]
+            if g.DEBUG_OL >= 2:
+                print(event1,values1)
+            roleupd=Roles.objects(RoleName=newname).first()
+            itemid='-ROLEID-'+str(a)
+            window[itemid].update(roleupd.RoleID)
+            
+            if g.DEBUG_OL >= 2:
+                print(a,newname,'\t',event1,values1)
+ 
+        
         if '-UPDT-' in event1:
             if g.DEBUG_OL >= 2:
                 print(event1,values1)
@@ -446,7 +483,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
 #            teamlinkupd=LinkMemberTeam.objects(MemberID=a).first())
             if g.DEBUG_OL >= 2:
                 print(a,itemupd)
-                
+            oldteamid=teamid    
             teamid='-TID-'+str(itemupd.MemberID)
             name='-NAME-'+str(itemupd.MemberID)
             fname='-FNAME-'+str(itemupd.MemberID)
@@ -461,14 +498,14 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             update_member(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(oldteamid,page,linespage,order1, order2, order3,info)
        
 
 
-# In[72]:
+# In[122]:
 
 
-list_members_gui('OKCorral')
+#list_members_gui('OKCorral')
 
 
 # In[ ]:
