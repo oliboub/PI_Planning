@@ -170,7 +170,7 @@ if __name__ == '__main__':
         print(UserAlias)
     
     if UserAlias != 'None':
-        memberid,name,alias,firstname,email,theme,project,projectid,team,teamid,role,admin,firstcon=query_member_alias(UserAlias)
+        memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(UserAlias)
         sg.theme(theme)
         main(theme,projectid,project,admin)
     else:
