@@ -33,5 +33,6 @@ class MyWindow(sg.Window):
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

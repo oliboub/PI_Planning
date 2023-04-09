@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -16,7 +16,7 @@ from backend_PI_Utils import * # Import tout ce qui est spécifique au projet
 from backend_PI_mongo_model import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 import global_variables as g
@@ -113,7 +113,7 @@ def update_team_logo(teamid,teamlogo):
 # - **projectID**
 # - **ProjectName**
 
-# In[ ]:
+# In[3]:
 
 
 def list_teams(project=None):
@@ -163,5 +163,6 @@ def list_teams(project=None):
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

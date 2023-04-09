@@ -139,11 +139,6 @@ def update_project(projectid,projectname,projectdescription):
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
-
-
-# In[ ]:
-
-
-
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

@@ -7,7 +7,7 @@
 import os
 import bcrypt
 from mongoengine import *
-from mongoengine_pagination import DocumentPro
+#from mongoengine_pagination import DocumentPro
 
 
 # In[ ]:
@@ -24,7 +24,7 @@ class Projects(Document):
     CreationDate = DateTimeField()
     LastUpdate = DateTimeField()
     
-class Teams(DocumentPro):
+class Teams(Document):
 #    id = SequenceField(primary_key=True)
     TeamID = SequenceField()          # ID de l'équipe
     TeamName = StringField(required=True, unique=True)    # Nom de l'équipe
@@ -37,7 +37,7 @@ class Teams(DocumentPro):
     LastUpdate = DateTimeField()
 
 hashAndSalt = bcrypt.hashpw('default1234'.encode(), bcrypt.gensalt())
-class Members(DocumentPro):
+class Members(Document):
 #    id = SequenceField(primary_key=True)
     MemberID = SequenceField()  # Identifiant de la personne
     MemberName =  StringField(required=True)
@@ -123,7 +123,7 @@ class LinkMemberRole(Document):
 
 #### Tasks 
 
-class Tasks(DocumentPro):
+class Tasks(Document):
     TaskID = SequenceField()
     SprintID = IntField()
     TaskCategoryID = IntField(required=True,default=5)
@@ -168,5 +168,6 @@ class TasksStatus(Document):
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

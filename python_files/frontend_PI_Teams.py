@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[4]:
+# In[ ]:
 
 
 import os
@@ -27,13 +27,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[5]:
+# In[ ]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[6]:
+# In[ ]:
 
 
 connect('PIPlanning')
@@ -124,7 +124,7 @@ def create_team_gui(info='Info'):
 
 # ## List_teams_gui(project=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info')
 
-# In[15]:
+# In[ ]:
 
 
 def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,info='info'):
@@ -446,7 +446,7 @@ def list_teams_gui(project=None,page=1,linespage=5,order1=1,order2=2,order3=4,in
             
 
 
-# In[17]:
+# In[ ]:
 
 
 #list_teams_gui()
@@ -510,5 +510,6 @@ def select_project_gui(info='info'):
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

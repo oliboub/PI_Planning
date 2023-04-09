@@ -53,7 +53,8 @@ Inputs:
 
 ### Tasks
 def create_task(name,memberid,weight,sprintid=None,categoryid=None,description="Thanks to describe your task please'"):
-    print('fonction: create_task(',name,memberid,weight,sprintid,categoryid,')')
+    if g.DEBUG_OL >= 1:    
+        print('fonction: create_task(',name,memberid,weight,sprintid,categoryid,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     task1=Tasks()
@@ -284,5 +285,6 @@ def list_tasks(projectin='All',teamin='All',piidin='All',sprintid='All'):
 # In[ ]:
 
 
-
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported') 
 

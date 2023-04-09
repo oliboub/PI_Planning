@@ -28,5 +28,11 @@ def init():
     global linespage # lines by pages when display lists
     linespage = 5
     
-print(os.getcwd(),__name__,'imported')
+
+
+# In[ ]:
+
+
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

@@ -16,6 +16,8 @@ import base64
 
 
 def convert_to_bytes(file_or_bytes, resize=None):
+    if g.DEBUG_OL >= 1:
+        print('convert_to_bytes(',file_or_bytes, resize,')')
     '''
     Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
     Turns into  PNG format in the process so that can be displayed by tkinter
@@ -49,5 +51,6 @@ def convert_to_bytes(file_or_bytes, resize=None):
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 

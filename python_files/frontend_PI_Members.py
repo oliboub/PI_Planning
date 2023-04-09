@@ -3,7 +3,7 @@
 
 # ## frontend_PI_Members
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -25,13 +25,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[2]:
+# In[ ]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[3]:
+# In[ ]:
 
 
 connect('PIPlanning')
@@ -176,7 +176,7 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[120]:
+# In[ ]:
 
 
 def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
@@ -502,7 +502,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
        
 
 
-# In[122]:
+# In[ ]:
 
 
 #list_members_gui('OKCorral')
@@ -511,11 +511,6 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
 # In[ ]:
 
 
-print(os.getcwd(),__name__,'imported')
-
-
-# In[ ]:
-
-
-
+if g.DEBUG_OL >= 1:
+    print(os.getcwd(),__name__,'imported')
 
