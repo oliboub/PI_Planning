@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[1]:
+# In[5]:
 
 
 import os
@@ -16,7 +16,7 @@ from backend_PI_Utils import * # Import tout ce qui est spécifique au projet
 from backend_PI_mongo_model import * # Import tout ce qui est spécifique au projet
 
 
-# In[2]:
+# In[6]:
 
 
 import global_variables as g
@@ -113,7 +113,7 @@ def update_team_logo(teamid,teamlogo):
 # - **projectID**
 # - **ProjectName**
 
-# In[3]:
+# In[9]:
 
 
 def list_teams(project=None):
@@ -128,7 +128,7 @@ def list_teams(project=None):
         else:
             projectinfo=Projects.objects(ProjectName=project).first()
             pid=projectinfo.ProjectID
-        team = Teams.objects(Archived=False,ProjectID=pid)
+        team = Teams.objects(ProjectID=pid)
         if g.DEBUG_OL >= 2:
             print('Team\t\t - \t Project')
     team1= []
@@ -154,7 +154,7 @@ def list_teams(project=None):
     return(list_teams)
 
 
-# In[ ]:
+# In[10]:
 
 
 #list_teams("titi")
