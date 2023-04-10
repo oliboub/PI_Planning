@@ -3,7 +3,7 @@
 
 # ## PI User Management
 
-# In[1]:
+# In[7]:
 
 
 import os
@@ -24,13 +24,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[2]:
+# In[8]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[3]:
+# In[9]:
 
 
 connect('PIPlanning')
@@ -40,7 +40,7 @@ connect('PIPlanning')
 # ### My Info
 # #### Who am I
 
-# In[6]:
+# In[13]:
 
 
 def who_am_i_gui(alias):
@@ -51,9 +51,9 @@ def who_am_i_gui(alias):
 #    font='Calibri 11'
 #    print(theme)
 #    sg.theme(theme)
-    memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(alias)
+    memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(alias)
     if g.DEBUG_OL >= 2:
-        print(memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role)
+        print(memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role)
     left_layout=[
         [sg.T('Alias Name', size=(10,1),font=g.FONT),sg.I(alias,key='-ALIAS-',enable_events=False,disabled=True, size=(50,1),font=g.FONT)],
         [sg.T('First name', size=(10,1),font=g.FONT),sg.I(firstname,key='-FIRST-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
@@ -67,6 +67,7 @@ def who_am_i_gui(alias):
     ]
     bottom_left=[[sg.T('UI Theme:', size=(10,1),font=g.FONT),sg.I(theme,key='-THEME-',enable_events=False,disabled=True,size=(50,1),font=g.FONT)]]
     bottom_right=[[sg.T('Admin:', size=(10,1),font=g.FONT),sg.I('Yes',key='-ADMIN-',enable_events=False,disabled=True,size=(10,1),font=g.FONT)]]
+    bottom_2right=[[sg.T('Portfolio:', size=(10,1),font=g.FONT),sg.I('Yes',key='-PORTFOLIO-',enable_events=False,disabled=True,size=(10,1),font=g.FONT)]]
     bottom_sright=[[sg.B('Change password',key='-PASSWD-',size=(10,1),font=g.FONT)]]
     
     layout=[[[sg.Frame('User info',left_layout, vertical_alignment='center',pad=((15,15),(15,15))),
@@ -74,7 +75,8 @@ def who_am_i_gui(alias):
              sg.Frame('Allocated Project Info',right_layout,element_justification='center',vertical_alignment='top',pad=((15,15),(15,15)))],
              sg.Frame('Application', bottom_left,element_justification='center',vertical_alignment='top',pad=((15,15),(15,15))),
              sg.B('Change password',key='-PASSWD-',size=(10,2)),
-            sg.Frame('Admin',bottom_right,key='-FADMN-',element_justification='center',visible=False,vertical_alignment='top',pad=((15,15),(15,15)))],
+             sg.Frame('Admin',bottom_right,key='-FADMN-',element_justification='center',visible=False,vertical_alignment='top',pad=((15,15),(15,15))),
+             sg.Frame('Portfolio',bottom_2right,key='-FPORTF-',element_justification='center',visible=False,vertical_alignment='top',pad=((15,15),(15,15)))],
              [sg.B('Return')]]
     
     window=MyWindow('Who am I',layout,finalize=True)
@@ -82,6 +84,9 @@ def who_am_i_gui(alias):
  
     if admin == True:
         window['-FADMN-'].update(visible=True)
+        
+    if portfolio == True:
+        window['-FPORTF-'].update(visible=True)
     
     while True:
         event, values = window.read()
@@ -98,10 +103,12 @@ def who_am_i_gui(alias):
             pass            
 
 
-# In[7]:
+# In[18]:
 
 
-#who_am_i_gui('superadmin')
+#who_am_i_gui('scrumol')
+#who_am_i_gui('admintop')
+#who_am_i_gui('rtelead')
 
 
 # ------
@@ -269,14 +276,14 @@ def select_theme_gui(memberid,theme):
 
 # ### Call User Alias
 
-# In[ ]:
+# In[1]:
 
 
 def user_alias_gui():
     if g.DEBUG_OL >= 1:
         print('function: user_alias_gui()')
     layout=[
-        [sg.T('Alias Name', size=(10,1)),sg.I(key='-ALIAS-', default_text='oliboub', size=(50,1))],
+        [sg.T('Alias Name', size=(10,1)),sg.I(key='-ALIAS-', default_text='', size=(50,1))],
         [sg.OK(),sg.Cancel()]
     ]
     
@@ -336,7 +343,7 @@ def login_window():
         print('function: login_window()')    
     x=3
     layout=[
-        [sg.T('Email', font=g.FONT, size=(10,1)),sg.I(key='-EMAIL-', default_text='oliboub@gmail.com',font=g.FONT, size=(50,1))],
+        [sg.T('Email', font=g.FONT, size=(10,1)),sg.I(key='-EMAIL-', default_text='admin@toto.com',font=g.FONT, size=(50,1))],
         [sg.T('Password', font=g.FONT,size=(10,1)),sg.I(key='-PASSWD-',font=g.FONT, password_char='*', size=(50,1))],
         [sg.OK(),sg.Cancel()]
     ]

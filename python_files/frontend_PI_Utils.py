@@ -7,6 +7,8 @@
 
 
 import os
+import global_variables as g
+g.init()
 import PySimpleGUI as sg
 from screeninfo import get_monitors
 

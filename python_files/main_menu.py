@@ -81,10 +81,22 @@ def main(theme,projectid,project,admin=False):
         ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
+    
+    menu_portfolio = [
+        [ 'Portfolio', ['Project management', 'Portfolio Management','Epic Management','PI Management' ]],
+        ['My Info',['Who am I','Select Theme']],
+        ['Exit', ['Quit']]
+    ]
+    
    
     if admin == True:
         layout = [[sg.Menu(menu_admin)],
               [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
+
+    elif portfolio == True:
+        layout = [[sg.Menu(menu_portfolio)],
+              [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
+    
     else:
         layout = [[sg.Menu(menu_std)],
               [sg.Image(data=convert_to_bytes('../imagesDB/safe.png', resize=(490, 220)))]] 
@@ -170,7 +182,7 @@ if __name__ == '__main__':
         print(UserAlias)
     
     if UserAlias != 'None':
-        memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(UserAlias)
+        memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(UserAlias)
         sg.theme(theme)
         main(theme,projectid,project,admin)
     else:

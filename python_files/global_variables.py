@@ -3,7 +3,7 @@
 
 # # global_variables
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -27,12 +27,16 @@ def init():
     
     global linespage # lines by pages when display lists
     linespage = 5
-    
+
+
+# In[2]:
+
+
+print(os.getcwd(),__name__,'imported')
 
 
 # In[ ]:
 
 
-if g.DEBUG_OL >= 1:
-    print(os.getcwd(),__name__,'imported')
+
 

@@ -37,30 +37,46 @@ project2.save()
 project3 =Projects()
 #project3.ProjectID = 3 # IDentifiant du projet
 project3.ProjectName = 'toto' # Nom du projet
-project1.ProjectDescription = 'Test de plus toto'
+project3.ProjectDescription = 'Essai en vol'
 project3.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project3.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project3.CreationDate = dt_string
 project3.LastUpdate = dt_string
 project3.save()
 
+project4 =Projects()
+#project3.ProjectID = 3 # IDentifiant du projet
+project4.ProjectName = 'tata' # Nom du projet
+project4.ProjectDescription = 'Taratata music box'
+project4.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
+project4.ProjectPIPlanningDuration = 2 # Durée du PI Planning
+project4.CreationDate = dt_string
+project4.LastUpdate = dt_string
+project4.save()
+
+project5 =Projects()
+#project3.ProjectID = 3 # IDentifiant du projet
+project5.ProjectName = 'tutu' # Nom du projet
+project5.ProjectDescription = 'Turlututu chapeau pointu'
+project5.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
+project5.ProjectPIPlanningDuration = 2 # Durée du PI Planning
+project5.CreationDate = dt_string
+project5.LastUpdate = dt_string
+project5.save()
+
+
 team1 = Teams()
-#team1.TeamID = 1
 team1.TeamName = 'PI'
 team1.TeamDescription = 'Developpers de la partie PI planning'
-#team1.PiID = 4
 team1.ProjectID = 1
 team1.TeamLogo = '../imagesDB/PI.jpeg'
-#team1.Archived = False
 team1.CreationDate = dt_string
 team1.LastUpdate = dt_string
 team1.save()
 
 team2 = Teams()
-#team2.TeamID = 2
 team2.TeamName = 'Sprinters'
 team2.TeamDescription = 'Developpers of sprints part'
-#team2.PiID = 0
 team2.ProjectID = 1
 team2.TeamLogo = '../imagesDB/sprinters.jpeg'
 team2.Archived = False
@@ -69,56 +85,82 @@ team2.LastUpdate = dt_string
 team2.save()
 
 team3 = Teams()
-#team3.TeamID = 3
 team3.TeamName = 'tintin'
 team3.TeamDescription = 'Developpers of reports part'
-#team3.PiID = 4
 team3.ProjectID = 1
-team3TeamLogo = '../imagesDB/report.jpeg'
+team3.TeamLogo = '../imagesDB/report.jpeg'
 team3.CreationDate = dt_string
 team3.LastUpdate = dt_string
 team3.save()
 
 team4 = Teams()
-#team4.TeamID = 3
 team4.TeamName = 'OKCorral'
 team4.TeamDescription = 'Developpers of reports menu'
-#team4.PiID = 5
+team4.TeamLogo = '../imagesDB/ok-corral-sign.jpg'
 team4.ProjectID = 2
 team4.CreationDate = dt_string
 team4.LastUpdate = dt_string
 team4.save()
 
 team5 = Teams()
-#team5.TeamID = 6
 team5.TeamName = 'SystemOnCloud'
 team5.TeamDescription = 'System team of reports cloud'
-#team5.PiID = 1
 team5.ProjectID = 1
-team5.TeamLogo = '../imagesDB/starbust.jpeg'
+team5.TeamLogo = '../imagesDB/cloud.jpg'
 team5.Archived = True
 team5.CreationDate = dt_string
 team5.LastUpdate = dt_string
 team5.save()
 
 team6 = Teams()
-#team6.TeamID = 7
 team6.TeamName = 'System2023'
 team6.TeamDescription = 'System team of 2023'
-#team6.PiID = 0
 team6.ProjectID = 2
-team6TeamLogo = '../imagesDB/system.jpeg'
+team6.TeamLogo = '../imagesDB/system.jpeg'
 team6.Archived = False
 team6.CreationDate = dt_string
 team6.LastUpdate = dt_string
 team6.save()
 
+team7 = Teams()
+#team6.TeamID = 7
+team7.TeamName = 'applepie'
+team7.TeamDescription = 'Team to define size of pies'
+#team6.PiID = 0
+team7.ProjectID = 1
+team7.TeamLogo = '../imagesDB/applepie.jpg'
+team7.Archived = False
+team7.CreationDate = dt_string
+team7.LastUpdate = dt_string
+team7.save()
+
+team8 = Teams()
+team8.TeamName = 'taskers'
+team8.TeamDescription = 'Team to work on tasks'
+team8.ProjectID = 2
+team8.TeamLogo = '../imagesDB/starburst.jpeg'
+team8.Archived = False
+team8.CreationDate = dt_string
+team8.LastUpdate = dt_string
+team8.save()
+
+team9 = Teams()
+team9.TeamName = 'Deep learning'
+team9.TeamDescription = 'Analyze how to reuse our data to progress'
+team9.ProjectID = 4
+team9.TeamLogo = '../imagesDB/reseau_neuronal.jpg'
+team9.Archived = False
+team9.CreationDate = dt_string
+team9.LastUpdate = dt_string
+team9.save()
+
+#-----
 
 members1 = Members()
 #members1.MemberID = 1
 members1.MemberName =  'Boubert'
 members1.MemberFirstName = 'Olivier'
-members1.MemberEmail = 'oliboub@gmail.com'
+members1.MemberEmail = 'oliboubr@toto.com'
 members1.MemberAlias = 'oliboub'
 members1.MemberRole = 2
 members1.MemberTheme = 'LightBlue2'
@@ -130,9 +172,9 @@ members1.save()
 
 members2 = Members()
 #members2.MemberID = 2
-members2.MemberName =  'TVV'
+members2.MemberName =  'Tuitui'
 members2.MemberFirstName = 'MC'
-members2.MemberEmail = 'mctvv@toto.com'
+members2.MemberEmail = 'tuitui@toto.com'
 members2.MemberAlias = 'MacFly'
 members2.MemberRole = 4
 members2.MemberTheme = 'LightBlue2'
@@ -145,7 +187,7 @@ members3 = Members()
 #members3.MemberID = 3
 members3.MemberName =  'Tartuffe'
 members3.MemberFirstName = 'Claudio'
-members3.MemberEmail = 'ctartuffe@gmail.com'
+members3.MemberEmail = 'ctartuffe@toto.com'
 members3.MemberAlias = 'CrackCl'
 members3.MemberRole = 1
 members3.MemberTheme = 'LightBlue2'
@@ -157,7 +199,7 @@ members4 = Members()
 #members4.MemberID = 4
 members4.MemberName =  'scrumol'
 members4.MemberFirstName = 'sprinter'
-members4.MemberEmail = 'scrumolse@gmail.com'
+members4.MemberEmail = 'scrumolse@toto.com'
 members4.MemberAlias = 'scrumol'
 members4.MemberRole = 3
 members4.MemberTheme = 'LightBlue2'
@@ -166,10 +208,9 @@ members4.LastUpdate = dt_string
 members4.save()
 
 members5 = Members()
-#members1.MemberID = 1
 members5.MemberName =  'admin'
 members5.MemberFirstName = 'admin'
-members5.MemberEmail = 'admin@gmail.com'
+members5.MemberEmail = 'admin@toto.com'
 members5.MemberAlias = 'admintop'
 members5.MemberRole = 5
 members5.MemberTheme = 'LightBlue2'
@@ -177,6 +218,79 @@ members5.MemberAdmin = True
 members5.CreationDate = dt_string
 members5.LastUpdate = dt_string
 members5.save()
+
+members6 = Members()
+members6.MemberName =  'Retail'
+members6.MemberFirstName = 'Valentin'
+members6.MemberEmail = 'rte@toto.com'
+members6.MemberAlias = 'rtelead'
+members6.MemberRole = 7
+members6.MemberTheme = 'LightBlue2'
+members6.MemberPortfolio = True
+members6.CreationDate = dt_string
+members6.LastUpdate = dt_string
+members6.save()
+
+members7 = Members()
+members7.MemberName =  'Aladin'
+members7.MemberFirstName = 'Magic'
+members7.MemberEmail = 'magical@toto.com'
+members7.MemberAlias = 'magical'
+members7.MemberRole = 3
+members7.MemberTheme = 'LightBlue2'
+members7.MemberPortfolio = False
+members7.CreationDate = dt_string
+members7.LastUpdate = dt_string
+members7.save()
+
+members8 = Members()
+members8.MemberName =  'Arthur'
+members8.MemberFirstName = 'Roi'
+members8.MemberEmail = 'kingart@toto.com'
+members8.MemberAlias = 'kingart'
+members8.MemberRole = 2
+members8.MemberTheme = 'LightBlue2'
+members8.MemberPortfolio = False
+members8.CreationDate = dt_string
+members8.LastUpdate = dt_string
+members8.save()
+
+members9 = Members()
+members9.MemberName =  'Facile'
+members9.MemberFirstName = 'Itateur'
+members9.MemberEmail = 'facilitateur@toto.com'
+members9.MemberAlias = 'facilitateur'
+members9.MemberRole = 4
+members9.MemberTheme = 'LightBlue2'
+members9.MemberPortfolio = False
+members9.CreationDate = dt_string
+members9.LastUpdate = dt_string
+members9.save()
+
+members10 = Members()
+members10.MemberName =  'Parson'
+members10.MemberFirstName = 'Alain'
+members10.MemberEmail = 'synthezic@toto.com'
+members10.MemberAlias = 'synthezic'
+members10.MemberRole = 1
+members10.MemberTheme = 'LightBlue2'
+members10.MemberPortfolio = False
+members10.CreationDate = dt_string
+members10.LastUpdate = dt_string
+members10.save()
+
+members11 = Members()
+members11.MemberName =  'Buzzee'
+members11.MemberFirstName = 'Berndt'
+members11.MemberEmail = 'buz1@toto.com'
+members11.MemberAlias = 'Buziness1'
+members11.MemberRole = 6
+members11.MemberTheme = 'LightBlue2'
+members11.MemberPortfolio = False
+members11.CreationDate = dt_string
+members11.LastUpdate = dt_string
+members11.save()
+
 
 PiTeams1 = Piteams()
 PiTeams1.PiID = 4
@@ -239,10 +353,25 @@ role4.save()
 role5= Roles()
 #role5.RoleID=5
 role5.RoleName ="admin"
-role5.RoleDescription ="administrateur de l'outil)"
+role5.RoleDescription ="administrateur de l'outil"
 role5.CreationDate = dt_string
 role5.LastUpdate = dt_string
 role5.save()
+
+role6= Roles()
+role6.RoleName ="Business Owner"
+role6.RoleDescription ="Business Owner"
+role6.CreationDate = dt_string
+role6.LastUpdate = dt_string
+role6.save()
+
+role7= Roles()
+role7.RoleName ="Portfolio"
+role7.RoleDescription ="Portfolio manager"
+role7.CreationDate = dt_string
+role7.LastUpdate = dt_string
+role7.save()
+
 
 #-------------
 
@@ -275,6 +404,37 @@ alloc5 =LinkMemberTeam()
 alloc5.MemberID = 5
 alloc5.TeamID = 1
 alloc5.save()
+
+alloc6 =LinkMemberTeam()
+#alloc2.AllocationID = 2
+alloc6.MemberID = 6
+alloc6.TeamID = 1
+alloc6.save()
+
+alloc7 =LinkMemberTeam()
+#alloc2.AllocationID = 2
+alloc7.MemberID = 7
+alloc7.TeamID = 3
+alloc7.save()
+
+alloc8 =LinkMemberTeam()
+#alloc2.AllocationID = 2
+alloc8.MemberID = 8
+alloc8.TeamID = 2
+alloc8.save()
+
+alloc9=LinkMemberTeam()
+#alloc2.AllocationID = 2
+alloc9.MemberID = 9
+alloc9.TeamID = 2
+alloc9.save()
+
+alloc10=LinkMemberTeam()
+#alloc2.AllocationID = 2
+alloc10.MemberID = 9
+alloc10.TeamID = 4
+alloc10.save()
+
 
 sprint1=Sprints()
 #sprint1.SprintID = 1
@@ -408,30 +568,30 @@ capa2.CapacityDays = 30
 capa2.MissingDays = 10
 capa2.save()
 
-linkmr1 = LinkMemberRole()
-linkmr1.MemberID = 1
-linkmr1.RoleID = 2
-linkmr1.save()
+#linkmr1 = LinkMemberRole()
+#linkmr1.MemberID = 1
+#linkmr1.RoleID = 2
+#linkmr1.save()
 
-linkmr2 = LinkMemberRole()
-linkmr2.MemberID = 2
-linkmr2.RoleID = 1
-linkmr2.save()
+#linkmr2 = LinkMemberRole()
+#linkmr2.MemberID = 2
+#linkmr2.RoleID = 1
+#linkmr2.save()
 
-linkmr3 = LinkMemberRole()
-linkmr3.MemberID = 3
-linkmr3.RoleID = 1
-linkmr3.save()
+#linkmr3 = LinkMemberRole()
+#linkmr3.MemberID = 3
+#linkmr3.RoleID = 1
+#linkmr3.save()
 
-linkmr4 = LinkMemberRole()
-linkmr4.MemberID = 4
-linkmr4.RoleID = 3
-linkmr4.save()
+#linkmr4 = LinkMemberRole()
+#linkmr4.MemberID = 4
+#linkmr4.RoleID = 3
+#linkmr4.save()
 
-linkmr5 = LinkMemberRole()
-linkmr5.MemberID = 5
-linkmr5.RoleID = 5
-linkmr5.save()
+#linkmr5 = LinkMemberRole()
+#linkmr5.MemberID = 5
+#linkmr5.RoleID = 5
+#linkmr5.save()
 
 
 disconnect()

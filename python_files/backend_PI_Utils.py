@@ -7,6 +7,8 @@
 
 
 import os
+import global_variables as g
+g.init()
 import PIL.Image
 import io
 import base64

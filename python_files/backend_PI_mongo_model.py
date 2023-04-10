@@ -50,6 +50,7 @@ class Members(Document):
     MemberPassword = BinaryField(default=hashAndSalt)
     MemberFirstConnection = BooleanField(default=True)
     MemberAdmin = BooleanField(default=False)
+    MemberPortfolio = BooleanField(default=False)
     Archived = BooleanField(default=False) # Membres actifs
     CreationDate = DateTimeField()
     LastUpdate = DateTimeField()
@@ -115,10 +116,10 @@ class Capacity(Document):
     CapacityDays = IntField(required=True)
     MissingDays = IntField(default=0)
 
-class LinkMemberRole(Document):
-    LinkMemberRoleID = SequenceField()  # identifiant unique
-    MemberID =  IntField(required=True)
-    RoleID =  IntField(required=True)
+#class LinkMemberRole(Document):
+#    LinkMemberRoleID = SequenceField()  # identifiant unique
+#    MemberID =  IntField(required=True)
+#    RoleID =  IntField(required=True)
 
 
 #### Tasks 
@@ -168,6 +169,12 @@ class TasksStatus(Document):
 # In[ ]:
 
 
-if g.DEBUG_OL >= 1:
-    print(os.getcwd(),__name__,'imported')
+#if g.DEBUG_OL >= 1:
+print(os.getcwd(),__name__,'imported')
+
+
+# In[ ]:
+
+
+
 

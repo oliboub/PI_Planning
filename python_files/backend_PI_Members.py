@@ -116,6 +116,7 @@ def query_member_alias(Alias):
         print('Member Email:',member1.MemberEmail)
         print('Member Theme:',member1.MemberTheme)
         print('Member admin:',member1.MemberAdmin)
+        print('Member Portfolio:',member1.MemberPortfolio)
         print('Member status:',member1.Archived)
         print('Member lastupdate:',member1.LastUpdate)
         print('Member First Connection:',member1.MemberFirstConnection)
@@ -127,7 +128,7 @@ def query_member_alias(Alias):
         print('Role:',role.RoleName)
         
     
-    return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,member1.MemberAdmin,member1.Archived,member1.LastUpdate,member1.MemberFirstConnection,project.ProjectID,project.ProjectName,team.TeamID,team.TeamName,role.RoleID,role.RoleName)
+    return(member1.MemberID,member1.MemberName,member1.MemberAlias,member1.MemberFirstName,member1.MemberEmail,member1.MemberTheme,member1.MemberAdmin,member1.MemberPortfolio,member1.Archived,member1.LastUpdate,member1.MemberFirstConnection,project.ProjectID,project.ProjectName,team.TeamID,team.TeamName,role.RoleID,role.RoleName)
 
 
 # In[ ]:
@@ -189,8 +190,8 @@ def list_members_by_team(team=None):
     for member in membersid:
         if g.DEBUG_OL >= 2:
                 print(member)
-        memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(member)
-        member2=[memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
+        memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(member)
+        member2=[memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
         if g.DEBUG_OL >= 2:
             print(member2)
         members.append(member2)
