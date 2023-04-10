@@ -3,7 +3,7 @@
 
 # ## PI Project Management
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -24,13 +24,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
@@ -99,7 +99,7 @@ def create_project_gui(info='info'):
 
 # ### list_projects_gui(page=1,linespage=5,info)
 
-# In[ ]:
+# In[4]:
 
 
 def list_projects_gui(page=1,linespage=5,info='info'):
@@ -286,7 +286,7 @@ def list_projects_gui(page=1,linespage=5,info='info'):
             list_projects_gui(page,linespage,info)
 
 
-# In[ ]:
+# In[5]:
 
 
 #list_projects_gui()
