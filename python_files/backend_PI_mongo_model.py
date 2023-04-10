@@ -127,6 +127,7 @@ class Capacity(Document):
 class Tasks(Document):
     TaskID = SequenceField()
     SprintID = IntField()
+    TaskFamilyID = IntField(required=True,default=1)
     TaskCategoryID = IntField(required=True,default=5)
     TaskName = StringField(required=True)
     TaskWeight=FloatField()
@@ -156,7 +157,16 @@ class TasksCategory(Document):
     CreationDate = DateTimeField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
+
+class TasksFamily(Document):
+    TaskCategoryID = SequenceField()
+    TaskFamilyName = StringField(required=True)
+    TaskFamilyDescription = StringField()
+    CreationDate = DateTimeField()
+    LastUpdate = DateTimeField()
+    Archived = BooleanField(default=False) # PI archived
     
+
 class TasksStatus(Document):
     TaskStatusID=SequenceField()
     TaskStatusName=StringField(required=True)

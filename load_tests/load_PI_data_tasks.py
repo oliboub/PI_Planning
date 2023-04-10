@@ -60,6 +60,41 @@ taskd3.LastUpdate=dt_string
 taskd3.save()
 
 
+taskf1 = TasksFamily()
+taskf1.TaskFamilyName = 'Epic'
+taskf1.TaskFamilyDescription = 'Link to all Epic'
+taskf1.CreationDate=dt_string
+taskf1.LastUpdate=dt_string
+taskf1.save()
+
+taskf2 = TasksFamily()
+taskf2.TaskFamilyName = 'Capability'
+taskf2.TaskFamilyDescription = 'Link to all Capabiliy'
+taskf2.CreationDate=dt_string
+taskf2.LastUpdate=dt_string
+taskf2.save()
+
+taskf3 = TasksFamily()
+taskf3.TaskFamilyName = 'Feature'
+taskf3.TaskFamilyDescription = 'Link to all features'
+taskf3.CreationDate=dt_string
+taskf3.LastUpdate=dt_string
+taskf3.save()
+
+taskf4 = TasksFamily()
+taskf4.TaskFamilyName = 'Story'
+taskf4.TaskFamilyDescription = 'Link to all Story'
+taskf4.CreationDate=dt_string
+taskf4.LastUpdate=dt_string
+taskf4.save()
+
+taskf5 = TasksFamily()
+taskf5.TaskFamilyName = 'Defect'
+taskf5.TaskFamilyDescription = 'Link to all Defect'
+taskf5.CreationDate=dt_string
+taskf5.LastUpdate=dt_string
+taskf5.save()
+
 taskc1 = TasksCategory()
 taskc1.TaskCategoryProjectID=1
 taskc1.TaskCategoryName='Projects activity'
