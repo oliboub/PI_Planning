@@ -25,8 +25,8 @@ project1.save()
 
 project2 =Projects()
 #project2.ProjectID = 2 # IDentifiant du projet
-project2.ProjectName = 'titi' # Nom du projet]
-project2.ProjectDescription = 'test titi' # Description du projet
+project2.ProjectName = 'Titi' # Nom du projet]
+project2.ProjectDescription = 'Test titi' # Description du projet
 project2.ProjectPIPlanning = '02/02/2023' # Date du PI Planning
 project2.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project2.CreationDate = dt_string
@@ -36,7 +36,7 @@ project2.save()
 
 project3 =Projects()
 #project3.ProjectID = 3 # IDentifiant du projet
-project3.ProjectName = 'toto' # Nom du projet
+project3.ProjectName = 'Toto' # Nom du projet
 project3.ProjectDescription = 'Essai en vol'
 project3.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project3.ProjectPIPlanningDuration = 2 # Durée du PI Planning
@@ -46,7 +46,7 @@ project3.save()
 
 project4 =Projects()
 #project3.ProjectID = 3 # IDentifiant du projet
-project4.ProjectName = 'tata' # Nom du projet
+project4.ProjectName = 'Tata' # Nom du projet
 project4.ProjectDescription = 'Taratata music box'
 project4.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project4.ProjectPIPlanningDuration = 2 # Durée du PI Planning
@@ -56,7 +56,7 @@ project4.save()
 
 project5 =Projects()
 #project3.ProjectID = 3 # IDentifiant du projet
-project5.ProjectName = 'tutu' # Nom du projet
+project5.ProjectName = 'Tutu' # Nom du projet
 project5.ProjectDescription = 'Turlututu chapeau pointu'
 project5.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project5.ProjectPIPlanningDuration = 2 # Durée du PI Planning
@@ -85,7 +85,7 @@ team2.LastUpdate = dt_string
 team2.save()
 
 team3 = Teams()
-team3.TeamName = 'tintin'
+team3.TeamName = 'Tintin'
 team3.TeamDescription = 'Developpers of reports part'
 team3.ProjectID = 1
 team3.TeamLogo = '../imagesDB/report.jpeg'
@@ -124,7 +124,7 @@ team6.save()
 
 team7 = Teams()
 #team6.TeamID = 7
-team7.TeamName = 'applepie'
+team7.TeamName = 'Applepie'
 team7.TeamDescription = 'Team to define size of pies'
 #team6.PiID = 0
 team7.ProjectID = 1
@@ -135,7 +135,7 @@ team7.LastUpdate = dt_string
 team7.save()
 
 team8 = Teams()
-team8.TeamName = 'taskers'
+team8.TeamName = 'Taskers'
 team8.TeamDescription = 'Team to work on tasks'
 team8.ProjectID = 2
 team8.TeamLogo = '../imagesDB/starburst.jpeg'
@@ -197,8 +197,8 @@ members3.save()
 
 members4 = Members()
 #members4.MemberID = 4
-members4.MemberName =  'scrumol'
-members4.MemberFirstName = 'sprinter'
+members4.MemberName =  'Scrumol'
+members4.MemberFirstName = 'Sprinter'
 members4.MemberEmail = 'scrumolse@toto.com'
 members4.MemberAlias = 'scrumol'
 members4.MemberRole = 3
@@ -208,8 +208,8 @@ members4.LastUpdate = dt_string
 members4.save()
 
 members5 = Members()
-members5.MemberName =  'admin'
-members5.MemberFirstName = 'admin'
+members5.MemberName =  'Admin'
+members5.MemberFirstName = 'Admin'
 members5.MemberEmail = 'admin@toto.com'
 members5.MemberAlias = 'admintop'
 members5.MemberRole = 5
@@ -329,7 +329,7 @@ role1.save()
 role2= Roles()
 #role2.RoleID=2
 role2.RoleName ="Solution Owner"
-role2.RoleDescription ="Responsable de libraison d'une équipe agile et de livrer les objectifs du PI"
+role2.RoleDescription ="Responsable de livraison d'une équipe agile et de livrer les objectifs du PI"
 role2.CreationDate = dt_string
 role2.LastUpdate = dt_string
 role2.save()
