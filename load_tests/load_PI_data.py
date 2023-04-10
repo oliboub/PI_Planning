@@ -431,10 +431,15 @@ alloc9.save()
 
 alloc10=LinkMemberTeam()
 #alloc2.AllocationID = 2
-alloc10.MemberID = 9
+alloc10.MemberID = 10
 alloc10.TeamID = 4
 alloc10.save()
 
+alloc10=LinkMemberTeam()
+#alloc2.AllocationID = 2
+alloc10.MemberID = 11
+alloc10.TeamID = 4
+alloc10.save()
 
 sprint1=Sprints()
 #sprint1.SprintID = 1

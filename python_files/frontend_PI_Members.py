@@ -3,7 +3,7 @@
 
 # ## frontend_PI_Members
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -25,13 +25,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
@@ -176,7 +176,7 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[ ]:
+# In[6]:
 
 
 def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
@@ -192,11 +192,16 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
     
     if teamid == None:
         members1=list_members_by_team()
-        teams=list_teams()
+        
     else:
         members1=list_members_by_team(teamid)
-        teamsearch=Teams.objects(TeamID=members1[0][12]).first()
-        teams=list_teams(teamsearch.ProjectID)
+        if "Error:" in members1:
+            print(members1)
+            sg.popup(members1+'\nReset to all teams',title="Warning",auto_close=True, auto_close_duration=3,)
+            members1=list_members_by_team(None)
+
+    teamsearch=Teams.objects(TeamID=members1[0][13]).first()
+    teams=list_teams(teamsearch.ProjectID)
         
     for i in teams:
         if i[7] == False:
@@ -212,7 +217,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
     if g.DEBUG_OL >= 2:
         print(teams[0][1],comboteams,comboroles)
 
-#return [memberid,name,alias,firstname,email,theme,admin,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
+#return [memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
 #   members = sorted(members1, key=lambda x: (x[8], x[2]))
     order1=int(order1)
     order2=int(order2)
@@ -242,7 +247,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
     if teamid == None:
         titlewindows='List of Members for all teams'
     else:
-        titlewindows='List of Members for the team: '+members[0][13]+' of project: '+members[0][11]
+        titlewindows='List of Members for the team: '+members[0][14]+' of project: '+members[0][12]
         
     sg.set_options(element_padding=(5, 5))
 #    list_teams=list_teams_all()
@@ -262,7 +267,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
     idx=0
     for member in members:
         if g.DEBUG_OL >= 2:
-            print('MemberID',member[0],'\tProjectID',member[10],'\Status:',member[7])
+            print('MemberID',member[0],'\tProjectID',member[11],'\Status:',member[7])
         
         if member[7] is False:
             status='Active'
@@ -279,14 +284,14 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
    
         row = [
 #            sg.I(member[13],enable_events=True,key=f'-TNAME-{member[0]}', font=g.FONT, size=(20,1)),
-               sg.Combo(comboteams,enable_events=True,key=f'-TNAME-{member[0]}',default_value=member[13],size=(20, 1),font=g.FONT),
-               sg.I(member[12],enable_events=False, visible=False,key=f'-TID-{member[0]}', font=g.FONT, size=(20,1)),
+               sg.Combo(comboteams,enable_events=True,key=f'-TNAME-{member[0]}',default_value=member[14],size=(20, 1),font=g.FONT),
+               sg.I(member[13],enable_events=False, visible=False,key=f'-TID-{member[0]}', font=g.FONT, size=(20,1)),
                sg.I(member[1],enable_events=True,key=f'-NAME-{member[0]}', font=g.FONT, size=(20,1)),
                sg.I(member[3],enable_events=True,key=f'-FNAME-{member[0]}', font=g.FONT,size=(20,1)),
                sg.I(member[2],enable_events=True,key=f'-ALIAS-{member[0]}', font=g.FONT,size=(20,1)),
                sg.I(member[4],enable_events=True,key=f'-EMAIL-{member[0]}', font=g.FONT,size=(20,1)),
-               sg.Combo(comboroles,enable_events=True,key=f'-ROLE-{member[0]}',default_value=member[15],font=g.FONT,size=(20,1)),
-               sg.I(member[14],enable_events=False, visible=False,key=f'-ROLEID-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.Combo(comboroles,enable_events=True,key=f'-ROLE-{member[0]}',default_value=member[16],font=g.FONT,size=(20,1)),
+               sg.I(member[15],enable_events=False, visible=False,key=f'-ROLEID-{member[0]}', font=g.FONT,size=(20,1)),
                
                sg.B('Update',enable_events=True, key=f'-UPDT-{member[0]}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
                sg.T(' ',font=g.FONT,size=(5, 1)),
@@ -363,13 +368,13 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
         if event1 == '-NFILTER-':
             order1=1
             order2=3
-            order3=8
+            order3=9
             page = 1
             window.close()
             list_members_gui(teamid,page,linespage,order1, order2, order3,info)
 
         if event1 == '-RFILTER-':
-            order1=10
+            order1=11
             order2=1
             order3=3
             page = 1
@@ -493,7 +498,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             
 #            desc='-DESC-'+str(itemupd.RoleID)
 
-            if g.DEBUG_OL >= 1:
+            if g.DEBUG_OL >= 2:
                 print(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
             update_member(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
             page = 1
@@ -502,10 +507,10 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
        
 
 
-# In[ ]:
+# In[7]:
 
 
-#list_members_gui('OKCorral')
+#list_members_gui('applepie')
 
 
 # In[ ]:

@@ -5,7 +5,7 @@
 
 # ## prerequisites
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -18,7 +18,7 @@ from backend_PI_mongo_model import * # Import tout ce qui est spécifique au pro
 #from frontend_PI import *
 
 
-# In[ ]:
+# In[2]:
 
 
 import global_variables as g
@@ -28,7 +28,7 @@ connect('PIPlanning')
 
 # ## query_member(alias)
 
-# In[ ]:
+# In[3]:
 
 
 def query_member(alias):
@@ -73,7 +73,7 @@ def query_member(alias):
 # ## query_member_alias(alias)
 # Can be alias or ID
 
-# In[ ]:
+# In[4]:
 
 
 def query_member_alias(Alias):
@@ -144,7 +144,7 @@ def query_member_alias(Alias):
 # - **TeamID**
 # 
 
-# In[ ]:
+# In[5]:
 
 
 def list_members_by_team(team=None):
@@ -163,7 +163,7 @@ def list_members_by_team(team=None):
         if g.DEBUG_OL >= 2:
             print(len(members1))
 
-    if type(team) is str and team != None :
+    elif type(team) is str and team != None :
         try:
             teamselected=Teams.objects(TeamName=team).first()
             teamid=teamselected.TeamID
@@ -175,8 +175,13 @@ def list_members_by_team(team=None):
     elif type(team) is int:
         teamid=team
     
+    if g.DEBUG_OL >= 2:
+        print('Teamid:',teamid)
+    
     if teamid != 0:
         members1=LinkMemberTeam.objects(TeamID=teamid)
+        if len(members1) == 0:
+            return "Error: Team has no members"
 
         if g.DEBUG_OL >= 2:
             print('teamid:',teamid,'Qtt members found:',len(members1))      
@@ -199,11 +204,11 @@ def list_members_by_team(team=None):
     return(members)
 
 
-# In[ ]:
+# In[7]:
 
 
 #list_members_by_team()
-#list_members_by_team('OKCorral')
+#list_members_by_team('applepie')
 
 
 # ## create_member(MemberName,FirstName.alias,email,teamid,roleid,MemberTheme='lightblue2',password='default123',admin=False)
