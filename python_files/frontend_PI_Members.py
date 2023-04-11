@@ -37,14 +37,14 @@ from frontend_PI_Utils import *
 connect('PIPlanning')
 
 
-# ## create_member_gui(info)
+# ## create_member_gui(memberid,info)
 
 # In[ ]:
 
 
-def create_member_gui(info='Info'):
+def create_member_gui(memberid,info='Info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_member_gui(',info,')')
+        print('--- function: create_member_gui(',memberid,info,')')
  
     sg.set_options(element_padding=(5, 10))
     fin=0
@@ -158,7 +158,7 @@ def create_member_gui(info='Info'):
 #                print('name:',values['-MNAME-'],'first name:',values['-FNAME-'],'alias:',values['-ALIAS-'],'email:',values['-EMAIL-'],'teamid:',teamid,'roleid:',roleid)
                 print('name:',username,'first name:',firstname,'alias:',alias,'email:',email,'teamid:',teamid,'roleid:',roleid)
 
-            id=create_member(username,firstname,alias,email,teamid,roleid)
+            id=create_member(username,firstname,alias,email,teamid,roleid,memberid,)
             if g.DEBUG_OL >= 2:
                 print('New user created with id:',id)
             sg.popup('New user '+alias+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
@@ -176,12 +176,12 @@ def create_member_gui(info='Info'):
 
 # ## list_members_gui(teamid,page,linespage,info='info')
 
-# In[6]:
+# In[7]:
 
 
-def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
+def list_members_gui(memberid,teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_members_gui(',teamid,page,linespage,order1, order2, order3,info,')')
+        print('--- function: list_members_gui(',memberid,teamid,page,linespage,order1, order2, order3,info,')')
  
     #    global page
     members=[]
@@ -196,9 +196,10 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
     else:
         members1=list_members_by_team(teamid)
         if "Error:" in members1:
-            print(members1)
+            if g.DEBUG_OL >= 1:
+                print(members1)
             sg.popup(members1+'\nReset to all teams',title="Warning",auto_close=True, auto_close_duration=3,)
-            members1=list_members_by_team(None)
+            members1=list_members_gui(memberid)
 
     teamsearch=Teams.objects(TeamID=members1[0][13]).first()
     teams=list_teams(teamsearch.ProjectID)
@@ -354,7 +355,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             order3=3
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
             
             
         if event1 == '-AFILTER-':
@@ -363,7 +364,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             order3=3
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
  
         if event1 == '-NFILTER-':
             order1=1
@@ -371,7 +372,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             order3=9
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
 
         if event1 == '-RFILTER-':
             order1=11
@@ -379,7 +380,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             order3=3
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
 
         if event1 == '-LFILTER-':
             order1=4
@@ -387,7 +388,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             order3=3
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
 
 
         if event1 == "-DLINES-":
@@ -397,34 +398,34 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
                 linespage=int(values1['-DLINES-'])
                 page=1
                 window.close()
-                list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+                list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
                                                   
         if event1 == "-NEXT-":
             page += 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
 
         if event1 == "-BACK-":
             page -= 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
         
         if event1 == "-BEGIN-":
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
         
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
             print(page)
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
 
         if event1 == "-CMEMBER-":
             window.close()
-            create_member_gui()
+            create_member_gui(memberid)
             page = 1
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
             
             
         if event1 == '-TEAMS-':
@@ -432,7 +433,7 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
             window.close()
             newteam=Teams.objects(TeamName=values1['-TEAMS-']).first()
             teamid=newteam.TeamID
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
              
 
         if '-ARCH-' in event1:
@@ -447,10 +448,10 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
                 
             if g.DEBUG_OL >= 2:
                 print(a,newstatus)
-            archive_member(a,newstatus)
+            archive_member(a,newstatus,memberid)
             page = 1
             window.close()
-            list_members_gui(teamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,teamid,page,linespage,order1, order2, order3,info)
 
         
         if '-TNAME-' in event1:
@@ -499,18 +500,19 @@ def list_members_gui(teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,i
 #            desc='-DESC-'+str(itemupd.RoleID)
 
             if g.DEBUG_OL >= 2:
-                print(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
-            update_member(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid])
+                print(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid],memberid,)
+            update_member(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid],memberid,)
             page = 1
             window.close()
-            list_members_gui(oldteamid,page,linespage,order1, order2, order3,info)
+            list_members_gui(memberid,oldteamid,page,linespage,order1, order2, order3,info)
        
 
 
-# In[7]:
+# In[8]:
 
 
 #list_members_gui('applepie')
+#list_members_gui()
 
 
 # In[ ]:

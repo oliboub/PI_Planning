@@ -5,7 +5,7 @@
 
 # ## Imports
 
-# In[1]:
+# In[ ]:
 
 
 import os
@@ -26,7 +26,7 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[2]:
+# In[ ]:
 
 
 from frontend_PI_Utils import *
@@ -39,13 +39,13 @@ from frontend_PI_Roles import *
 time.sleep(1)
 
 
-# In[3]:
+# In[ ]:
 
 
 connect('PIPlanning')
 
 
-# In[4]:
+# In[ ]:
 
 
 if g.DEBUG_OL >= 1:
@@ -58,7 +58,7 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[5]:
+# In[ ]:
 
 
 def main(theme,projectid,project,memberid,admin=False):
@@ -124,7 +124,7 @@ def main(theme,projectid,project,memberid,admin=False):
 
             
         if event == "Manage Members":
-            list_members_gui()
+            list_members_gui(memberid)
 
         if event == "List project teams":
             if g.DEBUG_OL >= 2:
@@ -137,11 +137,6 @@ def main(theme,projectid,project,memberid,admin=False):
             list_all_teams_gui(1,teams,info)
  
 
-        if event == 'Create member':
-            if g.DEBUG_OL >= 2:
-                print(__name__)
-            idx=create_member_gui('Create a new member allocated to a project and a team')
- 
         if event == 'List our team members':
             if g.DEBUG_OL >= 2:
                 print(__name__)
@@ -156,7 +151,7 @@ def main(theme,projectid,project,memberid,admin=False):
         if event == 'Manage Roles':
             if g.DEBUG_OL >= 2:
                 print(__name__)
-            idx=list_roles_gui(1,5,'List of all existing roles')
+            idx=list_roles_gui(memberid,1,5,'List of all existing roles')
 
     #--- My Info
         if event == "Who am I":

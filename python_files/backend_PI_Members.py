@@ -211,14 +211,14 @@ def list_members_by_team(team=None):
 #list_members_by_team('applepie')
 
 
-# ## create_member(MemberName,FirstName.alias,email,teamid,roleid,MemberTheme='lightblue2',password='default123',admin=False)
+# ## create_member(MemberName,FirstName.alias,email,teamid,roleid,memberid,MemberTheme='lightblue2',password='default123',admin=False)
 
 # In[ ]:
 
 
-def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',password="default123",admin=False):
+def create_member(name,firstname,alias,email,teamid,roleid,memberid,theme='LightBlue2',password="default123",admin=False):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_member(',name,firstname,alias,email,teamid,roleid,theme,password,admin,')')
+        print('--- function: create_member(',name,firstname,alias,email,teamid,roleid,memberid,theme,password,admin,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     member = Members()
@@ -234,7 +234,9 @@ def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',pa
     member.MemberAdmin = admin
     member.Archived = False
     member.MemberFirstConnection=True
+    member.CreatedByID = memberid
     member.CreationDate = creationdate
+    member.UpdatedByID = memberid
     member.LastUpdate = creationdate
     member.save()
     
@@ -245,6 +247,10 @@ def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',pa
     teammember= LinkMemberTeam()
     teammember.MemberID = newmember.MemberID
     teammember.TeamID = teamid
+    teammember.CreatedByID = memberid
+    teammember.CreationDate = creationdate
+    teammember.UpdatedByID = memberid
+    teammember.LastUpdate = creationdate
     teammember.save()
     
     if g.DEBUG_OL >= 2:
@@ -258,19 +264,20 @@ def create_member(name,firstname,alias,email,teamid,roleid,theme='LightBlue2',pa
 #create_member('Artic', 'Haud','haudartic','haudartic@toto.com',2,2)
 
 
-# ## archive_member(memberid,newstatus)
+# ## archive_member(memberid,newstatus,memberid)
 
 # In[ ]:
 
 
-def archive_member(memberid,newstatus):
+def archive_member(nameid,newstatus,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: archive_member(',memberid,newstatus,')')
-    item=Members.objects(MemberID=memberid).first()
+        print('--- function: archive_member(',nameid,newstatus,memberid,')')
+    item=Members.objects(MemberID=nameid).first()
     if g.DEBUG_OL >= 2:
         print('archive member name:',item.MemberName)
     now = datetime.now()
     item.Archived = newstatus
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 
@@ -281,28 +288,30 @@ def archive_member(memberid,newstatus):
 #archive_member(2,False)
 
 
-# ## update_member(memberid,teamid,name,firstname,alias,email,roleid)
+# ## update_member(memberid,teamid,name,firstname,alias,email,roleid,memberid)
 
 # In[ ]:
 
 
-def update_member(memberid,teamid,name,firstname,alias,email,roleid):
+def update_member(nameid,teamid,name,firstname,alias,email,roleid,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_member(',memberid,teamid,name,firstname,alias,email,roleid,')')
+        print('--- function: update_member(',nameid,teamid,name,firstname,alias,email,roleid,memberid,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    item=Members.objects(MemberID=memberid).first()
+    item=Members.objects(MemberID=nameid).first()
     item.MemberName =  name
     item.MemberFirstName = firstname
     item.MemberEmail = email
     item.MemberAlias = alias
     item.MemberRole = roleid
-#    MemberAvatar = photo
+    item.UpdatedByID = memberid
     item.LastUpdate = creationdate
     item.save()
     
     teammember= LinkMemberTeam.objects(MemberID=memberid).first()
     teammember.TeamID = teamid
+    teammember.UpdatedByID = memberid
+    teammember.LastUpdate = creationdate
     teammember.save()
     
     if g.DEBUG_OL >= 2:
@@ -312,27 +321,31 @@ def update_member(memberid,teamid,name,firstname,alias,email,roleid):
 
 # ------
 
-# ## write_new_member_theme(memberid,theme)
+# ## write_new_member_theme(nameid,theme,memberid)
 
 # In[ ]:
 
 
 def write_new_member_theme(memberid,theme):
     if g.DEBUG_OL >= 1:
-        print('--- function: write_new_member_theme(',memberid,theme,')')
-    member1 = Members.objects(MemberID=memberid).first()
+        print('--- function: write_new_member_theme(',nameid,theme,memberid,')')
+    now = datetime.now()
+    creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    member1 = Members.objects(MemberID=nameid).first()
     member1.MemberTheme=theme
+    member1.UpdatedByID = memberid
+    member1.LastUpdate = creationdate
     member1.save() 
 
 
-# ## update_member_password(email,password)
+# ## update_member_password(email,password,memberid)
 
 # In[ ]:
 
 
-def update_member_password(email,password):
+def update_member_password(email,password,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_member_passwd(',email,'password',')',)
+        print('--- function: update_member_passwd(',email,'password',memberid,')',)
     member1 = Members.objects(Archived=False,MemberEmail=email).first()
     debug_ol=0
     if g.DEBUG_OL >= 2:
@@ -358,7 +371,8 @@ def update_member_password(email,password):
     fields = {
         'MemberPassword': hashAndSalt,
         'MemberFirstConnection': False,
-        'LastUpdate': creationdate
+        'LastUpdate': creationdate,
+        'UpdatedByID' : memberid
     }
     member1.update(**fields)
 
