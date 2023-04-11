@@ -36,14 +36,14 @@ from frontend_PI_Utils import *
 connect('PIPlanning')
 
 
-# ## create_role_gui(info)
+# ## create_role_gui(memberid,info)
 
 # In[ ]:
 
 
-def create_role_gui(info='Info'):
+def create_role_gui(memberid,info='Info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_role_gui(',info,')')
+        print('--- function: create_role_gui(',memberid,info,')')
  
     sg.set_options(element_padding=(5, 10))
 
@@ -93,7 +93,7 @@ def create_role_gui(info='Info'):
                 sg.popup('Please enter a description',title="info",auto_close=True, auto_close_duration=3,)
        
             else:
-                id=create_role(values['-ROLE-'],values['-DESC-'])
+                id=create_role(values['-ROLE-'],values['-DESC-'],memberid)
                 if g.DEBUG_OL >= 2:
                     print('New Role created with id:',id)
                 sg.popup('New role '+values['-ROLE-']+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
@@ -107,14 +107,14 @@ def create_role_gui(info='Info'):
 #create_role_gui('Please enter the new role to create')
 
 
-# ## list_roles_gui(page,linespage,info='info')
+# ## list_roles_gui(memberid,page,linespage,info='info')
 
 # In[ ]:
 
 
-def list_roles_gui(page=1,linespage=5,info='info'):
+def list_roles_gui(memberid,page=1,linespage=5,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_roles_gui(',page,linespage,info,')')
+        print('--- function: list_roles_gui(',memberid,page,linespage,info,')')
  
     #    global page
     roles=[]
@@ -236,33 +236,33 @@ def list_roles_gui(page=1,linespage=5,info='info'):
                 linespage=int(values1['-DLINES-'])
                 page=1
                 window.close()
-                list_roles_gui(page,linespage,info)
+                list_roles_gui(memberid,page,linespage,info)
                                                   
         if event1 == "-NEXT-":
             page += 1
             window.close()
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
 
         if event1 == "-BACK-":
             page -= 1
             window.close()
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
         
         if event1 == "-BEGIN-":
             page = 1
             window.close()
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
         
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
             window.close()
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
             
         if event1 == "-CROLE-":
             window.close()
-            create_role_gui()
+            create_role_gui(memberid)
             page = 1
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
             
         if '-ARCH-' in event1:
             a=int(event1.split("-")[-1])
@@ -275,10 +275,10 @@ def list_roles_gui(page=1,linespage=5,info='info'):
                 
             if g.DEBUG_OL >= 2:
                 print(a,newstatus)
-            archive_role(a,newstatus)
+            archive_role(a,newstatus,memberid)
             page = 1
             window.close()
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
 
         if '-UPDT-' in event1:
             a=int(event1.split("-")[-1])
@@ -291,10 +291,10 @@ def list_roles_gui(page=1,linespage=5,info='info'):
 
             if g.DEBUG_OL >= 2:
                 print(itemupd.RoleID,"- '",values1[rol],"' - '",values1[desc],"'")
-            update_role(a,values1[rol],values1[desc])
+            update_role(a,values1[rol],values1[desc],memberid)
             page = 1
             window.close()
-            list_roles_gui(page,linespage,info)
+            list_roles_gui(memberid,page,linespage,info)
             
             
             

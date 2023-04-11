@@ -5,7 +5,7 @@
 
 # ## prerequisites
 
-# In[2]:
+# In[ ]:
 
 
 import os
@@ -18,7 +18,7 @@ from backend_PI_mongo_model import * # Import tout ce qui est spécifique au pro
 #from frontend_PI import *
 
 
-# In[3]:
+# In[ ]:
 
 
 import global_variables as g
@@ -26,14 +26,14 @@ g.init()
 connect('PIPlanning')
 
 
-# ## create_role(role,description)
+# ## create_role(role,description,memberid)
 
-# In[6]:
+# In[ ]:
 
 
-def create_role(newrole,description):
+def create_role(newrole,description,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_role(',newrole,description,')')
+        print('--- function: create_role(',newrole,description,memberid,')')
     newrole=newrole.title()
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -41,7 +41,9 @@ def create_role(newrole,description):
     role.RoleName =  newrole
     role.RoleDescription = description
     role.Archived=False
+    role.CreatedByID = memberid
     role.CreationDate = creationdate
+    role.UpdatedByID = memberid
     role.LastUpdate = creationdate
     role.save()
     
@@ -52,25 +54,26 @@ def create_role(newrole,description):
     return createdrole.RoleID
 
 
-# In[7]:
+# In[ ]:
 
 
 #create_role("busines owner HR","Business owner for SAP HR")
 
 
-# ## archive_role(roleid,newstatus)
+# ## archive_role(roleid,newstatus,memberid)
 
 # In[ ]:
 
 
-def archive_role(roleid,newstatus):
+def archive_role(roleid,newstatus,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: archive_role(',roleid,newstatus,')')
+        print('--- function: archive_role(',roleid,newstatus,memberid,')')
     item=Roles.objects(RoleID=roleid).first()
     if g.DEBUG_OL >= 2:
         print('archive role name:',item.RoleName)
     now = datetime.now()
     item.Archived = newstatus
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 
@@ -81,18 +84,19 @@ def archive_role(roleid,newstatus):
 #archive_status_role(1,False)
 
 
-# ## update_role(roleid,rolename,roledescription)
+# ## update_role(roleid,rolename,roledescription,memberid)
 
 # In[ ]:
 
 
-def update_role(roleid,rolename,roledescription):
+def update_role(roleid,rolename,roledescription,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_role(',roleid,rolename,roledescription,')')
+        print('--- function: update_role(',roleid,rolename,roledescription,memberid,')')
     now = datetime.now()
     item=Roles.objects(RoleID=roleid).first()
     item.RoleName = rolename
     item.RoleDescription = roledescription
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 

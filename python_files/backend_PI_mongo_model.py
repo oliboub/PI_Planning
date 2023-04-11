@@ -70,6 +70,7 @@ class Sprints(Document):
     SprintStartDate = DateField() # Date du Sprint1
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived=BooleanField(default=False)     
 
@@ -84,16 +85,20 @@ class PiPlan(Document):
     PiSprintQtt = IntField(required=True)  # Nombre de sprints
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
-class User(Document):
-    username = StringField(required=True, unique=True)
-    password = BinaryField(required=True)
-    email = EmailField(required=True, unique=True)
-    DefaultProject = IntField(default=0)
-    CreationDate = DateTimeField()
-    LastUpdate = DateTimeField()
+#class User(Document):
+#    username = StringField(required=True, unique=True)
+#    password = BinaryField(required=True)
+#    email = EmailField(required=True, unique=True)
+#    DefaultProject = IntField(default=0)
+#    CreatedByID=IntField()
+#    CreationDate = DateTimeField()
+#    UpdatedByID=IntField()
+#    LastUpdate = DateTimeField()
+#    Archived = BooleanField(default=False) # PI archived
 
 class Roles(Document):
     RoleID = SequenceField()  # identifiant unique
@@ -101,6 +106,7 @@ class Roles(Document):
     RoleDescription = StringField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -112,6 +118,7 @@ class LinkMemberTeam(Document):
     TeamID = IntField(required=True) # identifiant de lequipe
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -121,6 +128,7 @@ class Piteams(Document):
     TeamID = IntField(required=True)
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -133,6 +141,7 @@ class Capacity(Document):
     MissingDays = IntField(default=0)
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
