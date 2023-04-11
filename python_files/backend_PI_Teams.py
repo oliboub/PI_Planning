@@ -24,14 +24,14 @@ g.init()
 connect('PIPlanning')
 
 
-# ## create_team(projectID, team, description, logo)
+# ## create_team(projectID, team, description, logo,memberid)
 
 # In[ ]:
 
 
-def create_team(projectID, newteam, description, logo):
+def create_team(projectID, newteam, description, logo,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_team(',projectID,',',newteam,',',description,',',logo,')')
+        print('--- function: create_team(',projectID,',',newteam,',',description,',',logo,',',memberid,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     team1=Teams()
@@ -39,7 +39,9 @@ def create_team(projectID, newteam, description, logo):
     team1.TeamName = newteam
     team1.TeamDescription = description
     team1.TeamLogo = logo
+    team1.CreatedByID = memberid
     team1.CreationDate = creationdate
+    team1.UpdatedByID = memberid
     team1.LastUpdate = creationdate
     team1.save()
 
@@ -56,37 +58,38 @@ def create_team(projectID, newteam, description, logo):
 #create_team(1, 'Absolut','The best of drinking','../imagesDB/absolut_vodka.jpg')
 
 
-# # archive_team(teamid,newstatus)
+# # archive_team(teamid,newstatus,memberid)
 
 # In[ ]:
 
 
-def archive_team(teamid,newstatus):
+def archive_team(teamid,newstatus,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: archive_team(',teamid,newstatus,')')
+        print('--- function: archive_team(',teamid,newstatus,memberid,')')
     item=Teams.objects(TeamID=teamid).first()
     if g.DEBUG_OL >= 2:
         print('archive team name:',item.TeamName)
     now = datetime.now()
     item.Archived = newstatus
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 
 
-# ## update_team(projectid,teamid,teamname,teamdescription,teamlogo)
+# ## update_team(projectid,teamid,teamname,teamdescription,teamlogo,memberid)
 
 # In[ ]:
 
 
-def update_team(projectid,teamid,teamname,teamdescription,teamlogo):
+def update_team(projectid,teamid,teamname,teamdescription,teamlogo,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_team(',projectid,teamid,teamname,teamdescription,teamlogo,')')
+        print('--- function: update_team(',projectid,teamid,teamname,teamdescription,teamlogo,memberid,')')
     now = datetime.now()
     item=Teams.objects(TeamID=teamid).first()
     item.TeamName = teamname
     item.TeamDescription = teamdescription
     item.ProjectID = projectid
-#    item.TeamLogo = teamlogo
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 

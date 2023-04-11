@@ -41,6 +41,7 @@ def create_project(project, description,memberid):
     item.ProjectDescription = description
     item.CreatedByID = memberid
     item.CreationDate = creationdate
+    item.UpdatedByID = memberid
     item.LastUpdate = creationdate
     item.save()
 

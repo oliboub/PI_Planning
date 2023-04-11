@@ -120,7 +120,7 @@ def main(theme,projectid,project,memberid,admin=False):
 #--- Teams
         if event == "Manage Teams":
             info='List of All active Teams even if non allocated to project'
-            list_teams_gui()
+            list_teams_gui(memberid)
 
             
         if event == "Manage Members":
