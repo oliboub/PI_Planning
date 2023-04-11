@@ -338,14 +338,14 @@ def write_new_member_theme(memberid,theme):
     member1.save() 
 
 
-# ## update_member_password(email,password,memberid)
+# ## update_member_password(email,password)
 
 # In[ ]:
 
 
-def update_member_password(email,password,memberid):
+def update_member_password(email,password):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_member_passwd(',email,'password',memberid,')',)
+        print('--- function: update_member_passwd(',email,'password',')',)
     member1 = Members.objects(Archived=False,MemberEmail=email).first()
     debug_ol=0
     if g.DEBUG_OL >= 2:
@@ -371,8 +371,7 @@ def update_member_password(email,password,memberid):
     fields = {
         'MemberPassword': hashAndSalt,
         'MemberFirstConnection': False,
-        'LastUpdate': creationdate,
-        'UpdatedByID' : memberid
+        'LastUpdate': creationdate
     }
     member1.update(**fields)
 
@@ -392,7 +391,7 @@ def update_member_password(email,password,memberid):
 # In[ ]:
 
 
-#update_member_password('oliboub@gmail.com','aaaaaaaa')
+#update_member_password('oliboubr@toto.com')
 
 
 # ## get_actual_password(email,passwd)

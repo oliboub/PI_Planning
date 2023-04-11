@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[5]:
+# In[2]:
 
 
 import os
@@ -16,7 +16,7 @@ from backend_PI_Utils import * # Import tout ce qui est spécifique au projet
 from backend_PI_mongo_model import * # Import tout ce qui est spécifique au projet
 
 
-# In[6]:
+# In[3]:
 
 
 import global_variables as g
@@ -26,12 +26,13 @@ connect('PIPlanning')
 
 # ## create_team(projectID, team, description, logo,memberid)
 
-# In[ ]:
+# In[13]:
 
 
 def create_team(projectID, newteam, description, logo,memberid):
     if g.DEBUG_OL >= 1:
         print('--- function: create_team(',projectID,',',newteam,',',description,',',logo,',',memberid,')')
+    newteam = newteam.capitalize()
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     team1=Teams()
@@ -116,7 +117,7 @@ def update_team_logo(teamid,teamlogo):
 # - **projectID**
 # - **ProjectName**
 
-# In[9]:
+# In[10]:
 
 
 def list_teams(project=None):
@@ -129,6 +130,7 @@ def list_teams(project=None):
         if type(project) is int:
             pid=project
         else:
+            project = project.capitalize()
             projectinfo=Projects.objects(ProjectName=project).first()
             pid=projectinfo.ProjectID
         team = Teams.objects(ProjectID=pid)
@@ -157,7 +159,7 @@ def list_teams(project=None):
     return(list_teams)
 
 
-# In[10]:
+# In[12]:
 
 
 #list_teams("titi")

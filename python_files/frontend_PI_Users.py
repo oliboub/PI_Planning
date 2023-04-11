@@ -97,7 +97,7 @@ def who_am_i_gui(alias):
         if event == ('-PASSWD-'):
             if g.DEBUG_OL >= 2:
                 print('Passwd')
-            msg,firstcon = change_password(email,firstcon)
+            msg,firstcon = change_password(email,firstcon,memberid)
             if g.DEBUG_OL >= 2:
                 print(msg)
             pass            
@@ -229,7 +229,7 @@ def change_password(email,firstcon):
 # In[ ]:
 
 
-# change_password('oliboub@gmail.com',True)
+# change_password('oliboub@gmail.com',True,1)
 
 
 # ### Select Theme
@@ -332,7 +332,7 @@ def user_alias_gui():
             return(MemberAlias)
 
 
-# ## Login_Window
+# ## Login_Window()
 
 # In[ ]:
 

@@ -30,23 +30,19 @@ connect('PIPlanning')
 
 # ## Create Task
 
-# In[3]:
-
-
-'''
-Ths function intend to create a task linked to a sprint or to the backlog
-Backlog means no sprint, with default not plan and no status
-This create_task also creates the first description.
-
-Inputs: 
-- Name of task
-- allocated memberID
-- weight of this task in an agile definition
-- sprintID (not mandatory)
-- category (not mandatory) - can be a family of activity in a team
-- description (not mandatory , but necessary)
-'''
-
+# '''
+# Ths function intend to create a task linked to a sprint or to the backlog
+# Backlog means no sprint, with default not plan and no status
+# This create_task also creates the first description.
+# 
+# Inputs: 
+# - Name of task
+# - allocated memberID
+# - weight of this task in an agile definition
+# - sprintID (not mandatory)
+# - category (not mandatory) - can be a family of activity in a team
+# - description (not mandatory , but necessary)
+# '''
 
 # In[4]:
 
@@ -90,17 +86,13 @@ def create_task(name,memberid,weight,sprintid=None,categoryid=None,description="
 
 # ## Add task description
 
-# In[5]:
-
-
-'''
-in case the lifecycle of a task, we need to add information time to time
-this function allows to add a description to a task with creation date
-inputs:
-- taskID
-- Description
-'''
-
+# '''
+# in case the lifecycle of a task, we need to add information time to time
+# this function allows to add a description to a task with creation date
+# inputs:
+# - taskID
+# - Description
+# '''
 
 # In[6]:
 
@@ -121,26 +113,18 @@ def add_task_description(taskid,description):
     link1.save()
     print('taskid',taskid,'\tdescid',descid,'\tlinkid',link1.TaskDescriptionLinkID)
 
-
-# def task_link_desk(taskid,descid)
-#     link1=TasksDescriptionLinks()
-#     link1.TaskID=taskid
-#     link1.TaskDescriptionID=descid
-
-# add_task_description(15,"** et encore, je ne t'ai pas tout dit")
-
+def task_link_desk(taskid,descid):
+    link1=TasksDescriptionLinks()
+    link1.TaskID=taskid
+    link1.TaskDescriptionID=descid#add_task_description(15,"** et encore, je ne t'ai pas tout dit")
 # ## List Task
 
-# In[7]:
-
-
-'''
-Can be selected with different variables alone or cumulated:
-- ProjectID
-- PiID
-- SprintID
-'''
-
+# '''
+# Can be selected with different variables alone or cumulated:
+# - ProjectID
+# - PiID
+# - SprintID
+# '''
 
 # In[21]:
 
