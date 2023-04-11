@@ -22,6 +22,7 @@ class Projects(Document):
     ProjectPIPlanningDuration = IntField(default=2)       # Durée du PI Planning
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # Project archived
     
@@ -35,6 +36,7 @@ class Teams(Document):
     TeamLogo = StringField()    # logo de l'équipe
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # Teams archived
 
@@ -55,6 +57,7 @@ class Members(Document):
     MemberPortfolio = BooleanField(default=False)
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # Membres actifs
     

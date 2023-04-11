@@ -41,9 +41,9 @@ connect('PIPlanning')
 # In[ ]:
 
 
-def create_project_gui(info='info'):
+def create_project_gui(memberid,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: create_project_gui(',info,')')
+        print('--- function: create_project_gui(',memberid,info,')')
     
     sg.set_options(element_padding=(5, 10))
 
@@ -83,7 +83,7 @@ def create_project_gui(info='info'):
                 sg.popup('Please enter a description',title="info",auto_close=True, auto_close_duration=3,)
  
             else:
-                id=create_project(values['-PROJECT-'], values['-DESC-'])
+                id=create_project(values['-PROJECT-'], values['-DESC-'],memberid)
                 if g.DEBUG_OL >= 2:
                     print('New project: '+values['-PROJECT-']+' created with id:',str(id))
                 sg.popup('New project: '+values['-PROJECT-']+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
@@ -102,9 +102,9 @@ def create_project_gui(info='info'):
 # In[4]:
 
 
-def list_projects_gui(page=1,linespage=5,info='info'):
+def list_projects_gui(memberid,page=1,linespage=5,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_projects_gui(',page,linespage,info,')')
+        print('--- function: list_projects_gui(',memberid,page,linespage,info,')')
  
     #    global page
     projects=[]
@@ -226,33 +226,33 @@ def list_projects_gui(page=1,linespage=5,info='info'):
                 linespage=int(values1['-DLINES-'])
                 page=1
                 window.close()
-                list_projects_gui(page,linespage,info)
+                list_projects_gui(memberid,page,linespage,info)
                                                   
         if event1 == "-NEXT-":
             page += 1
             window.close()
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
 
         if event1 == "-BACK-":
             page -= 1
             window.close()
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
         
         if event1 == "-BEGIN-":
             page = 1
             window.close()
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
         
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
             window.close()
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
             
         if event1 == "-CPROJECT-":
             window.close()
-            create_project_gui()
+            create_project_gui(memberid)
             page = 1
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
             
         if '-ARCH-' in event1:
             a=int(event1.split("-")[-1])
@@ -265,10 +265,10 @@ def list_projects_gui(page=1,linespage=5,info='info'):
                 
             if g.DEBUG_OL >= 2:
                 print(a,newstatus)
-            archive_project(a,newstatus)
+            archive_project(a,newstatus,memberid)
             page = 1
             window.close()
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
 
         if '-UPDT-' in event1:
             a=int(event1.split("-")[-1])
@@ -280,10 +280,10 @@ def list_projects_gui(page=1,linespage=5,info='info'):
 
             if g.DEBUG_OL >= 2:
                 print(itemupd.ProjectID,"- '",values1[proj],"' - '",values1[desc],"'")
-            update_project(a,values1[proj],values1[desc])
+            update_project(a,values1[proj],values1[desc],memberid)
             page = 1
             window.close()
-            list_projects_gui(page,linespage,info)
+            list_projects_gui(memberid,page,linespage,info)
 
 
 # In[5]:

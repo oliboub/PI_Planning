@@ -25,6 +25,8 @@ def init():
     global THEME
     THEME = 'LightBlue2'
     
+    global memberid
+
     global linespage # lines by pages when display lists
     linespage = 5
 

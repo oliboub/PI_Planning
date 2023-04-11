@@ -61,9 +61,9 @@ if g.DEBUG_OL >= 1:
 # In[5]:
 
 
-def main(theme,projectid,project,admin=False):
+def main(theme,projectid,project,memberid,admin=False):
     if g.DEBUG_OL >= 1:
-        print('--- function main:(',theme,projectid,project,admin,')')
+        print('--- function main:(',theme,projectid,project,memberid,admin,')')
     menu_admin = [
         ['Management',
          ['Manage Projects',
@@ -77,7 +77,7 @@ def main(theme,projectid,project,admin=False):
         
     
     menu_std = [
-        ['My Project', ['List project teams','List project members','---','List our team members']],['Tasks',['Create task','List tasks']],
+        ['My Project', ['List project teams','List project members','---','List our team members']],['Objectives'],['Tasks',['Create task','List tasks']],
         ['My Info',['Who am I','Select Theme']],
         ['Exit', ['Quit']]
     ]
@@ -115,7 +115,7 @@ def main(theme,projectid,project,admin=False):
 #--- Projects
         if event == 'Manage Projects':
             info='List of active projects'
-            list_projects_gui(1,5,info)
+            list_projects_gui(memberid,1,5,info)
         
 #--- Teams
         if event == "Manage Teams":
@@ -184,7 +184,7 @@ if __name__ == '__main__':
     if UserAlias != 'None':
         memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(UserAlias)
         sg.theme(theme)
-        main(theme,projectid,project,admin)
+        main(theme,projectid,project,memberid,admin)
     else:
         toto="Bye"
         sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)

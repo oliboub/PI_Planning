@@ -31,14 +31,15 @@ connect('PIPlanning')
 # In[ ]:
 
 
-def create_project(project, description):
+def create_project(project, description,memberid):
     if g.DEBUG_OL >= 1:
-        print('function: create_project',project,description,')')
+        print('function: create_project',project,description,memberid,')')
     now = datetime.now()
     creationdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item=Projects()
     item.ProjectName = project
     item.ProjectDescription = description
+    item.CreatedByID = memberid
     item.CreationDate = creationdate
     item.LastUpdate = creationdate
     item.save()
@@ -90,19 +91,20 @@ def list_projects(project=None):
 # list_projects(1)
 
 
-# ## archive_project(projectid,newstatus)
+# ## archive_project(projectid,newstatus,memberid)
 
 # In[ ]:
 
 
-def archive_project(projectid,newstatus):
+def archive_project(projectid,newstatus,memberid):
     if g.DEBUG_OL >= 1:
-        print('function: archive_project(',projectid,newstatus,')')
+        print('function: archive_project(',projectid,newstatus,memberid,')')
     item = Projects.objects(ProjectID=projectid).first()
     if g.DEBUG_OL >= 2:
         print('archive_project name:',item.ProjectName)
     now = datetime.now()
     item.Archived = newstatus
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 
@@ -113,18 +115,19 @@ def archive_project(projectid,newstatus):
 #archive_project(2,False)
 
 
-# ## update_project(projectid,projectname,projectdescription)
+# ## update_project(projectid,projectname,projectdescription,memberid)
 
 # In[ ]:
 
 
-def update_project(projectid,projectname,projectdescription):
+def update_project(projectid,projectname,projectdescription,memberid):
     if g.DEBUG_OL >= 1:
-        print('--- function: update_role(',projectid,projectname,projectdescription,')')
+        print('--- function: update_role(',projectid,projectname,projectdescription,memberid,')')
     now = datetime.now()
     item=Projects.objects(ProjectID=projectid).first()
     item.ProjectName = projectname
     item.ProjectDescription = projectdescription
+    item.UpdatedByID = memberid
     item.LastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     item.save()
 

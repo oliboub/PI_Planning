@@ -21,6 +21,7 @@ project1.ProjectPIPlanning = '22/12/2022' # Date du PI Planning
 project1.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project1.CreatedByID=5
 project1.CreationDate = dt_string
+project1.UpdatedByID=5
 project1.LastUpdate = dt_string
 project1.save()
 
@@ -32,40 +33,41 @@ project2.ProjectPIPlanning = '02/02/2023' # Date du PI Planning
 project2.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project2.CreatedByID=5
 project2.CreationDate = dt_string
+project2.UpdatedByID=5
 project2.LastUpdate = dt_string
 project2.save()
 
 
 project3 =Projects()
-#project3.ProjectID = 3 # IDentifiant du projet
 project3.ProjectName = 'Toto' # Nom du projet
 project3.ProjectDescription = 'Essai en vol'
 project3.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project3.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project3.CreatedByID=5
 project3.CreationDate = dt_string
+project3.UpdatedByID=5
 project3.LastUpdate = dt_string
 project3.save()
 
 project4 =Projects()
-#project3.ProjectID = 3 # IDentifiant du projet
 project4.ProjectName = 'Tata' # Nom du projet
 project4.ProjectDescription = 'Taratata music box'
 project4.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project4.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project4.CreatedByID=5
 project4.CreationDate = dt_string
+project4.UpdatedByID=5
 project4.LastUpdate = dt_string
 project4.save()
 
 project5 =Projects()
-#project3.ProjectID = 3 # IDentifiant du projet
 project5.ProjectName = 'Tutu' # Nom du projet
 project5.ProjectDescription = 'Turlututu chapeau pointu'
 project5.ProjectPIPlanning = '09/02/2023' # Date du PI Planning
 project5.ProjectPIPlanningDuration = 2 # Durée du PI Planning
 project5.CreatedByID=5
 project5.CreationDate = dt_string
+project5.UpdatedByID=5
 project5.LastUpdate = dt_string
 project5.save()
 
@@ -77,6 +79,7 @@ team1.ProjectID = 1
 team1.TeamLogo = '../imagesDB/PI.jpeg'
 team1.CreatedByID=5
 team1.CreationDate = dt_string
+team1.UpdatedByID=5
 team1.LastUpdate = dt_string
 team1.save()
 
@@ -87,6 +90,7 @@ team2.ProjectID = 1
 team2.TeamLogo = '../imagesDB/sprinters.jpeg'
 team2.CreatedByID=5
 team2.CreationDate = dt_string
+team2.UpdatedByID=5
 team2.LastUpdate = dt_string
 team2.Archived = False
 team2.save()
@@ -98,6 +102,7 @@ team3.ProjectID = 1
 team3.TeamLogo = '../imagesDB/report.jpeg'
 team3.CreatedByID=5
 team3.CreationDate = dt_string
+team3.UpdatedByID=5
 team3.LastUpdate = dt_string
 team3.save()
 
@@ -108,6 +113,7 @@ team4.TeamLogo = '../imagesDB/ok-corral-sign.jpg'
 team4.ProjectID = 2
 team4.CreatedByID=5
 team4.CreationDate = dt_string
+team4.UpdatedByID=5
 team4.LastUpdate = dt_string
 team4.save()
 
@@ -118,6 +124,7 @@ team5.ProjectID = 1
 team5.TeamLogo = '../imagesDB/cloud.jpg'
 team5.CreatedByID=5
 team5.CreationDate = dt_string
+team5.UpdatedByID=5
 team5.LastUpdate = dt_string
 team5.Archived = True
 team5.save()
@@ -129,6 +136,7 @@ team6.ProjectID = 2
 team6.TeamLogo = '../imagesDB/system.jpeg'
 team6.CreatedByID=5
 team6.CreationDate = dt_string
+team6.UpdatedByID=5
 team6.LastUpdate = dt_string
 team6.Archived = False
 team6.save()
@@ -151,6 +159,7 @@ team8.ProjectID = 2
 team8.TeamLogo = '../imagesDB/starburst.jpeg'
 team8.CreatedByID=5
 team8.CreationDate = dt_string
+team8.UpdatedByID=5
 team8.LastUpdate = dt_string
 team8.Archived = False
 team8.save()
@@ -162,6 +171,7 @@ team9.ProjectID = 4
 team9.TeamLogo = '../imagesDB/reseau_neuronal.jpg'
 team9.CreatedByID=5
 team9.CreationDate = dt_string
+team9.UpdatedByID=5
 team9.LastUpdate = dt_string
 team9.Archived = False
 team9.save()
@@ -180,6 +190,7 @@ members1.MemberAdmin = False
 members1.MemberFirstConnection = True
 members1.CreatedByID = 5
 members1.CreationDate = dt_string
+members1.UpdatedByID=5
 members1.LastUpdate = dt_string
 members1.save()
 
@@ -194,6 +205,7 @@ members2.MemberTheme = 'LightBlue2'
 members2.MemberFirstConnection = True
 members2.CreatedByID = 5
 members2.CreationDate = dt_string
+members2.UpdatedByID=5
 members2.LastUpdate = dt_string
 members2.save()
 
@@ -207,6 +219,7 @@ members3.MemberRole = 1
 members3.MemberTheme = 'LightBlue2'
 members3.CreatedByID = 5
 members3.CreationDate = dt_string
+members3.UpdatedByID=5
 members3.LastUpdate = dt_string
 members3.save()
 
@@ -220,6 +233,7 @@ members4.MemberRole = 3
 members4.MemberTheme = 'LightBlue2'
 members4.CreatedByID = 5
 members4.CreationDate = dt_string
+members4.UpdatedByID=5
 members4.LastUpdate = dt_string
 members4.save()
 
@@ -233,6 +247,7 @@ members5.MemberTheme = 'LightBlue2'
 members5.MemberAdmin = True
 members5.CreatedByID = 5
 members5.CreationDate = dt_string
+members5.UpdatedByID=5
 members5.LastUpdate = dt_string
 members5.save()
 
@@ -246,6 +261,7 @@ members6.MemberTheme = 'LightBlue2'
 members6.MemberPortfolio = True
 members6.CreatedByID = 5
 members6.CreationDate = dt_string
+members6.UpdatedByID=5
 members6.LastUpdate = dt_string
 members6.save()
 
@@ -259,6 +275,7 @@ members7.MemberTheme = 'LightBlue2'
 members7.MemberPortfolio = False
 members7.CreatedByID = 5
 members7.CreationDate = dt_string
+members7.UpdatedByID=5
 members7.LastUpdate = dt_string
 members7.save()
 
@@ -272,6 +289,7 @@ members8.MemberTheme = 'LightBlue2'
 members8.MemberPortfolio = False
 members8.CreatedByID = 5
 members8.CreationDate = dt_string
+members8.UpdatedByID=5
 members8.LastUpdate = dt_string
 members8.save()
 
@@ -285,6 +303,7 @@ members9.MemberTheme = 'LightBlue2'
 members9.MemberPortfolio = False
 members9.CreatedByID = 5
 members9.CreationDate = dt_string
+members9.UpdatedByID=5
 members9.LastUpdate = dt_string
 members9.save()
 
@@ -298,6 +317,7 @@ members10.MemberTheme = 'LightBlue2'
 members10.MemberPortfolio = False
 members10.CreatedByID = 5
 members10.CreationDate = dt_string
+members10.UpdatedByID=5
 members10.LastUpdate = dt_string
 members10.save()
 
@@ -311,6 +331,7 @@ members11.MemberTheme = 'LightBlue2'
 members11.MemberPortfolio = False
 members11.CreatedByID = 5
 members11.CreationDate = dt_string
+members11.UpdatedByID=5
 members11.LastUpdate = dt_string
 members11.save()
 
