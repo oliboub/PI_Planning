@@ -148,7 +148,7 @@ def main(memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastup
             info='Lists of teams for your project: '+project
             if g.DEBUG_OL >= 2:
                 print(__name__)
-            idx=list_members_gui('All',1,5,8,1,3,info='List of project members')
+            list_members_gui(memberid,admin)
  
 
     #--- My Info
