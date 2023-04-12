@@ -5,7 +5,7 @@
 
 # ## Imports
 
-# In[ ]:
+# In[1]:
 
 
 import os
@@ -26,7 +26,7 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
@@ -39,13 +39,13 @@ from frontend_PI_Roles import *
 time.sleep(1)
 
 
-# In[ ]:
+# In[3]:
 
 
 connect('PIPlanning')
 
 
-# In[ ]:
+# In[4]:
 
 
 if g.DEBUG_OL >= 1:
@@ -58,12 +58,12 @@ if g.DEBUG_OL >= 1:
 # -------
 # ## Main
 
-# In[ ]:
+# In[5]:
 
 
-def main(theme,projectid,project,memberid,admin=False):
+def main(memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role):
     if g.DEBUG_OL >= 1:
-        print('--- function main:(',theme,projectid,project,memberid,admin,')')
+        print('--- function main:(',memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role,')')
     menu_admin = [
         ['Management',
          ['Manage Projects',
@@ -112,46 +112,44 @@ def main(theme,projectid,project,memberid,admin=False):
             window.close()
             break
 
-#--- Projects
+#--- Admin
         if event == 'Manage Projects':
-            info='List of active projects'
+            info='List of projects'
             list_projects_gui(memberid,1,5,info)
         
-#--- Teams
         if event == "Manage Teams":
-            info='List of All active Teams even if non allocated to project'
-            list_teams_gui(memberid)
+            info='List of Teams'
+            list_teams_gui(memberid,admin)
 
-            
         if event == "Manage Members":
+            info='List of Members'
             list_members_gui(memberid)
-
-        if event == "List project teams":
-            if g.DEBUG_OL >= 2:
-                print(__name__,projectid,project)
-            teams=list_teams_page(1,projectid)
-            if g.DEBUG_OL >= 2:
-                for a in teams.items:
-                    print(a.TeamName,'\t',a.TeamDescription,'\t',a.TeamLogo,'\t',a.ProjectID)
-            info='Lists of teams for your project: '+project
-            list_all_teams_gui(1,teams,info)
- 
-
-        if event == 'List our team members':
-            if g.DEBUG_OL >= 2:
-                print(__name__)
-            idx=list_members_gui(teamid,1,5,8,1,3,info='List of team members')
- 
-        if event == 'List project members':
-            if g.DEBUG_OL >= 2:
-                print(__name__)
-            idx=list_members_gui('All',1,5,8,1,3,info='List of project members')
- 
 
         if event == 'Manage Roles':
             if g.DEBUG_OL >= 2:
                 print(__name__)
             idx=list_roles_gui(memberid,1,5,'List of all existing roles')
+
+
+# standard user            
+        if event == "List project teams":
+            if g.DEBUG_OL >= 2:
+                print(__name__,projectid,project)
+            list_teams_gui(memberid,admin,projectid)
+ 
+
+        if event == 'List our team members':
+            info='List of or team members'
+            if g.DEBUG_OL >= 2:
+                print(__name__)
+            list_members_gui(memberid,admin,teamid)
+ 
+        if event == 'List project members':
+            info='Lists of teams for your project: '+project
+            if g.DEBUG_OL >= 2:
+                print(__name__)
+            idx=list_members_gui('All',1,5,8,1,3,info='List of project members')
+ 
 
     #--- My Info
         if event == "Who am I":
@@ -179,7 +177,7 @@ if __name__ == '__main__':
     if UserAlias != 'None':
         memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(UserAlias)
         sg.theme(theme)
-        main(theme,projectid,project,memberid,admin)
+        main(memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role)
     else:
         toto="Bye"
         sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)

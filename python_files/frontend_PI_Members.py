@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## PI User Management
+# ## frontend_PI_Members
 
-# In[7]:
+# In[1]:
 
 
 import os
@@ -11,6 +11,7 @@ import time
 import bcrypt
 from datetime import datetime
 import PySimpleGUI as sg
+from operator import itemgetter
 import global_variables as g
 g.init()
 #time.sleep(1)
@@ -24,409 +25,527 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[8]:
+# In[2]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[9]:
+# In[3]:
 
 
 connect('PIPlanning')
 
 
-# ------
-# ### My Info
-# #### Who am I
+# ## create_member_gui(memberid,info)
 
-# In[13]:
+# In[ ]:
 
 
-def who_am_i_gui(alias):
-
-    global admin
+def create_member_gui(memberid,info='Info'):
     if g.DEBUG_OL >= 1:
-        print('function: who_am_i_gui(',alias,')')
-#    font='Calibri 11'
-#    print(theme)
-#    sg.theme(theme)
-    memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role=query_member_alias(alias)
-    if g.DEBUG_OL >= 2:
-        print(memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role)
-    left_layout=[
-        [sg.T('Alias Name', size=(10,1),font=g.FONT),sg.I(alias,key='-ALIAS-',enable_events=False,disabled=True, size=(50,1),font=g.FONT)],
-        [sg.T('First name', size=(10,1),font=g.FONT),sg.I(firstname,key='-FIRST-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
-        [sg.T('Last name', size=(10,1),font=g.FONT),sg.I(name,key='-LAST-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
-        [sg.T('Email', size=(10,1),font=g.FONT),sg.I(email,key='-EMAIL-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)]
-    ]
-    right_layout=[
-        [sg.T('Project', size=(10,1),font=g.FONT),sg.I(project,key='-PROJ-',enable_events=False,disabled=True, size=(50,1),font=g.FONT)],
-        [sg.T('Team', size=(10,1),font=g.FONT),sg.I(team,key='-TEAM-',enable_events=False, disabled=True,size=(50,1),font=g.FONT)],
-        [sg.T('Team Role', size=(10,1),font=g.FONT),sg.I(role,key='-ROLE-', enable_events=False,disabled=True,size=(50,1),font=g.FONT)],
-    ]
-    bottom_left=[[sg.T('UI Theme:', size=(10,1),font=g.FONT),sg.I(theme,key='-THEME-',enable_events=False,disabled=True,size=(50,1),font=g.FONT)]]
-    bottom_right=[[sg.T('Admin:', size=(10,1),font=g.FONT),sg.I('Yes',key='-ADMIN-',enable_events=False,disabled=True,size=(10,1),font=g.FONT)]]
-    bottom_2right=[[sg.T('Portfolio:', size=(10,1),font=g.FONT),sg.I('Yes',key='-PORTFOLIO-',enable_events=False,disabled=True,size=(10,1),font=g.FONT)]]
-    bottom_sright=[[sg.B('Change password',key='-PASSWD-',size=(10,1),font=g.FONT)]]
-    
-    layout=[[[sg.Frame('User info',left_layout, vertical_alignment='center',pad=((15,15),(15,15))),
-             sg.VerticalSeparator(),
-             sg.Frame('Allocated Project Info',right_layout,element_justification='center',vertical_alignment='top',pad=((15,15),(15,15)))],
-             sg.Frame('Application', bottom_left,element_justification='center',vertical_alignment='top',pad=((15,15),(15,15))),
-             sg.B('Change password',key='-PASSWD-',size=(10,2)),
-             sg.Frame('Admin',bottom_right,key='-FADMN-',element_justification='center',visible=False,vertical_alignment='top',pad=((15,15),(15,15))),
-             sg.Frame('Portfolio',bottom_2right,key='-FPORTF-',element_justification='center',visible=False,vertical_alignment='top',pad=((15,15),(15,15)))],
-             [sg.B('Return')]]
-    
-    window=MyWindow('Who am I',layout,finalize=True)
-    window.my_move_to_center()
+        print('--- function: create_member_gui(',memberid,info,')')
  
-    if admin == True:
-        window['-FADMN-'].update(visible=True)
+    sg.set_options(element_padding=(5, 10))
+    fin=0
+    
+    projects_list=list_projects()
+    comboproj = []
+    for project in projects_list:
+        if g.DEBUG_OL >= 2:
+            print(project.Archived)
+        if project.Archived == False:
+            comboproj.append(project.ProjectName)
+    if g.DEBUG_OL >= 2:
+        print(comboproj)
+    
+    team=[]
+    combomembers=[]
+    comboroles=[]
+    
+    roles=Roles.objects(Archived=False)
+    for i in roles:
+        comboroles.append(i.RoleName)
+    if g.DEBUG_OL >= 2:
+        print(comboroles)
+    
+    
+    info_layout = [sg.T(info,font=g.FONT,justification="left")]
+ 
+    left_layout = [
+        [sg.T('Project Selection', size=(20, 1),font=g.FONT), sg.Combo(comboproj,key='-PROJ-',enable_events=True,size=(20, 1),font=g.FONT)],
+        [sg.T('Team Name', size=(20, 1),key='-TXTTEAM-',font=g.FONT,visible=False), sg.Combo(team,key='-TEAM-',enable_events=True,visible=False,size=(20, 1),font=g.FONT)],
+    ]
+    
+    bottom_layout=[[sg.T('Last Name',key='-L1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-MNAME-',visible=True,size=(20,1)),
+                    sg.T('First Name',key='-F1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-FNAME-',visible=True,size=(20,1))],
+                   [sg.T('Alias',key='-A1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-ALIAS-',visible=True,size=(20,1))],
+                   [sg.T('Email',key='-E1-',size=(15,1),font=g.FONT,visible=True),sg.I("",key='-EMAIL-',visible=True,size=(20,1))],
+                   [sg.T('Role', size=(15, 1),font=g.FONT), sg.Combo(comboroles,key='-ROLE-',enable_events=True,size=(20, 1),font=g.FONT)],
+                  ]
+    
+#    layout = [info_layout,[sg.Frame("Select perimeter", left_layout, vertical_alignment='top', pad=((10, 10), (10, 10)))],
+#            [sg.B('Add', enable_events=True), sg.Cancel()]]
+             
+    layout = [info_layout,[sg.Frame("Select perimeter", left_layout, vertical_alignment='top', pad=((10, 10), (10, 10)))],
+              [sg.Frame("New Member information", bottom_layout,key='-MEMBER-', vertical_alignment='top',pad=((10, 10), (10, 10)),visible=False)],
+              [sg.B('Add', enable_events=True), sg.Cancel()]]
         
-    if portfolio == True:
-        window['-FPORTF-'].update(visible=True)
+    window = MyWindow('Create member', layout,finalize=True)
+    window.my_move_to_center()
     
     while True:
         event, values = window.read()
-        if event == sg.WIN_CLOSED or event == ('Return'):
+#        print(event,values)
+        
+        if event == sg.WIN_CLOSED or event == 'Cancel':
+#            print(event)
             window.close()
+            fin=0
             break
+ 
+        elif '-PROJ-' in event:
+            window['-MEMBER-'].update(visible=False)
+            if g.DEBUG_OL >= 2:
+                print(values['-PROJ-'])
+            project=values['-PROJ-']
+            teams_list = []
+            teams_list=list_teams(project)
+            teams=[]
+            for i in teams_list:
+                if g.DEBUG_OL >= 2:
+                    print(i[3],i[7])
+                if i[7] == False:
+                    teams.append(i[3])
+            window['-TXTTEAM-'].update(visible=True)
+            window['-TEAM-'].update(values=teams,visible=True)
             
-        if event == ('-PASSWD-'):
+
+              
+        elif '-TEAM-' in event:
+            team=values['-TEAM-']
             if g.DEBUG_OL >= 2:
-                print('Passwd')
-            msg,firstcon = change_password(email,firstcon,memberid)
-            if g.DEBUG_OL >= 2:
-                print(msg)
-            pass            
+                print(team)
 
 
-# In[18]:
+            window['-MEMBER-'].update(visible=True)
 
-
-#who_am_i_gui('scrumol')
-#who_am_i_gui('admintop')
-#who_am_i_gui('rtelead')
-
-
-# ------
-# ### Change Password
-
-# In[ ]:
-
-
-def change_password(email,firstcon):
-    if g.DEBUG_OL >= 1:
-        print('function: change_password(',email,firstcon,')')
-    font='Calibri 11'
-    msg = 'Init'
-    layout=[
-        [sg.T('** First connection **',key='-FIRST-',size=(60,1),visible=False,justification='center',font=g.FONT)],
-        [sg.T(email,size=(17,1),font=g.FONT),sg.T('please change your password',size=(25,1),font=g.FONT)],
-        [sg.T('Old Passwd', key='-OLD1-',size=(15,1),visible=False,font=g.FONT),sg.I("",key='-OLDPWD-',  password_char='*',visible=False,size=(50,1),font=g.FONT)],
-        [sg.T('New Passwd', size=(15,1),font=g.FONT),sg.I("",key='-NEWPWD-', password_char='*', size=(50,1),font=g.FONT)],
-        [sg.T('Verify Passwd', size=(15,1),font=g.FONT),sg.I("",key='-CHKNEWPWD-', password_char='*', size=(50,1),font=g.FONT)],
-        [sg.Ok(),sg.Cancel()]]
- 
-    window1=MyWindow('Change Password',layout,finalize=True)
-    window1.my_move_to_center()
- 
-    if firstcon == False:
-        window1['-OLD1-'].update(visible=True)
-        window1['-OLDPWD-'].update(visible=True)
-    if firstcon == True:
-        window1['-FIRST-'].update(visible=True)
-
-    while True:
-        event1, values1 = window1.read()
-        if event1 == sg.WIN_CLOSED or event1 == 'Cancel':
-            if g.DEBUG_OL >= 2:
-                print('Cancel')
-            window1.close()
-            msg='Cancel:'
-            return(msg,firstcon)
+        elif event == 'Add':
             
-        elif event1 == 'Ok':
-            if firstcon == False:
-                if g.DEBUG_OL >= 2:
-                    print("firstcon = false")
-                checkpwd=get_actual_password(email,values1['-OLDPWD-'])
-                if checkpwd == False:
-                    msg='error, actual password not matching'
-                            
-                else:    
-                    if g.DEBUG_OL >= 2:
-                        print('check old passwd OK')
-                    if values1['-NEWPWD-'] == values1['-OLDPWD-'] and firstcon == True:
-                        msg='error: old and new paswd are equivalents'
-#                window1.close()
- 
-                    elif values1['-CHKNEWPWD-'] != values1['-NEWPWD-']:
-                        msg='error: new paswd are differents'
-#                window1.close()
-           
-                    elif values1['-CHKNEWPWD-'] == '':
-                        msg='error: new paswd is empty'
-#                window1.close()
- 
-                    elif len(values1['-NEWPWD-']) < 8:
-#                        print(len(values1['-NEWPWD-']))
-                        msg='error: Minimal size must be 8 caracters'
-#                window1.close()
-
-                    else:
-                        msg='ok: Passwd migth be updated'
-#                    print(values1['-CHKNEWPWD-'],values1['-NEWPWD-'])
-#                window1.close()
-#            pass
-            if g.DEBUG_OL >= 2:
-                print("msg:",msg)
-            matches = []
-            errorlist= ['error, actual password not matching','error: old and new paswd are equivalents','error: new paswd are differents','error: new paswd is empty','error: Minimal size must be 8 caracters','Cancel:']
-            matches = [match for match in errorlist if msg in match]
-            if g.DEBUG_OL >= 2:
-                print('matches:',matches)
-            if matches :
-                layout2=[[sg.T(msg,size=(60,1),justification='center',font=g.FONT)],[sg.B('Return')]]
-                window2=MyWindow('Error',layout2,finalize=True)
-                window2.my_move_to_center()
-                
-                while True:
-                    event2, values2 = window2.read()
-                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel' or event2 == 'Return':
-                        if g.DEBUG_OL >= 2:
-                            print('Cancel')
-                        window2.close()
-                        break
- 
-            elif not matches:
-                if g.DEBUG_OL >= 2:
-                    print('Passwd OK')
-                aa=update_member_password(email,values1['-NEWPWD-'])
-                if g.DEBUG_OL >= 2:
-                    print('Passwd updated')
-                msg=('Ok: Password updated succesfully')
-                firstcon=False
-                window1.close()
-                layout2=[[sg.T(msg,size=(60,1),justification='center',font=g.FONT)],[sg.B('Return')]]
-                window2=MyWindow('Ok',layout2,finalize=True)
-                window2.my_move_to_center()
-                
-                while True:
-                    event2, values2 = window2.read()
-                    if event2 == sg.WIN_CLOSED or event2 == 'Cancel' or event2 == 'Return':
-                        if g.DEBUG_OL >= 2:
-                            print('Cancel')
-                        window2.close()
-                        break
+            if values['-MNAME-'] == "" or values['-FNAME-'] == "" or values['-ALIAS-'] == "" or values['-EMAIL-'] == "" or values['-ROLE-'] == "":
+                sg.popup('Please fill all fields!',title="error",auto_close=True, auto_close_duration=2,)
+                window.close()
+                fin=1
                 break
-    
-    return(msg,firstcon)
+            if values['-EMAIL-'].find('@') == -1:
+                sg.popup('Please fill the email correctly!',title="error",auto_close=True, auto_close_duration=2,)
+                window.close()
+                fin=1
+                break
+                
+                
+            teamselected=Teams.objects(Archived=False,TeamName=values['-TEAM-']).first()
+            roleselected=Roles.objects(Archived=False,RoleName=values['-ROLE-']).first()
+            teamid=teamselected.TeamID
+            roleid=roleselected.RoleID
+            username=values['-MNAME-'].title()
+            firstname=values['-FNAME-'].capitalize()
+            alias=values['-ALIAS-'].lower()
+            email=values['-EMAIL-'].lower()
+
+            if g.DEBUG_OL >= 2:
+                print('event:',event,'\nvalues:',values)
+#                print('name:',values['-MNAME-'],'first name:',values['-FNAME-'],'alias:',values['-ALIAS-'],'email:',values['-EMAIL-'],'teamid:',teamid,'roleid:',roleid)
+                print('name:',username,'first name:',firstname,'alias:',alias,'email:',email,'teamid:',teamid,'roleid:',roleid)
+
+            id=create_member(username,firstname,alias,email,teamid,roleid,memberid,)
+            if g.DEBUG_OL >= 2:
+                print('New user created with id:',id)
+            sg.popup('New user '+alias+' created with id: '+str(id),title="info",auto_close=True, auto_close_duration=3,)
+            window.close()
+            
+    if fin == 1:
+        create_member_gui()
 
 
 # In[ ]:
 
 
-# change_password('oliboub@gmail.com',True,1)
+#create_member_gui()
 
 
-# ### Select Theme
+# ## list_members_gui(teamid,admin,page,linespage,info='info')
 
-# In[ ]:
+# In[11]:
 
 
-def select_theme_gui(memberid,theme):
+def list_members_gui(memberid,admin,teamid=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info'):
     if g.DEBUG_OL >= 1:
-        print('function: select_theme_gui(',memberid,theme,')')
+        print('--- function: list_members_gui(',memberid,admin,teamid,page,linespage,order1, order2, order3,info,')')
+ 
+    #    global page
+    members=[]
+    memberstotal=[]
+    members1=[]
+    comboteams=[]
+    comboroles=[]
+    
+    if teamid == None:
+        members1=list_members_by_team()
+        
+    else:
+        members1=list_members_by_team(teamid)
+        if "Error:" in members1:
+            if g.DEBUG_OL >= 1:
+                print(members1)
+            sg.popup(members1+'\nReset to all teams',title="Warning",auto_close=True, auto_close_duration=3,)
+            return('error')
+            exit()
+
+    teamsearch=Teams.objects(TeamID=members1[0][13]).first()
+    teams=list_teams(teamsearch.ProjectID)
+        
+    if teamid == None:
+        for i in teams:
+            if i[7] == False:
+                comboteams.append(i[3])
+            
+    roles=Roles.objects(Archived=False)
+    for i in roles:
+        comboroles.append(i.RoleName)
+    
+    comboteams.sort()
+    comboroles.sort()
+    
+    if g.DEBUG_OL >= 2:
+        print(teams[0][1],comboteams,comboroles)
+
+#return [memberid,name,alias,firstname,email,theme,admin,portfolio,status,lastupdate,firstcon,projectid,project,teamid,team,roleid,role]
+#   members = sorted(members1, key=lambda x: (x[8], x[2]))
+    order1=int(order1)
+    order2=int(order2)
+    order3=int(order3)
+
+    memberstotal=sorted(members1, key = itemgetter(order1, order2,order3))
+
+    items=len(memberstotal)
+
+    start=page*linespage-linespage
+    end=start+linespage
+    if end > items:
+        end = items
+    a=0
+    b=0
+ 
+    if g.DEBUG_OL >=2:
+        print('items:',items,'\tstart:',start,'\tend:',end)
+
+    if admin == True:
+        comboteamspace = 166
+    else:
+        comboteamspace = 128
+
+        
+    dteams={}
+    for i in range(start,end):
+        members.append(memberstotal[i])
+        if g.DEBUG_OL >= 2:
+            print(members[a])
+        a=+1
+    
+    if teamid == None:
+        titlewindows='List of Members for all teams'
+    else:
+        titlewindows='List of Members for the team: '+members[0][14]+' of project: '+members[0][12]
+        
+    sg.set_options(element_padding=(5, 5))
+#    list_teams=list_teams_all()
+    layout = [[sg.T(info,font=g.FONT,justification="left")],
+              [sg.T('Team Name',font=g.FONT,key='-TFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Name',font=g.FONT,key='-NFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Firstname',font=g.FONT,size=(20, 1)),
+               sg.T('Member Alias',font=g.FONT,key='-AFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Email',font=g.FONT,key='-MFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Member Role',font=g.FONT,key='-RFILTER-',enable_events=True, size=(20, 1)),
+               sg.T('Last Update',font=g.FONT,key='-LFILTER-',enable_events=True, size=(18, 1)),
+               sg.T('Update',visible=False,font=g.FONT,key='-UPDTITLE-',size=(10, 1)),
+               sg.T(' ',visible=False,font=g.FONT,key='-SPACETITLE-',size=(5, 1)),
+               sg.T('Status',visible=False,font=g.FONT,key='-STATTITLE-',size=(10, 1))
+
+              ],
+              [sg.Combo(comboteams,key='-TEAMS-',enable_events=True,size=(20, 1),font=g.FONT),sg.T(" ",size=(comboteamspace, 1),font=g.FONT)]
+             ]
+    idx=0
+    for member in members:
+        if g.DEBUG_OL >= 2:
+            print('MemberID',member[0],'\tProjectID',member[11],'\Status:',member[7])
+        
+        if member[8] is False:
+            status='Active'
+            FONT1=g.FONT
+            bfcolor='white'
+            bbcolor='green'
+            
+        else:
+            status='Archived'
+            FONT1=g.FONT+' italic'
+            bfcolor='white'
+            bbcolor='firebrick3'
+
+   
+        row = [
+#            sg.I(member[13],enable_events=True,key=f'-TNAME-{member[0]}', font=g.FONT, size=(20,1)),
+               sg.Combo(comboteams,enable_events=True,disabled=True,key=f'-TNAME-{member[0]}',default_value=member[14],size=(20, 1),font=g.FONT),
+               sg.I(member[13],enable_events=False, visible=False,key=f'-TID-{member[0]}', font=g.FONT, size=(0,1)),
+               sg.I(member[1],enable_events=True,key=f'-NAME-{member[0]}', font=g.FONT, size=(20,1)),
+               sg.I(member[3],enable_events=True,key=f'-FNAME-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.I(member[2],enable_events=True,key=f'-ALIAS-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.I(member[4],enable_events=True,key=f'-EMAIL-{member[0]}', font=g.FONT,size=(20,1)),
+               sg.Combo(comboroles,enable_events=True,disabled=True,key=f'-ROLE-{member[0]}',default_value=member[16],font=g.FONT,size=(20,1)),
+               sg.I(member[15],enable_events=False, visible=False,key=f'-ROLEID-{member[0]}', font=g.FONT,size=(0,1)),
+               sg.I(member[9],enable_events=False,key=f'-LASTUPDATE-{member[0]}', font=g.FONT,size=(18,1)),
+               sg.B('Update',enable_events=True,visible=False, key=f'-UPDT-{member[0]}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
+               sg.T(' ',font=g.FONT,visible=False,key=f'-SPACE-{member[0]}',size=(5, 1)),
+               sg.B(status, enable_events=True,visible=False,key=f'-ARCH-{member[0]}',font=FONT1,button_color=(bfcolor,bbcolor),size=(10,1)),
+             ]
+        layout.append(row)
+        idx+=1
+   
+    
+    memberqtt= [[sg.T('Total members found: ',font=g.FONT, size=(24, 1)),sg.I(items,key='-MFOUND-',enable_events=False,disabled=True,visible=True,size=(10,1))]
+                  ]
+    
+    displaylines= [[sg.T('Displayed Lines:',font=g.FONT, size=(22, 1)),sg.I(linespage,key='-DLINES-',enable_events=True,visible=True,size=(10,1))]
+                  ]
+    
+    pagination = [[sg.B('<<', key='-BEGIN-',disabled=False),
+                   sg.B("<", key='-BACK-',disabled=False),
+                   sg.T(text=page, key='-PAGE-', size=(2, 1)),
+                   sg.B(">", key='-NEXT-',disabled=False),
+                   sg.B(">>", key='-END-',disabled=False)
+                   ]]
+    
+    createmember = [[sg.B('Create Member',key='-CREATE-',font=g.FONT,visible=False,button_color=('white','darkblue')),
+                   sg.T(' ',font=g.FONT,size=(12, 1))]]
+    
+    
+ 
+    layout += [[sg.Col(createmember, element_justification='left'),sg.Col(displaylines, element_justification='left'),sg.Col(memberqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
+    layout += [[sg.B('Return')]]
+    
+               
+    window = MyWindow(titlewindows, layout,keep_on_top=True, element_justification = 'center',finalize=True)
+    window.my_move_to_center()
 
     if g.DEBUG_OL >= 2:
-        print('memberid:',memberid,' - theme',theme)
-    sg.theme(theme)
+        print('start',start,'end',end,'len(memberstotal)',len(memberstotal),'len(memberstotal)-linespage',len(memberstotal)-linespage)
+    if end >= len(memberstotal):
+        window['-END-'].update(disabled=True)
+        window['-NEXT-'].update(disabled=True)
+    if start  < linespage:
+        window['-BEGIN-'].update(disabled=True)
+        window['-BACK-'].update(disabled=True)
 
-    layout = [[sg.T('This is your layout')],
-              [sg.Button('Ok'), sg.Button('Change Theme'), sg.Button('Exit')]]
-    window=MyWindow('Pattern for changing theme', layout,finalize=True)
-    window.my_move_to_center()
+    if admin == True:
+        window['-UPDTITLE-'].update(visible=True)
+        window['-SPACETITLE-'].update(visible=True)
+        window['-STATTITLE-'].update(visible=True)
+        window['-CREATE-'].update(visible=True)
+        for member in members:
+            window[f'-ROLE-{member[0]}'].update(disabled=False)
+            window[f'-TNAME-{member[0]}'].update(disabled=False)
+            window[f'-UPDT-{member[0]}'].update(visible=True)
+            window[f'-SPACE-{member[0]}'].update(visible=True)
+            window[f'-ARCH-{member[0]}'].update(visible=True)
+  
+    if teamid != None:
+        window['-TEAMS-'].update(visible=False)
+
     
     while True:
-        event, value = window.read()
-        if event == sg.WINDOW_CLOSED or event == 'Exit':
+        event1, values1 = window.read()
+        if g.DEBUG_OL >= 2:
+            print(event1,values1)
+                                                                                                          
+        if event1 == sg.WIN_CLOSED or event1 == 'Return':
             window.close()
-            return(theme)
-        
-        if event == 'Change Theme':      # Theme button clicked, so get new theme and restart window
-            window1 = MyWindow('Choose Theme',
-            [[sg.Combo(sg.theme_list(), readonly=True, k='-THEME LIST-'),
-             sg.OK(), sg.Cancel()]],
-             finalize=True)
-            window1.my_move_to_center()
-                
-            event, value = window1.read(close=True)
+            return(None)
+            fin=0
+            break
+                                                                                                          
+
+        if event1 == '-TFILTER-':
+            order1=14
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
             
-            if event == 'OK':
- # ---- Switch to your new theme! ---- IMPORTANT PART OF THE PROGRA<
+            
+        if event1 == '-AFILTER-':
+            order1=2
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+ 
+        if event1 == '-NFILTER-':
+            order1=1
+            order2=3
+            order3=9
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == '-RFILTER-':
+            order1=16
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == '-LFILTER-':
+            order1=9
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == '-MFILTER-':
+            order1=4
+            order2=1
+            order3=3
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+
+
+        if event1 == "-DLINES-":
+            if g.DEBUG_OL >= 2:
+                print('type',type(values1['-DLINES-']),'value',values1['-DLINES-'],values1['-DLINES-'].isnumeric())
+            if values1['-DLINES-'].isnumeric()== True:
+                linespage=int(values1['-DLINES-'])
+                page=1
                 window.close()
-                theme=value['-THEME LIST-']
-                write_new_member_theme(memberid,theme)
-                sg.theme(theme)
-                return(theme)    
-
-
-# ### Call User Alias
-
-# In[1]:
-
-
-def user_alias_gui():
-    if g.DEBUG_OL >= 1:
-        print('function: user_alias_gui()')
-    layout=[
-        [sg.T('Alias Name', size=(10,1)),sg.I(key='-ALIAS-', default_text='', size=(50,1))],
-        [sg.OK(),sg.Cancel()]
-    ]
-    
-    window=MyWindow('Enter your alias',layout,finalize=True)
-    window.my_move_to_center()
-    
-    while True:
-        event, value = window.read()
-        if event == sg.WIN_CLOSED or event == ('Cancel'):
+                list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+                                                  
+        if event1 == "-NEXT-":
+            page += 1
             window.close()
-            MemberAlias='None'
-            return(MemberAlias) 
-            break
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == "-BACK-":
+            page -= 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
         
-        elif event =='OK':
-            if g.DEBUG_OL >= 2:
-                print(value['-ALIAS-'])
+        if event1 == "-BEGIN-":
+            page = 1
             window.close()
-            MemberAlias= value['-ALIAS-']
-            break
-    
-    if MemberAlias != 'None':
-        valid,result=query_member(MemberAlias)
-        if valid == 1:
-            layout=[
-                [sg.T("Alias is not existing in database.\nThanks to check with your administrator")],
-                [sg.Cancel()]]
-            window1=MyWindow('Error',layout,finalize=True)
-            window1.my_move_to_center()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+        
+        if event1 == "-END-":
+            page = (items-linespage)//linespage+1
+            print(page)
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+
+        if event1 == "-CREATE-":
+            window.close()
+            create_member_gui(memberid)
+            page = 1
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
             
-            while True:
-                event1, value1 = window1.read()
-                if event1 == sg.WIN_CLOSED or event1 == ('Cancel'):
-                    window1.close()
-                    MemberAlias='None'
-                    return(MemberAlias)                    
-                    break
-
-      
-        else:
-            if g.DEBUG_OL >= 2:
-                print(result.MemberFirstConnection)
-                print(result.MemberName)
-            toto="Welcome back "+result.MemberFirstName
-            sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
-            return(MemberAlias)
-
-
-# ## Login_Window()
-
-# In[ ]:
-
-
-def login_window():
-    if g.DEBUG_OL >= 1:
-        print(g.FONT,g.DEBUG_OL)
-        print('function: login_window()')    
-    x=3
-    layout=[
-        [sg.T('Email', font=g.FONT, size=(10,1)),sg.I(key='-EMAIL-', default_text='admin@toto.com',font=g.FONT, size=(50,1))],
-        [sg.T('Password', font=g.FONT,size=(10,1)),sg.I(key='-PASSWD-',font=g.FONT, password_char='*', size=(50,1))],
-        [sg.OK(),sg.Cancel()]
-    ]
-    
-    window=MyWindow('Login Session',layout,finalize=True)
-    window.my_move_to_center()
-    
-    while True:
-        event, value = window.read()
-        if event == sg.WIN_CLOSED or event == ('Cancel'):
+            
+        if event1 == '-TEAMS-':
+            page=1
             window.close()
-            MemberEmail='None'
-            return(MemberEmail)
-            break
-        
-        elif event =='OK':
+            newteam=Teams.objects(TeamName=values1['-TEAMS-']).first()
+            teamid=newteam.TeamID
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
+             
+
+        if '-ARCH-' in event1:
+            a=int(event1.split("-")[-1])
+            itemstatus=Members.objects(MemberID=a).first()
             if g.DEBUG_OL >= 2:
-                print(value['-EMAIL-'])
-#            window.close()
-            MemberEmail= value['-EMAIL-']
+                print(itemstatus.Archived)
+            if itemstatus.Archived == False:
+                newstatus=True
+            else:
+                newstatus=False
+                
+            if g.DEBUG_OL >= 2:
+                print(a,newstatus)
+            archive_member(a,newstatus,memberid)
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,teamid,page,linespage,order1, order2, order3,info)
 
-            if MemberEmail != 'None':
-                valid,result=query_member(MemberEmail)
-                if valid == 1:
-                    layout=[
-                        [sg.T("Email is not existing in database.\nThanks to check with your administrator")],
-                        [sg.Cancel()]]
+        
+        if '-TNAME-' in event1:
+            a=int(event1.split("-")[-1])
+            newname=values1[event1]
+            if g.DEBUG_OL >= 2:
+                print(a,newname,'\t',event1,values1)
+            teamupd=Teams.objects(TeamName=newname).first()
+            itemid='-TID-'+str(a)
+            window[itemid].update(teamupd.TeamID)
+            
+            if g.DEBUG_OL >= 2:
+                print(a,newname,'\t',event1,values1)
+            
 
-                    window1=MyWindow('Error',layout,finalize=True)
-                    window1.my_move_to_center()
+        if '-ROLE-' in event1:
+            a=int(event1.split("-")[-1])
+            newname=values1[event1]
+            if g.DEBUG_OL >= 2:
+                print(event1,values1)
+            roleupd=Roles.objects(RoleName=newname).first()
+            itemid='-ROLEID-'+str(a)
+            window[itemid].update(roleupd.RoleID)
+            
+            if g.DEBUG_OL >= 2:
+                print(a,newname,'\t',event1,values1)
+ 
+        
+        if '-UPDT-' in event1:
+            if g.DEBUG_OL >= 2:
+                print(event1,values1)
+  
+            a=int(event1.split("-")[-1])
+            itemupd=Members.objects(MemberID=a).first()
+#            teamlinkupd=LinkMemberTeam.objects(MemberID=a).first())
+            if g.DEBUG_OL >= 2:
+                print(a,itemupd)
+            oldteamid=teamid    
+            teamid='-TID-'+str(itemupd.MemberID)
+            name='-NAME-'+str(itemupd.MemberID)
+            fname='-FNAME-'+str(itemupd.MemberID)
+            alias='-ALIAS-'+str(itemupd.MemberID)
+            email='-EMAIL-'+str(itemupd.MemberID)
+            roleid='-ROLEID-'+str(itemupd.MemberID)
+            
+#            desc='-DESC-'+str(itemupd.RoleID)
 
-                    while True:
-                        event1, value1 = window1.read()
-                        if event1 == sg.WIN_CLOSED or event1 == ('Cancel'):
-                            window1.close()
-                            break
+            if g.DEBUG_OL >= 2:
+                print(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid],memberid,)
+            update_member(a,values1[teamid],values1[name],values1[fname],values1[alias],values1[email],values1[roleid],memberid,)
+            page = 1
+            window.close()
+            list_members_gui(memberid,admin,oldteamid,page,linespage,order1, order2, order3,info)
        
-                else:
-                    checkpasswd=get_actual_password(value['-EMAIL-'],value['-PASSWD-'])
-                    if g.DEBUG_OL >= 2:
-                        print(checkpasswd)
-                    if checkpasswd == False:
-                        layout=[
-                            [sg.T("Wrong password. ",size=(20,1),font=g.FONT),sg.T(x,size=(3,1),font=g.FONT),sg.T('Remaining tries',size=(15,1),font=g.FONT)],
-                            [sg.Cancel()]]
-
-                        window1=MyWindow('Error',layout,finalize=True)
-                        window1.my_move_to_center()
-
-                        while True:
-                            event1, value1 = window1.read()
-                            if event1 == sg.WIN_CLOSED or event1 == ('Cancel'):
-                                window1.close()
-                                break
-
-                        if x == 0:
-                            window.close()
-                            return('None')
-                        x -= 1
-
-                    else:
-                        if g.DEBUG_OL >= 2:
-                            print(result.MemberFirstConnection)
-                        MemberAlias= result.MemberAlias
-                        if g.DEBUG_OL >= 2:
-                            print(MemberAlias)
-                        window.close()
-                        if result.MemberFirstConnection == True:
-                            result = change_password(MemberEmail,True)
-                            toto="Welcome  "+MemberAlias
-                            sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
-                        else:
-                            toto="Welcome back "+MemberAlias
-                            sg.popup(toto,title="info",auto_close=True, auto_close_duration=2,)
-                        return(MemberAlias)
 
 
-# In[ ]:
+# In[12]:
 
 
-#global font
-#font='Calibri 11'
-# login_window()
+#list_members_gui('applepie')
+#list_members_gui(1,False)
 
 
 # In[ ]:
@@ -434,4 +553,10 @@ def login_window():
 
 if g.DEBUG_OL >= 1:
     print(os.getcwd(),__name__,'imported')
+
+
+# In[ ]:
+
+
+
 

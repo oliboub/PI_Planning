@@ -5,7 +5,7 @@
 
 # ## Prerequisites
 
-# In[ ]:
+# In[2]:
 
 
 import os
@@ -27,13 +27,13 @@ from backend_PI_Tasks import * # Import tout ce qui est spécifique au projet
 from backend_PI_Teams import * # Import tout ce qui est spécifique au projet
 
 
-# In[ ]:
+# In[3]:
 
 
 from frontend_PI_Utils import *
 
 
-# In[ ]:
+# In[4]:
 
 
 connect('PIPlanning')
@@ -122,23 +122,25 @@ def create_team_gui(memberid,info='Info'):
 #create_team_gui('Please enter informations regarding this team')
 
 
-# ## List_teams_gui(project=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info')
+# ## List_teams_gui(memberid,admin,project=None,page=1,linespage=5,order1=8,order2=1,order3=3,info='info')
 
-# In[ ]:
+# In[5]:
 
 
-def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,order3=4,info='info'):
+def list_teams_gui(memberid,admin,project=None,page=1,linespage=5,order1=1,order2=2,order3=4,info='info'):
     if g.DEBUG_OL >= 1:
-        print('--- function: list_teams_gui(',memberid,project,page,linespage,order1,order2,order3,info,')')
+        print('--- function: list_teams_gui(',memberid,admin,project,page,linespage,order1,order2,order3,info,')')
     
     imgdir='../imagesDB/'
     
-    projects_list=list_projects()
-    comboproj = []
-    for project1 in projects_list:
-        comboproj.append(project1.ProjectName)
-    if g.DEBUG_OL >= 2:
-        print(comboproj)
+    comboproj=[]
+    if project == None:
+        projects_list=list_projects()
+        comboproj = []
+        for project1 in projects_list:
+            comboproj.append(project1.ProjectName)
+        if g.DEBUG_OL >= 2:
+            print(comboproj)
  
     team=[]  
     teams1=[]
@@ -178,6 +180,10 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
     if g.DEBUG_OL >=2:
         print('items:',items,'\tstart:',start,'\tend:',end)
     
+    if admin == True:
+        comboprojspace = 118
+    else:
+        comboprojspace = 80
 
     for i in range(start,end):
         teams.append(teamstotal[i])
@@ -189,7 +195,7 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
     if project == None:
         titlewindows='List of Teams for all projects'
     else:
-        titlewindows='List of Teams for the project: '+ project
+        titlewindows='List of Teams for the project: '+ teams1[0][1]
         
     sg.set_options(element_padding=(5, 5))
     
@@ -199,11 +205,11 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
                sg.T('Team Description',font=g.FONT,size=(35, 1)),
                sg.T('Team Logo',font=g.FONT, size=(10, 1)),
                sg.T('Last Update',font=g.FONT,key='-LFILTER-',enable_events=True, size=(18, 1)),
-               sg.T('Update',font=g.FONT,size=(10, 1)),
-               sg.T(' ',font=g.FONT,size=(5, 1)),
-               sg.T('Status',font=g.FONT,size=(10, 1))
+               sg.T('Update',visible=False,font=g.FONT,key='-UPDTITLE-',size=(10, 1)),
+               sg.T(' ',visible=False,font=g.FONT,key='-SPACETITLE-',size=(5, 1)),
+               sg.T('Status',visible=False,font=g.FONT,key='-STATTITLE-',size=(10, 1))
               ],
-             [sg.Combo(comboproj,key='-PROJECT-',enable_events=True,size=(15, 1),font=g.FONT),sg.T(" ",size=(118, 1),font=g.FONT)]
+             [sg.Combo(comboproj,key='-PROJECT-',enable_events=True,size=(15, 1),font=g.FONT),sg.T(" ",size=(comboprojspace, 1),font=g.FONT)]
              ]
     
     idx=0
@@ -232,9 +238,9 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
                sg.I(team[5],enable_events=False,visible=False,key=f'-PHOTO-{team[2]}'),
                sg.I(team[0],enable_events=False,visible=False,key=f'-PID-{team[2]}'),
                sg.I(team[6],disabled=True, font=g.FONT,size=(18,1)),
-               sg.B('Update',enable_events=True, key=f'-UPDT-{team[2]}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
-               sg.T(' ',font=g.FONT,size=(5, 1)),
-               sg.B(status, enable_events=True,key=f'-ARCH-{team[2]}',font=FONT1,button_color=(bfcolor,bbcolor),size=(10,1)),
+               sg.B('Update',visible=False,enable_events=True, key=f'-UPDT-{team[2]}',font=g.FONT,button_color=('white','darkblue'),size=(10,1)),
+               sg.T(' ',visible=False,key=f'-SPACE-{team[2]}',font=g.FONT,size=(5, 1)),
+               sg.B(status,visible=False, enable_events=True,key=f'-ARCH-{team[2]}',font=FONT1,button_color=(bfcolor,bbcolor),size=(10,1)),
 
               ]
         layout.append(row)
@@ -255,7 +261,7 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
                    sg.B(">>", key='-END-',disabled=False)
                    ]]
     
-    create = [[sg.B('Create Team',key='-CREATE-',font=g.FONT,button_color=('white','darkblue')),
+    create = [[sg.B('Create Team',key='-CREATE-',visible=False,font=g.FONT,button_color=('white','darkblue')),
                    sg.T(' ',font=g.FONT,size=(12, 1))]]
     
     layout += [[sg.Col(create, element_justification='left'),sg.Col(displaylines, element_justification='left'),sg.Col(teamqtt, element_justification='center'),sg.Col(pagination, justification='right')]]
@@ -269,8 +275,20 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
         titlewindows='List of Members for all teams'
     else:
         titlewindows='List of Members for the team: '+team[3]+' of project: '+team[1]
-        
+ 
+    if admin == True:
+        window['-UPDTITLE-'].update(visible=True)
+        window['-SPACETITLE-'].update(visible=True)
+        window['-STATTITLE-'].update(visible=True)
+        window['-CREATE-'].update(visible=True)
+        for team in teams:
+            window[f'-UPDT-{team[2]}'].update(visible=True)
+            window[f'-SPACE-{team[2]}'].update(visible=True)
+            window[f'-ARCH-{team[2]}'].update(visible=True)
 
+    if project != None:
+        window['-PROJECT-'].update(visible=False)
+            
     if g.DEBUG_OL >= 2:
         print('start',start,'end',end,'len(teamstotal)',len(teamstotal),'len(teamstotal)-linespage',len(teamstotal)-linespage)
     if end >= len(teamstotal):
@@ -298,7 +316,7 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
             order3=4
             page = 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
             
             
         if event1 == '-TFILTER-':
@@ -307,7 +325,7 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
             order3=4
             page = 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
  
         if event1 == '-LFILTER-':
             order1=6
@@ -315,7 +333,7 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
             order3=3
             page = 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
 
         if event1 == "-DLINES-":
             if g.DEBUG_OL >= 2:
@@ -324,40 +342,40 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
                 linespage=int(values1['-DLINES-'])
                 page=1
                 window.close()
-                list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+                list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
  
         if event1 == '-PROJECT-':
             page=1
             window.close()
             project=values1['-PROJECT-']
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
             
         if event1 == "-NEXT-":
             page += 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
 
         if event1 == "-BACK-":
             page -= 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
         
         if event1 == "-BEGIN-":
             page = 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
         
         if event1 == "-END-":
             page = (items-linespage)//linespage+1
             print(page)
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)   
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)   
             
         if event1 == "-CREATE-":
             window.close()
             create_team_gui(memberid)
             page = 1
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
             
         if '-PHOTOIMG-' in event1:
             a=int(event1.split("-")[-1])
@@ -408,7 +426,7 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
                     break
             
             window1.close()        
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
             
              
         if '-ARCH-' in event1:
@@ -426,7 +444,8 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
             archive_team(a,newstatus,memberid)
             page = 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            print(memberid,admin,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
 
         if '-UPDT-' in event1:
             a=int(event1.split("-")[-1])
@@ -442,14 +461,14 @@ def list_teams_gui(memberid,project=None,page=1,linespage=5,order1=1,order2=2,or
             update_team(values1[projid],a,values1[team],values1[desc],values1[photo],memberid)
             page = 1
             window.close()
-            list_teams_gui(memberid,project,page,linespage,order1, order2, order3,info)
+            list_teams_gui(memberid,admin,project,page,linespage,order1, order2, order3,info)
             
 
 
-# In[ ]:
+# In[8]:
 
 
-#list_teams_gui()
+#list_teams_gui(1, False)
 
 
 # ## Select teams by Project
