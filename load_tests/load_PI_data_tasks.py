@@ -186,8 +186,8 @@ taskc4.save()
 
 taskc5 = TasksCategory()
 taskc5.TaskCategoryProjectID=1
-taskc5.TaskCategoryName='General activity'
-taskc5.TaskCategoryDescription='List des besoins'
+taskc5.TaskCategoryName='Portfolio activity'
+taskc5.TaskCategoryDescription='Actions necesary for portfolio management'
 taskc5.CreatedByID = 5
 taskc5.CreationDate=dt_string
 taskc5.UpdatedByID=5

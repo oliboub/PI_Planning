@@ -45,7 +45,7 @@ connect('PIPlanning')
 # - description (not mandatory , but necessary)
 # '''
 
-# In[23]:
+# In[ ]:
 
 
 ### Tasks
@@ -103,23 +103,23 @@ def create_task(name,memberid,weight,sprintid=None,categoryid=None,familyid=4,de
         print('link1.TaskDescriptionLinkID',link1.TaskDescriptionLinkID)
 
 
-# In[24]:
+# In[ ]:
 
 
-#create_task('Create menu to create a task',1,10,None,None,0,description="Thanks to describe your task please'")
+#create_task('Story consistency check',1,1,None,6,3,'As portfolio manager I need to check of stories are in sprint but with status as backlog, and to check if status is plan but not associated to sprint')
 
 
-# In[49]:
+# In[ ]:
 
 
 #create_task(name,memberid,weight,sprintid=None,categoryid=None,familyid=0,description="Thanks to describe your task please'")
 
 #create_task('tache pour tester les taches',1,2,1,2,4,'ceci est la description de la tache')
 #create_task("d'office pas trop top",1,1.5,2,1)
-#create_task("faire le menu pour affichage des tasks",2,2.3,1,3)
+#create_task("faire le menu pour affichage des tasks",2,2,1,3,3,3)
 
 
-# In[9]:
+# In[ ]:
 
 
 #create_task("essayer d'avancer sur les taches",2,2.3)
@@ -137,7 +137,7 @@ def create_task(name,memberid,weight,sprintid=None,categoryid=None,familyid=4,de
 # - Description
 # '''
 
-# In[5]:
+# In[ ]:
 
 
 def add_task_description(taskid,description,memberid):
@@ -169,19 +169,20 @@ def add_task_description(taskid,description,memberid):
         print('taskid',taskid,'\tdescid',descid,'\tlinkid',link1.TaskDescriptionLinkID)
 
 
-# In[6]:
+# In[ ]:
 
 
 #add_task_description(2,"** et encore, je ne t'ai pas tout dit",1)
 #add_task_description(1,"Je pense qu'il faudrait discuter avec le BO sur le cas de figure",2)
 
 
-# In[10]:
+# In[ ]:
 
 
 #add_task_description(8,'Il ne faut pas faire attendre le mammouth')
 
 
+# ------
 # ## list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None)
 
 # '''
@@ -191,7 +192,7 @@ def add_task_description(taskid,description,memberid):
 # - SprintID
 # '''
 
-# In[97]:
+# In[36]:
 
 
 def list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
@@ -209,7 +210,7 @@ def list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
     list_descs=[]
 
     for task1 in task:
-        if g.DEBUG_OL >= 1:    
+        if g.DEBUG_OL >= 2:    
             print('\n--------------------------')
             print('taskid:',task1.TaskID,'name:',task1.TaskName,'memberid:',task1.MemberID,'weight:',task1.TaskWeight,'progress:',task1.TaskProgress,'sprintid:',task1.SprintID,'statusid:',task1.TaskStatusID,'categoryid',task1.TaskCategoryID)
 
@@ -226,7 +227,7 @@ def list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
             piid1=sprint1.PiID
             if sprint1.SprintSeq != None: 
                 sprint=sprint1.SprintSeq
-            if g.DEBUG_OL >= 1:   
+            if g.DEBUG_OL >= 2:
                 print('Sprint Start Date:',sprint1.SprintStartDate,'\tSprint1 Duration:','\tSprint Days:',sprint1.SprintDays,'\tpiid',piid1,'\tsprint:',sprint)
 
 #get taskname
@@ -275,7 +276,7 @@ def list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
         
         
 ## get Result
-        if g.DEBUG_OL >= 1:   
+        if g.DEBUG_OL >= 2:   
             print('taskid:',taskid,'- Task name:',taskname,'\tProject:',project,'- Teamname:',team,'- Member:',member,'\tPI:',piid,'- Sprint:',sprint,'\tTask Weight:',weight,'- Task progress',progress,'- Status:',status,'\tCategory:',category,'- Family:',family)
         detail_tasks=[taskid,taskname,project,team,member,piid,sprint,weight,progress,status,category,family]
         list_of_tasks.append(detail_tasks)
@@ -283,73 +284,90 @@ def list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
     return(list_of_tasks)
 
 
-# In[99]:
+# In[33]:
 
 
-#list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
+## list_tasks(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
 
-#list_tasks(1,None,None,None,None)
+# list_tasks(1,None,None,None,None)
 #list_tasks(1,None,None,None,1)
 #list_tasks(1,None,1,1,1)
 
 
 
-# In[ ]:
+# ------
+# ## def list_task_descriptions(memberid,taskid=None)
+
+# In[15]:
 
 
-## def list_descriptions()
-
-# def list_descriptions(memberid,projectin=None,teamin=None,piidin=None,sprintid=None):
-            desclink=TasksDescriptionLink.objects(TaskID=task1.TaskID)
+def list_task_descriptions(memberid,taskid=None):
+    if g.DEBUG_OL >= 1:
+        print('fonction: list_tasks_descriptions(',memberid,taskid,')')
+        desclink=TasksDescriptionLink.objects(TaskID=taskid)
         desc1 = []
+        
+        
+        
         if desclink != None:
-#            print(len(desclink))
+            if g.DEBUG_OL >= 2:
+                print(len(desclink))
+                
             for i in desclink:
-                if g.DEBUG_OL >= 1:   
-                    print('desclink.TaskID',i.TaskID,'\desclink.TaskDescriptionID',i.TaskDescriptionID)
                 desc=TasksDescription.objects(TaskDescriptionID=i.TaskDescriptionID).first()
-                if g.DEBUG_OL >= 1:   
-                    print('Description:',desc.TaskDescription,'\tLast update:',desc.LastUpdate)
-                desclist = [desc.TaskDescription,desc.LastUpdate]
+                if g.DEBUG_OL >= 2:   
+                    print('TaskID',taskid,'DescID',desc.TaskDescriptionID,'Description:',desc.TaskDescription,'\tLast update:',desc.LastUpdate,'- UpdatedBYID:',desc.UpdatedByID)
+                desclist = [taskid,desc.TaskDescriptionID,desc.TaskDescription,desc.LastUpdate,desc.UpdatedByID]
                 desc1.append(desclist)
         else:
-            if g.DEBUG_OL >= 1:   
+            if g.DEBUG_OL >= 2:   
                 print('None')
-
-#       print(projectin,project,teamin,team,piid,piidin)
-    
-        if projectin == 'All' or projectin == project:
-            if teamin == 'All' or team == teamin:
-                if piidin == 'All' or piidin == piid:
-                    task1=[project,team,piid,sprint,member,taskname,weight,task1.TaskProgress,status,category]
-                    list_tasks.append(task1)
-                    list_descs.append(desc1)
-                if piid == None and piidin == None:
-                    task1=[project,team,piid,sprint,member,taskname,weight,'None',status,category]
-                    list_tasks.append(task1)
-                    list_descs.append(desc1)
-
-#       print(task1)
-#        print(desc1)
-#        list_tasks.append(task1)
-#        list_descs.append(desc1)
-        
-#        if projectname is None:
-#            projectname='Non allocated'
-#        print(projectname.ProjectName)
-#        teams=[projectname.ProjectName,team1.TeamName,team1.TeamDescription,team1.TeamLogo]
-#        list_teams.append(teams)
-    for i in range(len(list_tasks)):
-        print(list_tasks[i])
-        for j in range(len(list_descs[i])):
-            print(list_descs[i][j])
-        print('\n----\n')
-#    print(list_teams[0][1])
-#    return(list_teams)   
+            return(None)
+            
+    return(desc1)   
 
     
     
-# In[12]:
+
+
+# In[16]:
+
+
+## list_task_descriptions(memberid,taskid)
+
+#list_task_descriptions(1,1)
+
+
+# ------
+# ## check_tasks_consistency(ProjectID=None,TeamID=None,Archived=False)
+
+# In[55]:
+
+
+def check_tasks_consistency(memberid,projectid=None,teamid=None,piid=None,sprintid=None):
+    if g.DEBUG_OL >= 1:
+        print('fonction: check_tasks_consistency(',projectid,teamid,piid,sprintid,')')
+    result=[]
+    result=list_tasks(memberid,projectid,teamid,piid,sprintid)
+    for i in range(len(result)):
+        if g.DEBUG_OL >= 2:
+            print(i,result[i][1], result[i][6], result[i][9])
+        if result[i][6] == 1 and result[i][9] != 'Backlog':
+            print('Warning: TaskID:',result[i][0],' is not consistent - task not allocated to sprint, but not in backlog!')
+        if result[i][6] != None and result[i][9] == 'Backlog':
+            print('Warning: TaskID:',result[i][0],'is not consistent - task allocated to sprint, but still in backlog!')
+        else:
+            print('TaskID:',result[i][0],'with name: ',result[i][1], '\t\tis consistent.')
+
+
+# In[56]:
+
+
+## check_tasks_consistency(projectid=None,teamid=None,archived=False)
+#check_tasks_consistency(1)
+
+
+# In[ ]:
 
 
 if g.DEBUG_OL >= 1:
