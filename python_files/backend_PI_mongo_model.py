@@ -165,6 +165,7 @@ class Tasks(Document):
     MemberID=IntField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False)
     
@@ -175,6 +176,7 @@ class TasksDependency(Document):
     TaskDepencyCategoryID=IntField(required=True) # Category od dependency
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -184,6 +186,7 @@ class TasksDependencyCategory(Document):
     TaskDependencyCategoryDescription=StringField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
     
@@ -193,6 +196,7 @@ class TasksDescriptionLink(Document):
     TaskDescriptionID=IntField(required=True)
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -201,6 +205,7 @@ class TasksDescription(Document):
     TaskDescription=StringField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -211,6 +216,7 @@ class TasksCategory(Document):
     TaskCategoryDescription = StringField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
@@ -220,6 +226,7 @@ class TasksFamily(Document):
     TaskFamilyDescription = StringField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
     
@@ -230,6 +237,7 @@ class TasksStatus(Document):
     TaskStatusDescription=StringField()
     CreatedByID=IntField()
     CreationDate = DateTimeField()
+    UpdatedByID=IntField()
     LastUpdate = DateTimeField()
     Archived = BooleanField(default=False) # PI archived
 
