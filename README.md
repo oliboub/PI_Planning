@@ -4,7 +4,7 @@
 Ths purpose of this site is to use learning done on **python**, **mongodb** and **pysimplegui** to try to develop a usefull tool to manage SAFE PI planning
 
 - Includes a database model on mongodb
-- Includes Admion for Projects, Teams, Members, Roles
+- Includes Admin for Projects, Teams, Members, Roles
 - Planned to have Epic, Features, Objectives, PI, Stories
 
 The idea is to improve pi planning efforts and capacity management.
